@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4sp"
+        android:text="Taskname" />
+
+    <EditText
+        android:id="@+id/weather_city_name_reader"
+        android:layout_width="fill_parent"
+        android:hint="e.g. Project setup"
+        android:layout_height="wrap_content" />
+    
+        <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4sp"
+        android:text="Deadline" />
+
+    <EditText
+        android:id="@+id/weather_city_state_reader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="e.g. now!" />
+    
+     <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4sp"
+        android:text="Goal" />
+
+
+    <Button
+        android:id="@+id/mycountry_done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Add" />
+    
+
+</LinearLayout>
