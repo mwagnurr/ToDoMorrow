@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="4sp"
-        android:text="@string/task_name" />
-
-    <EditText
-        android:id="@+id/taskname"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/task_hint" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="4sp"
-        android:text="@string/deadline" />
-
-    <DatePicker
-        android:id="@+id/pick_deadline"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false" />
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="4sp"
-            android:text="@string/goal" />
+            android:text="@string/task_name" />
 
-        <Spinner
-            android:id="@+id/goal_spinner"
+        <EditText
+            android:id="@+id/taskname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/task_hint" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="4sp"
+            android:text="@string/deadline_date" />
+
+        <DatePicker
+            android:id="@+id/pick_deadline"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:calendarViewShown="false" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="4sp"
+            android:text="@string/deadline_time" />
+
+        <TimePicker
+            android:id="@+id/pick_deadline_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4sp"
+                android:text="@string/goal" />
+
+            <Spinner
+                android:id="@+id/goal_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/add_task"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addTask"
+            android:text="@string/addTask" />
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

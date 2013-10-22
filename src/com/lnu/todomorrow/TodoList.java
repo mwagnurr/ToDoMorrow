@@ -1,0 +1,127 @@
+package com.lnu.todomorrow;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.lnu.todomorrow.dao.*;
+import com.lnu.todomorrow.utils.Task;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class TodoList extends Activity {
+	
+	private ListView lv;
+	private MyAdapter adapter;
+	private static DataSource datasource;
+	private ArrayList<Task> tasks;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_todo_list);
+		lv = (ListView) findViewById(R.id.list);
+		datasource = new DataSource(this);
+		datasource.open();
+		tasks = (ArrayList<Task>) datasource.getAllTasks();
+		
+		adapter = new MyAdapter(this, R.layout.row_layout, tasks);
+		lv.setAdapter(adapter);
+		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.todo_list, menu);
+		return true;
+	}
+	
+	public void addTask(View view){
+		Intent intent = new Intent(this, TaskForm.class);
+		this.startActivityForResult(intent, 0);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode,
+			Intent result){
+		switch(requestCode){
+		case 0:
+			if(resultCode == RESULT_OK){
+				int y = result.getIntExtra("dead_y", 2013);
+				int m = result.getIntExtra("dead_m", 1);
+				int d = result.getIntExtra("dead_d", 1);
+				
+				int h = result.getIntExtra("dead_h", 12);
+				int min = result.getIntExtra("dead_min", 00);
+				
+				String name = result.getStringExtra("task_name");
+				String goal = result.getStringExtra("goal");
+				
+				Date date = new Date(y-1900, m, d);
+				date.setHours(h);
+				date.setMinutes(min);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+				String deadline = sdf.format(date);
+				datasource.open();
+				Task task = datasource.createTaskEntry(name, deadline);
+				adapter.add(task);
+				adapter.notifyDataSetChanged();
+			}
+		}
+	}
+	
+	public void checkboxChecked(View view){
+		Toast.makeText(this, "Checkbox Checked", Toast.LENGTH_LONG).show();
+	}
+	
+	/**
+	 * New Adapter Class for row-layout in WeatherApp
+	 * 
+	 * @author Lia
+	 * 
+	 */
+	class MyAdapter extends ArrayAdapter<Task> {
+		Context context;
+
+		public MyAdapter(Context context, int resource, List<Task> objects) {
+			super(context, resource, objects);
+		}
+
+		@Override
+		// Called when updating the ListView
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View row;
+			if (convertView == null) {
+				LayoutInflater inflater = getLayoutInflater();
+				row = inflater.inflate(R.layout.row_layout, parent, false);
+			} else {
+				row = convertView;
+			}
+
+			TextView name = (TextView) row.findViewById(R.id.show_task);
+			TextView dead = (TextView) row.findViewById(R.id.show_deadline);
+			TextView goal = (TextView) row.findViewById(R.id.show_goal);
+			
+			name.setText(tasks.get(position).getName());
+			dead.setText(tasks.get(position).getDeadline());
+			goal.setText("Goal");
+
+			return row;
+		}
+
+	}
+
+}
