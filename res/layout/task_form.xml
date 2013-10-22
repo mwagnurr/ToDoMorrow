@@ -3,43 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="4sp"
-        android:text="Taskname" />
+        android:text="@string/task_name" />
 
     <EditText
-        android:id="@+id/weather_city_name_reader"
+        android:id="@+id/taskname"
         android:layout_width="fill_parent"
-        android:hint="e.g. Project setup"
-        android:layout_height="wrap_content" />
-    
+        android:layout_height="wrap_content"
+        android:hint="@string/task_hint" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4sp"
+        android:text="@string/deadline" />
+
+    <DatePicker
+        android:id="@+id/pick_deadline"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
         <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="4sp"
-        android:text="Deadline" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4sp"
+            android:text="@string/goal" />
 
-    <EditText
-        android:id="@+id/weather_city_state_reader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="e.g. now!" />
-    
-     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="4sp"
-        android:text="Goal" />
-
-
-    <Button
-        android:id="@+id/mycountry_done_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add" />
-    
+        <Spinner
+            android:id="@+id/goal_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </LinearLayout>

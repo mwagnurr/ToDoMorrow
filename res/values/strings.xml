@@ -1,5 +1,10 @@
 <resources>
 
     <string name="app_name">ToDoMorrow</string>
+    <string name="deadline">Deadline</string>
+    <string name="task_name">Description</string>
+    <string name="task_hint">e.g. Project setup</string>
+    <string name="goal">Goal</string>
+    <string name="add_goal">Add Task</string>
 
 </resources>
