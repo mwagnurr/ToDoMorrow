@@ -1,6 +1,10 @@
 package com.lnu.todomorrow;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.lnu.todomorrow.dao.GoalDAO;
+import com.lnu.todomorrow.utils.Goal;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class TaskForm extends Activity {
@@ -20,12 +25,16 @@ public class TaskForm extends Activity {
 	private Spinner goalSpin;
 	private TimePicker tp;
 	private String goal;
+	private GoalDAO goalDB;
+	ArrayList<String> goals;
+	List<Goal> g;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.task_form);
- 
+
+		goalDB = new GoalDAO(this);
 		addItemsToSpinner();
 		addSpinnerItemClickListener();
 
@@ -36,10 +45,16 @@ public class TaskForm extends Activity {
 
 	private void addItemsToSpinner() {
 		goalSpin = (Spinner) findViewById(R.id.goal_spinner);
-		// retrieve all available goals from database
-		ArrayList<String> goals = new ArrayList<String>();
-		// run through List of Goals, add names to ArrayList
+		goalDB.open();
+
+		g = goalDB.getAllGoals();
+		goals = new ArrayList<String>();
+
+		goals.add("Select Goal");
 		goals.add("New Goal");
+		for (Goal go : g) {
+			goals.add(go.getName());
+		}
 
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, goals);
@@ -79,23 +94,41 @@ public class TaskForm extends Activity {
 		finish();
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent result) {
+		switch (requestCode) {
+		case 0:
+			if (resultCode == RESULT_OK) {
+				goalDB = new GoalDAO(this);
+				addItemsToSpinner();
+				goalSpin.setSelection(goals.size()-1);
+				goal = goals.get(goals.size()-1).toString();
+			}
+		}
+	}
+
 	public class CustomOnItemSelectedListener implements OnItemSelectedListener {
 
 		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			goal = arg0.getItemAtPosition(arg2).toString();
-			if (goal.equalsIgnoreCase("New Goal")) {
-				// create new Goal object
-			} else {
-				// add task to selected goal
-			}
+			if (goal.equalsIgnoreCase("Select Goal")) {
+
+			} else if (goal.equalsIgnoreCase("New Goal")) {
+				Intent intent = new Intent();
+				intent.setClass(TaskForm.this, GoalForm.class);
+				TaskForm.this.startActivityForResult(intent, 0);
+			} else
+				Toast.makeText(TaskForm.this, "Choosen Goal: " + goal,
+						Toast.LENGTH_SHORT).show();
 
 		}
 
 		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
+			Toast.makeText(TaskForm.this, "Choose a Goal for this Task",
+					Toast.LENGTH_SHORT).show();
 
 		}
 

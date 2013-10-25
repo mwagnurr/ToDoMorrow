@@ -1,9 +1,10 @@
 package com.lnu.todomorrow;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Collections;
 
 import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Task;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +29,7 @@ public class TodoList extends Activity {
 	private ListView lv;
 	private MyAdapter adapter;
 	private static TaskDAO datasource;
-	private ArrayList<Task> tasks;
+	private List<Task> tasks;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class TodoList extends Activity {
 		lv = (ListView) findViewById(R.id.list);
 		datasource = new TaskDAO(this);
 		datasource.open();
-		tasks = (ArrayList<Task>) datasource.getAllTasks();
+		tasks = datasource.getAllTasks();
 		
 		adapter = new MyAdapter(this, R.layout.row_layout, tasks);
 		lv.setAdapter(adapter);
@@ -87,7 +89,21 @@ public class TodoList extends Activity {
 	}
 	
 	public void checkboxChecked(View view){
-		Toast.makeText(this, "Checkbox Checked", Toast.LENGTH_LONG).show();
+		CheckBox check = (CheckBox) view;
+		Collections.sort(tasks, new BooleanComparator());
+		if(adapter == null){
+			adapter = new MyAdapter(this, R.layout.row_layout, tasks);
+		}
+		if(check.isChecked()){
+			// task.setFinished = true;
+			// cross out task
+			adapter.notifyDataSetChanged();
+			Toast.makeText(this, "Checkbox Checked", Toast.LENGTH_LONG).show();
+		} else {
+			// set finished-field to false
+			Toast.makeText(this, "Checkbox Unchecked", Toast.LENGTH_LONG).show();
+		}
+		
 	}
 	
 	/**
@@ -123,6 +139,19 @@ public class TodoList extends Activity {
 			goal.setText("Goal");
 
 			return row;
+		}
+
+	}
+	
+	public class BooleanComparator implements Comparator<Task> {
+
+		@Override
+		public int compare(Task lhs, Task rhs) {
+			if(lhs.isFinished())
+				return 1;
+			if(rhs.isFinished())
+				return -1;
+			return 0;
 		}
 
 	}

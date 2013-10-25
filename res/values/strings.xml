@@ -18,5 +18,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="task">Task</string>
     <string name="deadline">Deadline</string>
+    <string name="selectGoal">Select Goal</string>
 
 </resources>
