@@ -39,4 +39,10 @@ public class Goal {
 		this.deadline = deadline;
 	}
 
+	@Override
+	public String toString() {
+		return "Goal [id=" + id + ", name=" + name + ", score=" + score + ", deadline=" + deadline
+				+ "]";
+	}
+
 }

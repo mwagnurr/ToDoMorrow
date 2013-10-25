@@ -4,9 +4,10 @@ public class Task {
 
 	private long id;
 	private String name;
-	private String goal;
+	private Goal goal;
 	private String deadline;
-	private int finished;
+	private boolean finished;
+	private int value;
 
 	public long getId() {
 		return id;
@@ -24,11 +25,11 @@ public class Task {
 		this.name = name;
 	}
 
-	public String getGoal() {
+	public Goal getGoal() {
 		return goal;
 	}
 
-	public void setGoal(String goal) {
+	public void setGoal(Goal goal) {
 		this.goal = goal;
 	}
 
@@ -40,4 +41,26 @@ public class Task {
 		this.deadline = deadline;
 	}
 
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", name=" + name + ", goal=" + goal + ", deadline=" + deadline
+				+ ", finished=" + finished + ", value=" + value + "]";
+	}
+	
 }

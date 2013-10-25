@@ -26,6 +26,18 @@
             android:name="com.lnu.todomorrow.TaskForm"
             android:label="@string/title_activity_task_form" >
         </activity>
+        <activity
+            android:name="com.lnu.todomorrow.GoalList"
+            android:label="@string/title_activity_goal_list" >
+        </activity>
+        <activity
+            android:name="com.lnu.todomorrow.GoalOverview"
+            android:label="@string/title_activity_goal_overview" >
+        </activity>
+        <activity
+            android:name="com.lnu.todomorrow.GoalForm"
+            android:label="@string/title_activity_goal_form" >
+        </activity>
     </application>
 
 </manifest>

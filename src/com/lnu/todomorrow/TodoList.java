@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -22,10 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TodoList extends Activity {
-	
+	private static final String TAG = TodoList.class.getSimpleName();
 	private ListView lv;
 	private MyAdapter adapter;
-	private static DataSource datasource;
+	private static TaskDAO datasource;
 	private ArrayList<Task> tasks;
 
 	@Override
@@ -33,7 +34,7 @@ public class TodoList extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_todo_list);
 		lv = (ListView) findViewById(R.id.list);
-		datasource = new DataSource(this);
+		datasource = new TaskDAO(this);
 		datasource.open();
 		tasks = (ArrayList<Task>) datasource.getAllTasks();
 		
@@ -77,6 +78,8 @@ public class TodoList extends Activity {
 				String deadline = sdf.format(date);
 				datasource.open();
 				Task task = datasource.createTaskEntry(name, deadline);
+				
+				Log.d(TAG, "created task: " + task);
 				adapter.add(task);
 				adapter.notifyDataSetChanged();
 			}

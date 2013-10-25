@@ -25,7 +25,7 @@ public class TaskForm extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.task_form);
-
+ 
 		addItemsToSpinner();
 		addSpinnerItemClickListener();
 
