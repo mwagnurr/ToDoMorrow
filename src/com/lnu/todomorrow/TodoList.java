@@ -1,12 +1,9 @@
 package com.lnu.todomorrow;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 import java.util.Collections;
-
+import java.util.Comparator;
+import java.util.List;
 import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Task;
 import com.lnu.todomorrow.utils.TimeUtil;
@@ -21,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -34,7 +32,8 @@ public class TodoList extends Activity {
 	private MyAdapter adapter;
 	private static TaskDAO datasource;
 	private List<Task> tasks;
-	private ScoreManager scoreMan = new ScoreManager();
+
+	// private ScoreManager scoreMan = new ScoreManager();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +43,18 @@ public class TodoList extends Activity {
 		datasource = new TaskDAO(this);
 		datasource.open();
 		tasks = datasource.getAllTasks();
-		
+
 		adapter = new MyAdapter(this, R.layout.row_layout, tasks);
 		lv.setAdapter(adapter);
-		
+
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		
+
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {	
+		switch (item.getItemId()) {
 		case android.R.id.home:
 			Intent intent1 = new Intent(this, GoalList.class);
 			intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -72,68 +71,48 @@ public class TodoList extends Activity {
 		getMenuInflater().inflate(R.menu.todo_list, menu);
 		return true;
 	}
-	
-	public void addTask(View view){
+
+	public void addTask(View view) {
 		Intent intent = new Intent(this, TaskForm.class);
 		this.startActivityForResult(intent, 0);
 	}
-	
+
 	@Override
-	public void onActivityResult(int requestCode, int resultCode,
-			Intent result){
-		switch(requestCode){
+	public void onActivityResult(int requestCode, int resultCode, Intent result) {
+		switch (requestCode) {
 		case 0:
-			if(resultCode == RESULT_OK){
+			if (resultCode == RESULT_OK) {
 				int y = result.getIntExtra("dead_y", 2013);
 				int m = result.getIntExtra("dead_m", 1);
 				int d = result.getIntExtra("dead_d", 1);
-				
+
 				int h = result.getIntExtra("dead_h", 12);
 				int min = result.getIntExtra("dead_min", 00);
-				
+
 				String name = result.getStringExtra("task_name");
-				
+
 				int goal = result.getIntExtra("goal", 0);
-				
+
 				Calendar cal = Calendar.getInstance();
-				
+
 				cal.set(Calendar.HOUR_OF_DAY, h);
 				cal.set(Calendar.MINUTE, min);
 				cal.set(Calendar.SECOND, 0);
-				
+
 				cal.set(Calendar.DAY_OF_MONTH, d);
 				cal.set(Calendar.MONTH, m);
 				cal.set(Calendar.YEAR, y);
-				
-				
+
 				datasource.open();
 				Task task = datasource.createTaskEntry(name, cal, goal);
-				
+
 				Log.d(TAG, "created task: " + task);
 				adapter.add(task);
 				adapter.notifyDataSetChanged();
 			}
 		}
 	}
-	
-	public void checkboxChecked(View view){
-		CheckBox check = (CheckBox) view;
-		Collections.sort(tasks, new BooleanComparator());
-		if(adapter == null){
-			adapter = new MyAdapter(this, R.layout.row_layout, tasks);
-		}
-		if(check.isChecked()){
-			// task.setFinished = true;
-			// cross out task
-			adapter.notifyDataSetChanged();
-			Toast.makeText(this, "Checkbox Checked", Toast.LENGTH_LONG).show();
-		} else {
-			// set finished-field to false
-			Toast.makeText(this, "Checkbox Unchecked", Toast.LENGTH_LONG).show();
-		}
-		
-	}
-	
+
 	/**
 	 * New Adapter Class for row-layout in WeatherApp
 	 * 
@@ -161,23 +140,55 @@ public class TodoList extends Activity {
 			TextView name = (TextView) row.findViewById(R.id.show_task);
 			TextView dead = (TextView) row.findViewById(R.id.show_deadline);
 			TextView goal = (TextView) row.findViewById(R.id.show_goal);
-			
+
+			CheckBox check = (CheckBox) row.findViewById(R.id.check);
+			check.setOnClickListener(new CheckListener());
+			check.setTag(position);
+
 			name.setText(tasks.get(position).getName());
-			dead.setText(TimeUtil.getFormattedDate(tasks.get(position).getDeadline()));
+			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
+					.getDeadline()));
 			goal.setText("Goal");
 
 			return row;
 		}
 
 	}
-	
+
+	public class CheckListener implements OnClickListener {
+
+		@Override
+		public void onClick(View arg0) {
+			CheckBox check = (CheckBox) arg0;
+			int pos = (Integer) check.getTag();
+			if (check.isChecked()) {
+				Task t = tasks.get(pos);
+				t.setFinished(true);
+				Toast.makeText(TodoList.this, "Checkbox Checked",
+						Toast.LENGTH_LONG).show();
+
+			} else {
+				Task t = tasks.get(pos);
+				t.setFinished(false);
+				Toast.makeText(TodoList.this, "Checkbox Unchecked",
+						Toast.LENGTH_LONG).show();
+			}
+			Collections.sort(tasks, new BooleanComparator());
+			if(adapter == null){
+				adapter = new MyAdapter(TodoList.this, R.layout.row_layout, tasks);
+			}
+			adapter.notifyDataSetChanged();
+		}
+
+	}
+
 	public class BooleanComparator implements Comparator<Task> {
 
 		@Override
 		public int compare(Task lhs, Task rhs) {
-			if(lhs.isFinished())
+			if (lhs.isFinished())
 				return 1;
-			if(rhs.isFinished())
+			if (rhs.isFinished())
 				return -1;
 			return 0;
 		}

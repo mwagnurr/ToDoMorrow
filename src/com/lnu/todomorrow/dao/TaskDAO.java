@@ -71,6 +71,20 @@ public class TaskDAO {
 		return tasks;
 
 	}
+	
+	public Task getTask(long id) {
+		  String restrict = DbHelper.TASKS_C_ID + "=" + id;
+		  Cursor cursor = database.query(true, DbHelper.TABLE_TASKS, columnsTask, restrict, 
+		    		                        null, null, null, null, null);
+		  if (cursor != null && cursor.getCount() > 0) {
+			  cursor.moveToFirst();
+			  Task t = cursorToTask(cursor);
+			  return t;
+		  }
+		  // Make sure to close the cursor
+		  cursor.close();
+		  return null;
+	  }
 
 	public List<Task> getAllTasksByGoal(Goal goal) {
 		List<Task> tasks = new ArrayList<Task>();
