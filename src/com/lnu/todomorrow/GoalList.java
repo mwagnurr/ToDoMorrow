@@ -1,6 +1,5 @@
 package com.lnu.todomorrow;
 
-import java.util.Calendar;
 import java.util.List;
 
 import com.lnu.todomorrow.dao.GoalDAO;
@@ -43,16 +42,22 @@ public class GoalList extends Activity {
 		adapter = new GoalAdapter(this, R.layout.row_layout, datasource.getAllGoals());
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnGoalItemClick());
-		
+
 		Log.d(TAG, "onCreate()");
+	}
+	
+	@Override
+	public void onDestroy(){
+		datasource.close();
+		super.onDestroy();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.goal_list, menu);	
+		getMenuInflater().inflate(R.menu.goal_list, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -65,16 +70,16 @@ public class GoalList extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private class OnGoalItemClick implements OnItemClickListener {
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 			Goal sel = adapter.getItem(position);
-			
+
 			Log.d(TAG, "clicked goal " + sel);
-			
+
 			Intent intent = new Intent(GoalList.this, TodoList.class);
+			intent.putExtra("goal", sel);
 			GoalList.this.startActivity(intent);
 		}
 	}
@@ -113,23 +118,16 @@ public class GoalList extends Activity {
 
 	}
 
-	/** Called when the activity receives a results. */
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent result) {
 		if (resultCode == RESULT_OK) {
-			Log.d(TAG, "received result");
-			
-			String goalName =  result.getStringExtra("goal_name");
-			
-			Calendar cal = (Calendar) result.getSerializableExtra("goal_deadline");
-			
-			datasource.open();
-			Goal goal = datasource.createGoalEntry(goalName, cal);
-			
-			Log.d(TAG, "created goal: " + goal);
-			
+
+			Goal goal = (Goal) result.getSerializableExtra("goal");
 			adapter.add(goal);
 			adapter.notifyDataSetChanged();
+
+			Log.d(TAG, "received result: " + goal);
 		}
 	}
 }

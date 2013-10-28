@@ -2,12 +2,14 @@ package com.lnu.todomorrow;
 
 import java.util.Calendar;
 
+import com.lnu.todomorrow.dao.GoalDAO;
+import com.lnu.todomorrow.utils.Goal;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,8 +28,8 @@ public class GoalForm extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_form);
-
 	}
+	
 
 	public void addDeadlineChecked(View view) {
 		Log.d(TAG, "addDeadlineChecked()");
@@ -69,9 +71,9 @@ public class GoalForm extends Activity {
 		EditText nameReader = (EditText) findViewById(R.id.goal_form_name_reader);
 		String name = nameReader.getText().toString();
 
+		//reply.putExtra("goal_name", name);
 		
-		Intent reply = new Intent();
-		reply.putExtra("goal_name", name);
+		Calendar calendar = null;
 		
 		if(deadlineChecked){
 			
@@ -83,7 +85,7 @@ public class GoalForm extends Activity {
 			int hour = deadTime.getCurrentHour();
 			int min = deadTime.getCurrentMinute();
 
-			Calendar calendar = Calendar.getInstance();
+			calendar = Calendar.getInstance();
 			calendar.set(Calendar.HOUR_OF_DAY, hour);
 			calendar.set(Calendar.MINUTE, min);
 			calendar.set(Calendar.SECOND, 0);
@@ -94,10 +96,15 @@ public class GoalForm extends Activity {
 			
 			Log.d(TAG, "created calendar: " + calendar);
 			
-			reply.putExtra("goal_deadline", calendar);	
+			//reply.putExtra("goal_deadline", calendar);	
 		}
 		
-
+		GoalDAO dao = new GoalDAO(this);
+		dao.open();
+		Goal goal = dao.createGoalEntry(name, calendar);
+		
+		Intent reply = new Intent();
+		reply.putExtra("goal", goal);
 		setResult(RESULT_OK, reply);
 		finish();
 	}
