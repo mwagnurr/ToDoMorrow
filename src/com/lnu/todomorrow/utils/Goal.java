@@ -1,11 +1,32 @@
 package com.lnu.todomorrow.utils;
 
+import java.util.Calendar;
+
 public class Goal {
 
 	private int id;
 	private String name;
 	private int score;
-	private String deadline;
+	private Calendar deadline;
+
+	public Goal(int id, String name, int score, Calendar deadline) {
+		this.id = id;
+		this.name = name;
+		this.score = score;
+		this.deadline = deadline;
+	}
+
+	public Goal(int id, String name, int score) {
+		this(id, name, score, null);
+	}
+
+	public Goal(int id, String name, Calendar deadline) {
+		this(id, name, 0, deadline);
+	}
+
+	public Goal(int id, String name) {
+		this(id, name, 0, null);
+	}
 
 	public int getId() {
 		return id;
@@ -31,18 +52,18 @@ public class Goal {
 		this.score = score;
 	}
 
-	public String getDeadline() {
+	public Calendar getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(String deadline) {
+	public void setDeadline(Calendar deadline) {
 		this.deadline = deadline;
 	}
 
 	@Override
 	public String toString() {
-		return "Goal [id=" + id + ", name=" + name + ", score=" + score + ", deadline=" + deadline
-				+ "]";
+		return "Goal [id=" + id + ", name=" + name + ", score=" + score + ", deadline="
+				+ TimeUtil.getFormattedDate(deadline) + "]";
 	}
 
 }

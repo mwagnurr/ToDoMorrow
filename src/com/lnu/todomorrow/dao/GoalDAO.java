@@ -1,6 +1,9 @@
 package com.lnu.todomorrow.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.lnu.todomorrow.utils.Goal;
@@ -52,6 +55,31 @@ public class GoalDAO {
 		return goal;
 	}
 
+	public Goal createGoalEntry(String name, Calendar deadline) {
+		ContentValues values = new ContentValues();
+		values.put(DbHelper.GOALS_C_NAME, name);
+		values.put(DbHelper.GOALS_C_SCORE, 0);
+
+		if (deadline != null) {
+			Date dead = deadline.getTime();
+			// SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			// String strDead = sdf.format(dead);
+			// values.put(DbHelper.GOALS_C_DEADLINE, strDead);
+
+			values.put(DbHelper.GOALS_C_DEADLINE, dead.getTime());
+
+			// Log.d(TAG, "inserting goal with deadline: " + strDead);
+		}
+
+		long insertId = database.insert(DbHelper.TABLE_GOALS, null, values);
+		Cursor cursor = database.query(DbHelper.TABLE_GOALS, columnsGoal, DbHelper.GOALS_C_ID
+				+ " = " + insertId, null, null, null, null);
+		cursor.moveToFirst();
+		Goal goal = cursorToGoal(cursor);
+		cursor.close();
+		return goal;
+	}
+
 	public List<Goal> getAllGoals() {
 		List<Goal> goals = new ArrayList<Goal>();
 		Cursor cursor = database.query(DbHelper.TABLE_GOALS, columnsGoal, null, null, null, null,
@@ -84,11 +112,19 @@ public class GoalDAO {
 	}
 
 	private Goal cursorToGoal(Cursor cursor) {
-		Goal goal = new Goal();
-		goal.setId(cursor.getInt(0));
-		goal.setName(cursor.getString(1));
-		goal.setScore((cursor.getInt(2)));
-		goal.setDeadline((cursor.getString(3)));
+
+		int id = cursor.getInt(0);
+		String name = cursor.getString(1);
+		int score = cursor.getInt(2);
+		Goal goal = new Goal(id, name, score);
+
+		if (cursor.getLong(3) != 0) {
+			Log.e(TAG, "goal " + name + " has deadline " + cursor.getLong(3));
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(cursor.getLong(3));
+			goal.setDeadline(cal);
+		}
+		
 		return goal;
 	}
 }

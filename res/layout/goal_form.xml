@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="4sp"
+            android:text="@string/goal_name" />
+
+        <EditText
+            android:id="@+id/goal_form_name_reader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/goal_name_hint" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/goal_form_add_deadline_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="addDeadlineChecked" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="addDeadlineChecked"
+                android:padding="4sp"
+                android:text="@string/goal_add_deadline" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/goal_form_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <!-- dynamic content date and time picker added with java -->
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/goal_form_add_goal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addGoalButtonClick"
+            android:text="@string/add_goal" />
+    </LinearLayout>
+
+</ScrollView>

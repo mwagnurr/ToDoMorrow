@@ -16,11 +16,7 @@
         <activity
             android:name="com.lnu.todomorrow.TodoList"
             android:label="@string/title_activity_todo_list" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+           
         </activity>
         <activity
             android:name="com.lnu.todomorrow.TaskForm"
@@ -29,6 +25,11 @@
         <activity
             android:name="com.lnu.todomorrow.GoalList"
             android:label="@string/title_activity_goal_list" >
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.lnu.todomorrow.GoalOverview"
