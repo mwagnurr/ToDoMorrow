@@ -19,5 +19,8 @@
     <string name="task">Task</string>
     <string name="deadline">Deadline</string>
     <string name="selectGoal">Select Goal</string>
+    <string name="goal_name">Goal name:</string>
+    <string name="goal_name_hint">e.g. Android Project</string>
+    <string name="goal_add_deadline">Add deadline</string>
 
 </resources>
