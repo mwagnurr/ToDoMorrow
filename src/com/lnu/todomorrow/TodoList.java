@@ -9,6 +9,7 @@ import java.util.Collections;
 import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Task;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -43,6 +45,22 @@ public class TodoList extends Activity {
 		adapter = new MyAdapter(this, R.layout.row_layout, tasks);
 		lv.setAdapter(adapter);
 		
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {	
+		case android.R.id.home:
+			Intent intent1 = new Intent(this, GoalList.class);
+			intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent1);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override

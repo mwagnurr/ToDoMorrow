@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ public class GoalList extends Activity {
 
 		adapter = new GoalAdapter(this, R.layout.row_layout, datasource.getAllGoals());
 		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new OnGoalItemClick());
 		
 		Log.d(TAG, "onCreate()");
 	}
@@ -60,6 +63,19 @@ public class GoalList extends Activity {
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private class OnGoalItemClick implements OnItemClickListener {
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+
+			Goal sel = adapter.getItem(position);
+			
+			Log.d(TAG, "clicked goal " + sel);
+			
+			Intent intent = new Intent(GoalList.this, TodoList.class);
+			GoalList.this.startActivity(intent);
 		}
 	}
 

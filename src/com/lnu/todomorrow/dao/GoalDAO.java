@@ -119,7 +119,7 @@ public class GoalDAO {
 		Goal goal = new Goal(id, name, score);
 
 		if (cursor.getLong(3) != 0) {
-			Log.e(TAG, "goal " + name + " has deadline " + cursor.getLong(3));
+			//Log.e(TAG, "goal " + name + " has deadline " + cursor.getLong(3));
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(cursor.getLong(3));
 			goal.setDeadline(cal);
