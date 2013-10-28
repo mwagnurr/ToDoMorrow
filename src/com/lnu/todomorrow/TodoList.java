@@ -89,7 +89,7 @@ public class TodoList extends Activity {
 				int min = result.getIntExtra("dead_min", 00);
 				
 				String name = result.getStringExtra("task_name");
-				String goal = result.getStringExtra("goal");
+				int goal = result.getIntExtra("goal", 0);
 				
 				Date date = new Date(y-1900, m, d);
 				date.setHours(h);
@@ -97,7 +97,7 @@ public class TodoList extends Activity {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 				String deadline = sdf.format(date);
 				datasource.open();
-				Task task = datasource.createTaskEntry(name, deadline);
+				Task task = datasource.createTaskEntry(name, deadline, goal);
 				
 				Log.d(TAG, "created task: " + task);
 				adapter.add(task);
