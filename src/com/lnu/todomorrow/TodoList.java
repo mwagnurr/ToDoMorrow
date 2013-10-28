@@ -34,6 +34,7 @@ public class TodoList extends Activity {
 	private MyAdapter adapter;
 	private static TaskDAO datasource;
 	private List<Task> tasks;
+	private ScoreManager scoreMan = new ScoreManager();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
