@@ -41,10 +41,11 @@ public class TaskDAO {
 		dbHelper.close();
 	}
 
-	public Task createTaskEntry(String name, String deadline) {
+	public Task createTaskEntry(String name, String deadline, int goal) {
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.TASKS_C_NAME, name);
 		values.put(DbHelper.TASKS_C_DEADLINE, deadline);
+		values.put(DbHelper.TASKS_C_GOAL, goal);
 		long insertId = database.insert(DbHelper.TABLE_TASKS, null, values);
 		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask, DbHelper.TASKS_C_ID
 				+ " = " + insertId, null, null, null, null);
