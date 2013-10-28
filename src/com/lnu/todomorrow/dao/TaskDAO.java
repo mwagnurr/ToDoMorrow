@@ -1,6 +1,7 @@
 package com.lnu.todomorrow.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.lnu.todomorrow.utils.Goal;
@@ -41,10 +42,11 @@ public class TaskDAO {
 		dbHelper.close();
 	}
 
-	public Task createTaskEntry(String name, String deadline, int goal) {
+	public Task createTaskEntry(String name, Calendar deadline, int goal) {
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.TASKS_C_NAME, name);
-		values.put(DbHelper.TASKS_C_DEADLINE, deadline);
+		// values.put(DbHelper.TASKS_C_DEADLINE, deadline);
+		values.put(DbHelper.TASKS_C_DEADLINE, deadline.getTimeInMillis());
 		values.put(DbHelper.TASKS_C_GOAL, goal);
 		long insertId = database.insert(DbHelper.TABLE_TASKS, null, values);
 		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask, DbHelper.TASKS_C_ID
@@ -90,7 +92,11 @@ public class TaskDAO {
 		Task task = new Task();
 		task.setName(cursor.getString(1));
 		task.setId(cursor.getInt(0));
-		task.setDeadline(cursor.getString(2));
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(cursor.getLong(2));
+		task.setDeadline(cal);
+
 		return task;
 	}
 

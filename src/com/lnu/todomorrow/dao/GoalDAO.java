@@ -1,6 +1,5 @@
 package com.lnu.todomorrow.dao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,7 +65,7 @@ public class GoalDAO {
 			// SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 			// String strDead = sdf.format(dead);
 			// values.put(DbHelper.GOALS_C_DEADLINE, strDead);
-
+			
 			values.put(DbHelper.GOALS_C_DEADLINE, dead.getTime());
 
 			// Log.d(TAG, "inserting goal with deadline: " + strDead);

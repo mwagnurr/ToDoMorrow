@@ -1,11 +1,13 @@
 package com.lnu.todomorrow.utils;
 
+import java.util.Calendar;
+
 public class Task {
 
 	private long id;
 	private String name;
 	private Goal goal;
-	private String deadline;
+	private Calendar deadline;
 	private boolean finished;
 	private int value;
 
@@ -33,11 +35,11 @@ public class Task {
 		this.goal = goal;
 	}
 
-	public String getDeadline() {
+	public Calendar getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(String deadline) {
+	public void setDeadline(Calendar deadline) {
 		this.deadline = deadline;
 	}
 

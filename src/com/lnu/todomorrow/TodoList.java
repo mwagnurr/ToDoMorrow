@@ -1,6 +1,7 @@
 package com.lnu.todomorrow;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Collections;
 
 import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Task;
+import com.lnu.todomorrow.utils.TimeUtil;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -89,15 +91,22 @@ public class TodoList extends Activity {
 				int min = result.getIntExtra("dead_min", 00);
 				
 				String name = result.getStringExtra("task_name");
+				
 				int goal = result.getIntExtra("goal", 0);
 				
-				Date date = new Date(y-1900, m, d);
-				date.setHours(h);
-				date.setMinutes(min);
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-				String deadline = sdf.format(date);
+				Calendar cal = Calendar.getInstance();
+				
+				cal.set(Calendar.HOUR_OF_DAY, h);
+				cal.set(Calendar.MINUTE, min);
+				cal.set(Calendar.SECOND, 0);
+				
+				cal.set(Calendar.DAY_OF_MONTH, d);
+				cal.set(Calendar.MONTH, m);
+				cal.set(Calendar.YEAR, y);
+				
+				
 				datasource.open();
-				Task task = datasource.createTaskEntry(name, deadline, goal);
+				Task task = datasource.createTaskEntry(name, cal, goal);
 				
 				Log.d(TAG, "created task: " + task);
 				adapter.add(task);
@@ -153,7 +162,7 @@ public class TodoList extends Activity {
 			TextView goal = (TextView) row.findViewById(R.id.show_goal);
 			
 			name.setText(tasks.get(position).getName());
-			dead.setText(tasks.get(position).getDeadline());
+			dead.setText(TimeUtil.getFormattedDate(tasks.get(position).getDeadline()));
 			goal.setText("Goal");
 
 			return row;
