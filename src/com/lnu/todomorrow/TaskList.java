@@ -26,8 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TodoList extends Activity {
-	private static final String TAG = TodoList.class.getSimpleName();
+public class TaskList extends Activity {
+	private static final String TAG = TaskList.class.getSimpleName();
 	private ListView lv;
 	private MyAdapter adapter;
 	private static TaskDAO datasource;
@@ -137,13 +137,15 @@ public class TodoList extends Activity {
 				row = convertView;
 			}
 
+			Collections.sort(tasks, new BooleanComparator());
 			TextView name = (TextView) row.findViewById(R.id.show_task);
 			TextView dead = (TextView) row.findViewById(R.id.show_deadline);
 			TextView goal = (TextView) row.findViewById(R.id.show_goal);
 
 			CheckBox check = (CheckBox) row.findViewById(R.id.check);
-			check.setOnClickListener(new CheckListener());
 			check.setTag(position);
+			check.setChecked(tasks.get(position).isFinished());
+			check.setOnClickListener(new CheckListener());
 
 			name.setText(tasks.get(position).getName());
 			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
@@ -164,18 +166,21 @@ public class TodoList extends Activity {
 			if (check.isChecked()) {
 				Task t = tasks.get(pos);
 				t.setFinished(true);
-				Toast.makeText(TodoList.this, "Checkbox Checked",
+				Toast.makeText(TaskList.this,
+						"Task: " + t.getName() + "Checked: " + t.isFinished(),
 						Toast.LENGTH_LONG).show();
 
 			} else {
 				Task t = tasks.get(pos);
 				t.setFinished(false);
-				Toast.makeText(TodoList.this, "Checkbox Unchecked",
+				Toast.makeText(TaskList.this,
+						"Task: " + t.getName() + "Checked: " + t.isFinished(),
 						Toast.LENGTH_LONG).show();
 			}
-			Collections.sort(tasks, new BooleanComparator());
-			if(adapter == null){
-				adapter = new MyAdapter(TodoList.this, R.layout.row_layout, tasks);
+
+			if (adapter == null) {
+				adapter = new MyAdapter(TaskList.this, R.layout.row_layout,
+						tasks);
 			}
 			adapter.notifyDataSetChanged();
 		}

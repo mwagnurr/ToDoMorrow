@@ -78,7 +78,7 @@ public class GoalList extends Activity {
 
 			Log.d(TAG, "clicked goal " + sel);
 
-			Intent intent = new Intent(GoalList.this, TodoList.class);
+			Intent intent = new Intent(GoalList.this, TaskList.class);
 			intent.putExtra("goal", sel);
 			GoalList.this.startActivity(intent);
 		}
