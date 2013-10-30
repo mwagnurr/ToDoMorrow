@@ -5,11 +5,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import com.lnu.todomorrow.dao.*;
+import com.lnu.todomorrow.utils.Goal;
+import com.lnu.todomorrow.utils.MyBroadcastReceiver;
 import com.lnu.todomorrow.utils.Task;
 import com.lnu.todomorrow.utils.TimeUtil;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +36,7 @@ public class TaskList extends Activity {
 	private MyAdapter adapter;
 	private static TaskDAO datasource;
 	private List<Task> tasks;
+	private ScoreManager scoreMan;
 
 	// private ScoreManager scoreMan = new ScoreManager();
 
@@ -106,6 +111,21 @@ public class TaskList extends Activity {
 				datasource.open();
 				Task task = datasource.createTaskEntry(name, cal, goal);
 
+				Intent intent = new Intent(TaskList.this,
+						MyBroadcastReceiver.class);
+				PendingIntent pi = PendingIntent.getBroadcast(TaskList.this, 0,
+						intent, 0);
+				// calculation of time difference between now and 
+				// deadline of taks
+				long deadTimeMs = task.getDeadline().getTimeInMillis();
+				Calendar currTime = Calendar.getInstance();
+				long currTimeMs = currTime.getTimeInMillis();
+				long timeDiff = deadTimeMs - currTimeMs;
+				// setting alarm
+				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
+				alarmMan.set(AlarmManager.RTC_WAKEUP,
+						timeDiff, pi);
+
 				Log.d(TAG, "created task: " + task);
 				adapter.add(task);
 				adapter.notifyDataSetChanged();
@@ -166,6 +186,10 @@ public class TaskList extends Activity {
 			if (check.isChecked()) {
 				Task t = tasks.get(pos);
 				t.setFinished(true);
+//				int score = scoreMan.calculateScore(t);
+//				Goal g = t.getGoal();
+				// g.addScoreFromTask
+
 				Toast.makeText(TaskList.this,
 						"Task: " + t.getName() + "Checked: " + t.isFinished(),
 						Toast.LENGTH_LONG).show();

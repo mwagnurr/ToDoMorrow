@@ -39,6 +39,7 @@
             android:name="com.lnu.todomorrow.GoalForm"
             android:label="@string/title_activity_goal_form" >
         </activity>
+        <receiver android:name="com.lnu.todomorrow.utils.MyBroadCastReceiver" />
     </application>
 
 </manifest>
