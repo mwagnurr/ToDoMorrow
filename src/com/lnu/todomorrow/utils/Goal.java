@@ -61,6 +61,10 @@ public class Goal implements Serializable {
 	public void setDeadline(Calendar deadline) {
 		this.deadline = deadline;
 	}
+	
+	public void addScore(int score){
+		this.score += score;
+	}
 
 	@Override
 	public String toString() {

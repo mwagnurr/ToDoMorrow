@@ -6,6 +6,7 @@ import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.TimeUtil;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -39,15 +40,19 @@ public class GoalList extends Activity {
 
 		listView = (ListView) findViewById(R.id.goal_list);
 
-		adapter = new GoalAdapter(this, R.layout.row_layout, datasource.getAllGoals());
+		adapter = new GoalAdapter(this, R.layout.row_layout,
+				datasource.getAllGoals());
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnGoalItemClick());
 
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
 		Log.d(TAG, "onCreate()");
 	}
-	
+
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		datasource.close();
 		super.onDestroy();
 	}
@@ -61,24 +66,30 @@ public class GoalList extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.add_goal:
-			Intent intent = new Intent(this, GoalForm.class);
+		case R.id.show_taskList:
+			Intent intent = new Intent(this, TaskList.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivityForResult(intent, 0);
+			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	public void addGoal(View view){
+		Intent intent = new Intent (this, GoalForm.class);
+		startActivityForResult(intent, 0);
+	}
 
 	private class OnGoalItemClick implements OnItemClickListener {
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
 
 			Goal sel = adapter.getItem(position);
 
 			Log.d(TAG, "clicked goal " + sel);
 
-			Intent intent = new Intent(GoalList.this, TaskList.class);
+			Intent intent = new Intent(GoalList.this, GoalOverview.class);
 			intent.putExtra("goal", sel);
 			GoalList.this.startActivity(intent);
 		}
@@ -106,7 +117,8 @@ public class GoalList extends Activity {
 			TextView name = (TextView) row.findViewById(R.id.goalrow_name);
 			TextView score = (TextView) row.findViewById(R.id.goalrow_score);
 			TextView tasks = (TextView) row.findViewById(R.id.goalrow_tasks);
-			TextView deadline = (TextView) row.findViewById(R.id.goalrow_deadline);
+			TextView deadline = (TextView) row
+					.findViewById(R.id.goalrow_deadline);
 
 			name.setText(currGoal.getName());
 			score.setText(String.valueOf(currGoal.getScore()));
@@ -118,9 +130,9 @@ public class GoalList extends Activity {
 
 	}
 
-
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent result) {
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent result) {
 		if (resultCode == RESULT_OK) {
 
 			Goal goal = (Goal) result.getSerializableExtra("goal");

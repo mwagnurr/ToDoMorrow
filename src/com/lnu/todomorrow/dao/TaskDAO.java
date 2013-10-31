@@ -20,7 +20,7 @@ public class TaskDAO {
 	private SQLiteDatabase database;
 	private DbHelper dbHelper;
 	private String[] columnsTask = { DbHelper.TASKS_C_ID, DbHelper.TASKS_C_NAME,
-			DbHelper.TASKS_C_DEADLINE, DbHelper.TASKS_C_GOAL };
+			DbHelper.TASKS_C_DEADLINE, DbHelper.TASKS_C_GOAL, DbHelper.TASKS_C_FINISH, DbHelper.TASKS_C_VALUE };
 
 	private static final String TAG = TaskDAO.class.getSimpleName();
 
@@ -42,12 +42,11 @@ public class TaskDAO {
 		dbHelper.close();
 	}
 
-	public Task createTaskEntry(String name, Calendar deadline, int goal) {
+	public Task createTaskEntry(String name, Calendar deadline, Goal goal) {
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.TASKS_C_NAME, name);
-		// values.put(DbHelper.TASKS_C_DEADLINE, deadline);
 		values.put(DbHelper.TASKS_C_DEADLINE, deadline.getTimeInMillis());
-		values.put(DbHelper.TASKS_C_GOAL, goal);
+		values.put(DbHelper.TASKS_C_GOAL, goal.getId());
 		long insertId = database.insert(DbHelper.TABLE_TASKS, null, values);
 		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask, DbHelper.TASKS_C_ID
 				+ " = " + insertId, null, null, null, null);
@@ -106,12 +105,21 @@ public class TaskDAO {
 		Task task = new Task();
 		task.setName(cursor.getString(1));
 		task.setId(cursor.getInt(0));
-
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(cursor.getLong(2));
 		task.setDeadline(cal);
+//		task.setGoal(cursor.getInt(3));
 
 		return task;
+	}
+
+	public void updateTask(String name, Calendar deadline, boolean finished, int value) {
+		ContentValues args = new ContentValues();
+		args.put(DbHelper.TASKS_C_NAME, name);
+		args.put(DbHelper.TASKS_C_DEADLINE, deadline.getTimeInMillis());
+		args.put(DbHelper.TASKS_C_FINISH, finished ? 1 : 0);
+		args.put(DbHelper.TASKS_C_VALUE, value);
+		
 	}
 
 }

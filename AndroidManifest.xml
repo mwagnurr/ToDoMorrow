@@ -16,7 +16,6 @@
         <activity
             android:name="com.lnu.todomorrow.TaskList"
             android:label="@string/title_activity_todo_list" >
-           
         </activity>
         <activity
             android:name="com.lnu.todomorrow.TaskForm"
@@ -25,7 +24,7 @@
         <activity
             android:name="com.lnu.todomorrow.GoalList"
             android:label="@string/title_activity_goal_list" >
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -39,7 +38,8 @@
             android:name="com.lnu.todomorrow.GoalForm"
             android:label="@string/title_activity_goal_form" >
         </activity>
-        <receiver android:name="com.lnu.todomorrow.utils.MyBroadCastReceiver" />
+
+        <receiver android:name="com.lnu.todomorrow.utils.MyBroadcastReceiver" />
     </application>
 
 </manifest>

@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            <!-- dynamic content date and time picker added with java -->
+            <!-- dynamic content date and time picker added with java -->
         </LinearLayout>
 
         <Button
@@ -52,7 +52,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="addGoalButtonClick"
-            android:text="@string/add_goal" />
+            android:text="@string/addGoal" />
     </LinearLayout>
 
 </ScrollView>

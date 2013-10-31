@@ -1,7 +1,9 @@
 package com.lnu.todomorrow.utils;
 
+import com.lnu.todomorrow.GoalList;
 import com.lnu.todomorrow.R;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,15 +19,16 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 		
 	}
 
-	private void showNotification(Context context) {
-		NotificationCompat.Builder notBuilder =
-	            new NotificationCompat.Builder(context)
+	private void showNotification(Context context) {		
+		Notification.Builder notBuilder =
+	            new Notification.Builder(context)
 	            .setSmallIcon(R.drawable.ic_launcher)
 	            .setContentTitle("My notification")
 	            .setContentText("Hello World!");
 	    NotificationManager mNotificationManager =
 	        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 	    mNotificationManager.notify(1, notBuilder.build());
+	   
 		
 	}
 

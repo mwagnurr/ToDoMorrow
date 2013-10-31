@@ -36,19 +36,24 @@ public class TaskList extends Activity {
 	private MyAdapter adapter;
 	private static TaskDAO datasource;
 	private List<Task> tasks;
+	private List<Goal> goals;
 	private ScoreManager scoreMan;
-
-	// private ScoreManager scoreMan = new ScoreManager();
+	private static GoalDAO dataGoals;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_todo_list);
+		setContentView(R.layout.activity_task_list);
 		lv = (ListView) findViewById(R.id.list);
+		scoreMan = new ScoreManager();
 		datasource = new TaskDAO(this);
 		datasource.open();
 		tasks = datasource.getAllTasks();
 
+		dataGoals = new GoalDAO(this);
+		dataGoals.open();
+		goals = dataGoals.getAllGoals();
+		
 		adapter = new MyAdapter(this, R.layout.row_layout, tasks);
 		lv.setAdapter(adapter);
 
@@ -58,6 +63,19 @@ public class TaskList extends Activity {
 	}
 
 	@Override
+	public void onDestroy() {
+		datasource.close();
+		super.onDestroy();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.todo_list, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -65,16 +83,22 @@ public class TaskList extends Activity {
 			intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent1);
 			return true;
+		case R.id.filter_by_goal:
+			// code for filtering by goal
+		case R.id.show_goalList:
+			Intent intent = new Intent(this, GoalList.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivityForResult(intent, 0);
+			return true;
+		case R.id.sort_by_deadline:
+			Collections.sort(tasks, new DateComparator());
+			if(adapter == null){
+				adapter = new MyAdapter(this, R.layout.row_layout, tasks);
+			}
+			adapter.notifyDataSetChanged();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.todo_list, menu);
-		return true;
 	}
 
 	public void addTask(View view) {
@@ -96,7 +120,9 @@ public class TaskList extends Activity {
 
 				String name = result.getStringExtra("task_name");
 
-				int goal = result.getIntExtra("goal", 0);
+				int g = result.getIntExtra("goal" , 0);
+				Goal goal = goals.get(g);
+				
 
 				Calendar cal = Calendar.getInstance();
 
@@ -115,7 +141,8 @@ public class TaskList extends Activity {
 						MyBroadcastReceiver.class);
 				PendingIntent pi = PendingIntent.getBroadcast(TaskList.this, 0,
 						intent, 0);
-				// calculation of time difference between now and 
+
+				// calculation of time difference between now and
 				// deadline of taks
 				long deadTimeMs = task.getDeadline().getTimeInMillis();
 				Calendar currTime = Calendar.getInstance();
@@ -123,8 +150,7 @@ public class TaskList extends Activity {
 				long timeDiff = deadTimeMs - currTimeMs;
 				// setting alarm
 				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
-				alarmMan.set(AlarmManager.RTC_WAKEUP,
-						timeDiff, pi);
+				alarmMan.set(AlarmManager.RTC_WAKEUP, timeDiff, pi);
 
 				Log.d(TAG, "created task: " + task);
 				adapter.add(task);
@@ -166,6 +192,9 @@ public class TaskList extends Activity {
 			check.setTag(position);
 			check.setChecked(tasks.get(position).isFinished());
 			check.setOnClickListener(new CheckListener());
+			if(tasks.get(position).isFinished()){
+				check.setEnabled(false);
+			}
 
 			name.setText(tasks.get(position).getName());
 			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
@@ -186,22 +215,16 @@ public class TaskList extends Activity {
 			if (check.isChecked()) {
 				Task t = tasks.get(pos);
 				t.setFinished(true);
+				datasource.updateTask(t.getName(), t.getDeadline(), t.isFinished(), t.getValue());
 //				int score = scoreMan.calculateScore(t);
 //				Goal g = t.getGoal();
-				// g.addScoreFromTask
+//				g.addScore(score);
 
-				Toast.makeText(TaskList.this,
-						"Task: " + t.getName() + "Checked: " + t.isFinished(),
-						Toast.LENGTH_LONG).show();
-
-			} else {
-				Task t = tasks.get(pos);
-				t.setFinished(false);
 				Toast.makeText(TaskList.this,
 						"Task: " + t.getName() + "Checked: " + t.isFinished(),
 						Toast.LENGTH_LONG).show();
 			}
-
+			
 			if (adapter == null) {
 				adapter = new MyAdapter(TaskList.this, R.layout.row_layout,
 						tasks);
@@ -222,6 +245,19 @@ public class TaskList extends Activity {
 			return 0;
 		}
 
+	}
+	
+	public class DateComparator implements Comparator<Task> {
+
+		@Override
+		public int compare(Task lhs, Task rhs) {
+			if(lhs.getDeadline().getTimeInMillis() < rhs.getDeadline().getTimeInMillis())
+				return -1;
+			if(lhs.getDeadline().getTimeInMillis() > rhs.getDeadline().getTimeInMillis())
+				return 1;
+			return 0;
+		}
+		
 	}
 
 }

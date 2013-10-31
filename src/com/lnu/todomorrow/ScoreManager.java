@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import android.util.Log;
 
+import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
 
 public class ScoreManager {
@@ -41,6 +42,10 @@ public class ScoreManager {
 			Log.d(TAG, "calculating before deadline");
 			score += 10;
 		}
+		
+		Goal g = task.getGoal();
+		
+		
 		
 		return score;
 		
