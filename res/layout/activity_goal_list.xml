@@ -8,5 +8,12 @@
         android:id="@+id/goal_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    
+     <Button
+        android:id="@+id/new_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addGoal"
+        android:text="@string/addGoal" />
 
 </LinearLayout>

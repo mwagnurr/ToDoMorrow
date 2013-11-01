@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.utils.Goal;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -101,8 +100,8 @@ public class TaskForm extends Activity {
 			if (resultCode == RESULT_OK) {
 				goalDB = new GoalDAO(this);
 				addItemsToSpinner();
-				goalSpin.setSelection(goals.size()-1);
-				goal = goals.get(goals.size()-1).toString();
+				goalSpin.setSelection(goals.size() - 1);
+				goal = goals.get(goals.size() - 1).toString();
 			}
 		}
 	}

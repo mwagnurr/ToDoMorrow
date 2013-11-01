@@ -16,7 +16,6 @@
         <activity
             android:name="com.lnu.todomorrow.TaskList"
             android:label="@string/title_activity_todo_list" >
-           
         </activity>
         <activity
             android:name="com.lnu.todomorrow.TaskForm"
@@ -40,6 +39,8 @@
             android:name="com.lnu.todomorrow.GoalForm"
             android:label="@string/title_activity_goal_form" >
         </activity>
+
+        <receiver android:name="com.lnu.todomorrow.utils.MyBroadcastReceiver" />
     </application>
 
 </manifest>

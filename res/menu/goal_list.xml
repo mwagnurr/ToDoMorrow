@@ -1,11 +1,15 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/add_goal_menu"
-        android:title="Add"
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/goal_menu"
         android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="ifRoom|withText">
+        android:showAsAction="ifRoom|withText"
+        android:title="Add">
         <menu>
-           <item android:id="@+id/add_goal" android:title="Add Goal" />
-        </menu>       
+            <item
+                android:id="@+id/show_taskList"
+                android:title="Switch to Tasklist"/>
+        </menu>
     </item>
-        
+
 </menu>

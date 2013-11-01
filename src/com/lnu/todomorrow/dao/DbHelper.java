@@ -40,6 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
     		+ " (" + TASKS_C_ID + " integer primary key autoincrement, "
     		+ TASKS_C_NAME + " text not null, "
             + TASKS_C_DEADLINE + " datetime, " 
+            + TASKS_C_FINISH + " integer, "
             + TASKS_C_VALUE + " integer, "
             + TASKS_C_GOAL + " integer, "
     		+ "foreign key(" + TASKS_C_GOAL +") references " +TABLE_GOALS +"(" +GOALS_C_ID+")"+");";

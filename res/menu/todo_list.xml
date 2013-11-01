@@ -1,9 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:id="@+id/task_menu"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom|withText"
+        android:title="Add">
+
+    <menu>
+        <item
+            android:id="@+id/show_goalList"
+            android:title="Switch to Goal List"/>
+        <item
+            android:id="@+id/filter_by_goal"
+            android:title="Filter by Goal"/>
+        <item
+            android:id="@+id/sort_by_deadline"
+            android:title="Sort by Deadline"/>
+    </menu>
+    </item>
 
 </menu>
