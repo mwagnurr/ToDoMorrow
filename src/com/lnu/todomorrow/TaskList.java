@@ -167,9 +167,11 @@ public class TaskList extends Activity {
 	 */
 	class MyAdapter extends ArrayAdapter<Task> {
 		Context context;
+		private List<Task> tasks;
 
 		public MyAdapter(Context context, int resource, List<Task> objects) {
 			super(context, resource, objects);
+			tasks = objects;
 		}
 
 		@Override

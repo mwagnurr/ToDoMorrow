@@ -8,7 +8,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "todomorrow.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	//GOALS table columns
 	public static final String TABLE_GOALS = "goals";
