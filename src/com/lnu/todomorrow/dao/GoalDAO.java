@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.lnu.todomorrow.utils.Goal;
+import com.lnu.todomorrow.utils.Task;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -94,6 +95,21 @@ public class GoalDAO {
 		return goals;
 
 	}
+	
+	public Goal getGoal(long id) {
+		  String restrict = DbHelper.GOALS_C_ID + "=" + id;
+		  Cursor cursor = database.query(true, DbHelper.TABLE_GOALS, columnsGoal, restrict, 
+		    		                        null, null, null, null, null);
+		  if (cursor != null && cursor.getCount() > 0) {
+			  cursor.moveToFirst();
+			  Goal g = cursorToGoal(cursor);
+			  return g;
+		  }
+		  // Make sure to close the cursor
+		  cursor.close();
+		  return null;
+	  }
+
 
 	public boolean updateGoal(Goal goal) {
 
