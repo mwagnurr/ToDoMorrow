@@ -136,6 +136,7 @@ public class TaskList extends Activity {
 
 				datasource.open();
 				Task task = datasource.createTaskEntry(name, cal, goal);
+//				task.setGoal(dataGoals.getGoal(goal.getId()));
 
 				Intent intent = new Intent(TaskList.this,
 						MyBroadcastReceiver.class);

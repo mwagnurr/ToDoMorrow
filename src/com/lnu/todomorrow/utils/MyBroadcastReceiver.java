@@ -2,6 +2,7 @@ package com.lnu.todomorrow.utils;
 
 import com.lnu.todomorrow.GoalList;
 import com.lnu.todomorrow.R;
+import com.lnu.todomorrow.TaskList;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,9 +13,11 @@ import android.support.v4.app.NotificationCompat;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
+	Intent in;
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		System.out.println("Received Broadcast");
+		in = new Intent (context, TaskList.class);
 		showNotification(context);
 		
 	}
