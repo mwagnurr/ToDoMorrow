@@ -96,6 +96,8 @@ public class TaskList extends Activity {
 
 				int h = result.getIntExtra("dead_h", 12);
 				int min = result.getIntExtra("dead_min", 00);
+				
+				int val = result.getIntExtra("value", 0);
 
 				String name = result.getStringExtra("task_name");
 
@@ -114,7 +116,7 @@ public class TaskList extends Activity {
 				cal.set(Calendar.YEAR, y);
 
 				dataTasks.open();
-				Task task = dataTasks.createTaskEntry(name, cal, goal);
+				Task task = dataTasks.createTaskEntry(name, cal, val, goal);
 //				task.setGoal(dataGoals.getGoal(goal.getId()));
 
 				Intent intent = new Intent(TaskList.this,
