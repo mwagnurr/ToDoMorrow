@@ -22,5 +22,15 @@
     <string name="goal_name">Goal name:</string>
     <string name="goal_name_hint">e.g. Android Project</string>
     <string name="goal_add_deadline">Add deadline</string>
+    <string name="goal_overview_graph_domain">Day of year</string>
+    <string name="goal_overview_graph_range">Tasks</string>
+    <string name="goal_overview_tasklist">Tasks for this Goal:</string>
+    <string name="goal_overview_goal">Goal:</string>
+    <string name="goal_menu_title">Options</string>
+    <string name="goal_menu_switchToTasklist">Switch to task list</string>
+    <string name="task_menu_title">Options</string>
+    <string name="task_menu_sortByDeadline">Sort by deadline</string>
+    <string name="task_menu_filterByGoal">Filter by Goal</string>
+    <string name="task_menu_showGoallist">Switch to Goal list</string>
 
 </resources>
