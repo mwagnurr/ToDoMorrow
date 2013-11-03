@@ -19,16 +19,11 @@ public class TaskDAO {
 	// Database fields
 	private SQLiteDatabase database;
 	private DbHelper dbHelper;
-<<<<<<< HEAD
-	private String[] columnsTask = { DbHelper.TASKS_C_ID,
-			DbHelper.TASKS_C_NAME, DbHelper.TASKS_C_DEADLINE,
-			DbHelper.TASKS_C_GOAL, DbHelper.TASKS_C_FINISH,
-			DbHelper.TASKS_C_VALUE };
-=======
+	
 	private String[] columnsTask = { DbHelper.TASKS_C_ID, DbHelper.TASKS_C_NAME,
 			DbHelper.TASKS_C_DEADLINE, DbHelper.TASKS_C_GOAL, DbHelper.TASKS_C_VALUE,
 			DbHelper.TASKS_C_FINISHED, DbHelper.TASKS_C_FINISHED_AT };
->>>>>>> e57028c6980badf0aff8c64701cfacde367770d0
+
 
 	private static final String TAG = TaskDAO.class.getSimpleName();
 
@@ -90,23 +85,17 @@ public class TaskDAO {
 
 	}
 
-<<<<<<< HEAD
 	public void deleteTaskEntry(Task t) {
 		long id = t.getId();
 		database.delete(DbHelper.TABLE_TASKS, DbHelper.TASKS_C_ID + "=" + id,
 				null);
 	}
 
-	public Task getTask(long id) {
-		String restrict = DbHelper.TASKS_C_ID + "=" + id;
-		Cursor cursor = database.query(true, DbHelper.TABLE_TASKS, columnsTask,
-				restrict, null, null, null, null, null);
-=======
+	
 	public Task getTask(long id) {
 		String restrict = DbHelper.TASKS_C_ID + "=" + id;
 		Cursor cursor = database.query(true, DbHelper.TABLE_TASKS, columnsTask, restrict, null,
 				null, null, null, null);
->>>>>>> e57028c6980badf0aff8c64701cfacde367770d0
 		if (cursor != null && cursor.getCount() > 0) {
 			cursor.moveToFirst();
 			Task t = cursorToTask(cursor);
@@ -166,11 +155,6 @@ public class TaskDAO {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(cursor.getLong(2));
 		task.setDeadline(cal);
-<<<<<<< HEAD
-
-		// System.out.println(cursor.getString(1) + "hat Goal: " +
-		// cursor.getInt(3));
-=======
 		// task.setFinished(cursor.getInt(4)? 1 : 0);
 
 		task.setValue(cursor.getInt(4));
@@ -197,25 +181,22 @@ public class TaskDAO {
 		// Goal g = cursorToGoal(cursor);
 		// return g;
 		// }
->>>>>>> e57028c6980badf0aff8c64701cfacde367770d0
+
 		// task.setGoal(cursor.getInt(3));
 
 		return task;
 	}
 
-<<<<<<< HEAD
 	public boolean updateTask(long id, String name, Calendar deadline,
 			boolean finished, int value) {
 		ContentValues args = new ContentValues();
 		args.put(DbHelper.TASKS_C_NAME, name);
 		args.put(DbHelper.TASKS_C_DEADLINE, deadline.getTimeInMillis());
-		args.put(DbHelper.TASKS_C_FINISH, finished ? 1 : 0);
+		args.put(DbHelper.TASKS_C_FINISHED, finished ? 1 : 0);
 		args.put(DbHelper.TASKS_C_VALUE, value);
 
 		String restrict = DbHelper.TASKS_C_ID + "=" + id;
 		return database.update(DbHelper.TABLE_TASKS, args, restrict, null) > 0;
 	}
 
-=======
->>>>>>> e57028c6980badf0aff8c64701cfacde367770d0
 }
