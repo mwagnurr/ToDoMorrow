@@ -106,44 +106,4 @@ public class GoalOverview extends Activity {
         //plot.getLayoutManager().setMarkupEnabled(true);
 	}
 	
-	
-//	class TaskListAdapter extends ArrayAdapter<Task> {
-//		private List<Task> tasks;
-//		public TaskListAdapter(Context context, int resource, List<Task> objects) {		
-//			super(context, resource, objects);
-//			tasks = objects;
-//		}
-//
-//		@Override
-//		public View getView(int position, View convertView, ViewGroup parent) {
-//			View row;
-//			if (convertView == null) {
-//				LayoutInflater inflater = getLayoutInflater();
-//				row = inflater.inflate(R.layout.row_layout, parent, false);
-//			} else {
-//				row = convertView;
-//			}
-//			
-//			Collections.sort(tasks, new BooleanComparator());
-//			TextView name = (TextView) row.findViewById(R.id.show_task);
-//			TextView dead = (TextView) row.findViewById(R.id.show_deadline);
-//			TextView goal = (TextView) row.findViewById(R.id.show_goal);
-//
-//			CheckBox check = (CheckBox) row.findViewById(R.id.check);
-//			check.setTag(position);
-//			check.setChecked(tasks.get(position).isFinished());
-//			check.setOnClickListener(new CheckListener());
-//			if(tasks.get(position).isFinished()){
-//				check.setEnabled(false);
-//			}
-//
-//			name.setText(tasks.get(position).getName());
-//			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
-//					.getDeadline()));
-//			goal.setText("Goal");
-//
-//			return row;
-//		}
-//
-//	}
 }

@@ -64,6 +64,7 @@ public class TaskDAO {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Task t = cursorToTask(cursor);
+			Log.d(TAG, "DEBUG: task - " + t.getName() + " isfinished: " + t.isFinished());
 			tasks.add(t);
 			cursor.moveToNext();
 		}
@@ -101,23 +102,6 @@ public class TaskDAO {
 		return tasks;
 
 	}
-
-	private Task cursorToTask(Cursor cursor) {
-		Task task = new Task();
-		task.setName(cursor.getString(1));
-		task.setId(cursor.getInt(0));
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(cursor.getLong(2));
-		task.setDeadline(cal);
-		//task.setFinished(cursor.getInt(4)? 1 : 0);
-		
-		
-		
-		// task.setGoal(cursor.getInt(3));
-
-		return task;
-	}
-
 	public void updateTask(String name, Calendar deadline, boolean finished, int value) {
 		ContentValues args = new ContentValues();
 		args.put(DbHelper.TASKS_C_NAME, name);
@@ -140,5 +124,40 @@ public class TaskDAO {
 				DbHelper.TASKS_C_ID + "=" + task.getId(), null) > 0;
 
 	}
+	
+	private Task cursorToTask(Cursor cursor) {
+		Task task = new Task();
+		task.setName(cursor.getString(1));
+		task.setId(cursor.getInt(0));
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(cursor.getLong(2));
+		task.setDeadline(cal);
+		//task.setFinished(cursor.getInt(4)? 1 : 0);
+		
+		int fin = cursor.getInt(4);
+		if(fin==1)
+		task.setFinished(true);
+		else if(fin==0)
+			task.setFinished(false);
+		
+		//Log.d(TAG, "tasks fin=" + fin);
+		
+		task.setValue(cursor.getInt(5));
+		
+		//TODO setGoal
+//		  String restrict = DbHelper.GOALS_C_ID + "=" + cursor.getInt(3);
+//		  Cursor goalCursor = database.query(true, DbHelper.TABLE_GOALS, GoalDAO.columnsGoal, restrict, 
+//		    		                        null, null, null, null, null);
+//		  if (goalCursor != null && goalCursor.getCount() > 0) {
+//			  goalCursor.moveToFirst();
+//			  Goal g = cursorToGoal(cursor);
+//			  return g;
+//		  }
+		// task.setGoal(cursor.getInt(3));
+
+		return task;
+	}
+
+
 
 }

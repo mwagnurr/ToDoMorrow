@@ -11,6 +11,7 @@ import com.lnu.todomorrow.utils.TimeUtil;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,26 +23,25 @@ import android.widget.Toast;
 
 public class TaskListFragment extends ListFragment {
 	private static final String TAG = TaskListFragment.class.getSimpleName();
-	
-	private TaskDAO taskDAO;	
+
+	private TaskDAO taskDAO;
 	private MyAdapter adapter;
 	private List<Task> tasks;
-	
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        
-        taskDAO = new TaskDAO(getActivity());
-        taskDAO.open();
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		taskDAO = new TaskDAO(getActivity());
+		taskDAO.open();
 		tasks = taskDAO.getAllTasks();
 
-        adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
-        setListAdapter(adapter);
+		adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
+		setListAdapter(adapter);
 
-    }
-    
-    
-    class MyAdapter extends ArrayAdapter<Task> {
+	}
+
+	class MyAdapter extends ArrayAdapter<Task> {
 		private List<Task> tasks;
 
 		public MyAdapter(Context context, int resource, List<Task> objects) {
@@ -69,13 +69,14 @@ public class TaskListFragment extends ListFragment {
 			check.setTag(position);
 			check.setChecked(tasks.get(position).isFinished());
 			check.setOnClickListener(new CheckListener());
-			if(tasks.get(position).isFinished()){
+			if (tasks.get(position).isFinished()) {
 				check.setEnabled(false);
-			}
+				// Log.d(TAG, "disabling checkbox because task: " + tasks.get(position));
+			} else
+				check.setEnabled(true);
 
 			name.setText(tasks.get(position).getName());
-			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
-					.getDeadline()));
+			dead.setText(TimeUtil.getFormattedDate(tasks.get(position).getDeadline()));
 			goal.setText("Goal");
 
 			return row;
@@ -95,8 +96,7 @@ public class TaskListFragment extends ListFragment {
 		}
 
 	}
-	
-	
+
 	public class CheckListener implements OnClickListener {
 
 		@Override
@@ -105,22 +105,32 @@ public class TaskListFragment extends ListFragment {
 			int pos = (Integer) check.getTag();
 			if (check.isChecked()) {
 				Task t = tasks.get(pos);
-				t.setFinished(true);
-				taskDAO.updateTask(t);
-//				int score = scoreMan.calculateScore(t);
-//				Goal g = t.getGoal();
-//				g.addScore(score);
+				finishTask(t);
 
 				Toast.makeText(getActivity(),
-						"Task: " + t.getName() + "Checked: " + t.isFinished(),
-						Toast.LENGTH_LONG).show();
+						"Task: " + t.getName() + "Checked: " + t.isFinished(), Toast.LENGTH_LONG)
+						.show();
 			}
-			
+
 			if (adapter == null) {
-				adapter = new MyAdapter(getActivity(), R.layout.row_layout,
-						tasks);
+				adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
 			}
 			adapter.notifyDataSetChanged();
+		}
+
+		/**
+		 * @param t
+		 */
+		private void finishTask(Task t) {
+			t.setFinished(true);
+			if (!taskDAO.updateTask(t)) {
+				Log.e(TAG, "couldnt update Task");
+			}
+			Log.d(TAG, "task - " + t.getName() + " set isfinshed to: " + t.isFinished());
+
+			// int score = scoreMan.calculateScore(t);
+			// Goal g = t.getGoal();
+			// g.addScore(score);
 		}
 
 	}

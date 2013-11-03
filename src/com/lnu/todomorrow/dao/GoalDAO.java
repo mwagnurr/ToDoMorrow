@@ -19,7 +19,7 @@ public class GoalDAO {
 	// Database fields
 	private SQLiteDatabase database;
 	private DbHelper dbHelper;
-	private String[] columnsGoal = { DbHelper.GOALS_C_ID, DbHelper.GOALS_C_NAME,
+	protected static String[] columnsGoal = { DbHelper.GOALS_C_ID, DbHelper.GOALS_C_NAME,
 			DbHelper.GOALS_C_SCORE, DbHelper.GOALS_C_DEADLINE };
 
 	private static final String TAG = GoalDAO.class.getSimpleName();
