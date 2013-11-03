@@ -24,6 +24,7 @@ public class TaskForm extends Activity {
 	private Spinner goalSpin;
 	private TimePicker tp;
 	private String goal;
+	private int goalID;
 	private GoalDAO goalDB;
 	ArrayList<String> goals;
 	List<Goal> g;
@@ -77,8 +78,14 @@ public class TaskForm extends Activity {
 		int day = dp.getDayOfMonth();
 		int month = dp.getMonth();
 		int year = dp.getYear();
+		
+//		goal = goalSpin.getSelectedItem().toString();
+//		goalID = goa.getId();
 
 		EditText et = (EditText) findViewById(R.id.taskname);
+		if(et.equals("")){
+			Toast.makeText(TaskForm.this.getBaseContext(), "Please enter a name", Toast.LENGTH_SHORT).show();
+		}
 		String taskName = et.getText().toString().trim();
 
 		Intent reply = new Intent();
