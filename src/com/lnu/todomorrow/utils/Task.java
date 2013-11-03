@@ -9,6 +9,7 @@ public class Task {
 	private Goal goal;
 	private Calendar deadline;
 	private boolean finished;
+	private Calendar finishedAt;
 	private int value;
 
 	public long getId() {
@@ -59,10 +60,19 @@ public class Task {
 		this.value = value;
 	}
 
+	public Calendar getFinishedAt() {
+		return finishedAt;
+	}
+
+	public void setFinishedAt(Calendar finishedAt) {
+		this.finishedAt = finishedAt;
+	}
+
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", name=" + name + ", goal=" + goal + ", deadline=" + deadline
-				+ ", finished=" + finished + ", value=" + value + "]";
+		return "Task [id=" + id + ", name=" + name + ", goal=" + goal + ", deadline="
+				+ TimeUtil.getFormattedDate(deadline) + ", finished=" + finished + ", finishedAt="
+				+ TimeUtil.getFormattedDate(finishedAt) + ", value=" + value + "]";
 	}
-	
+
 }

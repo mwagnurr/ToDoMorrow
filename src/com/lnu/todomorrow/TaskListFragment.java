@@ -27,6 +27,7 @@ public class TaskListFragment extends ListFragment {
 	private TaskDAO taskDAO;
 	private MyAdapter adapter;
 	private List<Task> tasks;
+	private ScoreManager scoreMan;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -36,9 +37,28 @@ public class TaskListFragment extends ListFragment {
 		taskDAO.open();
 		tasks = taskDAO.getAllTasks();
 
+		scoreMan = new ScoreManager();
+
 		adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
 		setListAdapter(adapter);
 
+	}
+
+	public void addTask(Task task) {
+		Log.d(TAG, "adding task to TaskListFragment adapter - " + task.getName());
+
+		adapter.add(task);
+		adapter.notifyDataSetChanged();
+	}
+
+	public void sortListByDeadline() {
+
+		Collections.sort(tasks, new DateComparator());
+
+		if (adapter == null) {
+			adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
+		}
+		adapter.notifyDataSetChanged();
 	}
 
 	class MyAdapter extends ArrayAdapter<Task> {
@@ -92,6 +112,19 @@ public class TaskListFragment extends ListFragment {
 				return 1;
 			if (rhs.isFinished())
 				return -1;
+			return 0;
+		}
+
+	}
+
+	public class DateComparator implements Comparator<Task> {
+
+		@Override
+		public int compare(Task lhs, Task rhs) {
+			if (lhs.getDeadline().getTimeInMillis() < rhs.getDeadline().getTimeInMillis())
+				return -1;
+			if (lhs.getDeadline().getTimeInMillis() > rhs.getDeadline().getTimeInMillis())
+				return 1;
 			return 0;
 		}
 

@@ -11,7 +11,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.lnu.todomorrow.TaskList.MyAdapter;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Task;
 
@@ -31,7 +30,6 @@ public class GoalOverview extends Activity {
 	private XYPlot plot;
 	
 	private static TaskDAO taskDAO;
-	//private MyAdapter adapter;
 	
 	
 	@Override
@@ -41,11 +39,7 @@ public class GoalOverview extends Activity {
 		
 		
 		taskDAO = new TaskDAO(this);
-		taskDAO.open();
-		List<Task> tasks = taskDAO.getAllTasks();
-		
-		//adapter = new MyAdapter(this, R.layout.row_layout, tasks);
-		
+			
 		createTaskPlot();
         
 		ActionBar actionBar = getActionBar();

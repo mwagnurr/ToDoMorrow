@@ -4,11 +4,11 @@
         android:id="@+id/goal_menu"
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom|withText"
-        android:title="Add">
+        android:title="@string/goal_menu_title">
         <menu>
             <item
                 android:id="@+id/show_taskList"
-                android:title="Switch to Tasklist"/>
+                android:title="@string/goal_menu_switchToTasklist"/>
         </menu>
     </item>
 
