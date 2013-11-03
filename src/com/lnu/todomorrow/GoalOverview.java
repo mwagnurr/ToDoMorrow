@@ -12,6 +12,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 import com.lnu.todomorrow.dao.TaskDAO;
+import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
 
 import android.app.ActionBar;
@@ -31,13 +32,15 @@ public class GoalOverview extends Activity {
 	
 	private static TaskDAO taskDAO;
 	
+	private Goal thisGoal;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_overview);
 		
-		
+		thisGoal = (Goal) getIntent().getSerializableExtra("goal");
 		taskDAO = new TaskDAO(this);
 			
 		createTaskPlot();
@@ -58,6 +61,9 @@ public class GoalOverview extends Activity {
 //		// Create a couple arrays of y-values to plot:
         Number[] series1Numbers = {1, 3, 5, 2, 0, 4, 0};
      
+        taskDAO.open();
+        List<Task> tasks = taskDAO.getAllTasksByGoal(goal);
+        
         Calendar cal = Calendar.getInstance();
         int today = cal.get(Calendar.DAY_OF_YEAR);
         

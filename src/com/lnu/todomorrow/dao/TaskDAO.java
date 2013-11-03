@@ -144,8 +144,10 @@ public class TaskDAO {
 			Calendar finCal = Calendar.getInstance();
 			finCal.setTimeInMillis(cursor.getLong(6));
 			task.setFinishedAt(finCal);
-		} else if (fin == 0)
+		} else if (fin == 0){
 			task.setFinished(false);
+			task.setFinishedAt(null);
+		}
 
 		// Log.d(TAG, "tasks fin=" + fin);
 

@@ -28,7 +28,6 @@ public class GoalList extends Activity {
 	private ListView listView;
 	private GoalAdapter adapter;
 	private static GoalDAO datasource;
-	private List<Goal> goals;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

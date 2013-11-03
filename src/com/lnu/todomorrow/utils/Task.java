@@ -9,7 +9,7 @@ public class Task {
 	private Goal goal;
 	private Calendar deadline;
 	private boolean finished;
-	private Calendar finishedAt;
+	private Calendar finishedAt = null;
 	private int value;
 
 	public long getId() {
