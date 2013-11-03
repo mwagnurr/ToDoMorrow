@@ -19,15 +19,18 @@ public class TaskDAO {
 	// Database fields
 	private SQLiteDatabase database;
 	private DbHelper dbHelper;
-	
-	private String[] columnsTask = { DbHelper.TASKS_C_ID, DbHelper.TASKS_C_NAME,
-			DbHelper.TASKS_C_DEADLINE, DbHelper.TASKS_C_GOAL, DbHelper.TASKS_C_VALUE,
+	private GoalDAO goalDAO;
+
+	private String[] columnsTask = { DbHelper.TASKS_C_ID,
+			DbHelper.TASKS_C_NAME, DbHelper.TASKS_C_DEADLINE,
+			DbHelper.TASKS_C_GOAL, DbHelper.TASKS_C_VALUE,
 			DbHelper.TASKS_C_FINISHED, DbHelper.TASKS_C_FINISHED_AT };
 
 	private static final String TAG = TaskDAO.class.getSimpleName();
 
 	public TaskDAO(Context context) {
 		dbHelper = new DbHelper(context);
+		goalDAO = new GoalDAO(context);
 	}
 
 	/**
@@ -55,7 +58,8 @@ public class TaskDAO {
 	 * @param goal
 	 * @return
 	 */
-	public Task createTaskEntry(String name, Calendar deadline, int value, Goal goal) {
+	public Task createTaskEntry(String name, Calendar deadline, int value,
+			Goal goal) {
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.TASKS_C_NAME, name);
 		values.put(DbHelper.TASKS_C_DEADLINE, deadline.getTimeInMillis());
@@ -72,6 +76,7 @@ public class TaskDAO {
 
 	/**
 	 * returns a list of all tasks in the database
+	 * 
 	 * @return
 	 */
 	public List<Task> getAllTasks() {
@@ -88,16 +93,17 @@ public class TaskDAO {
 		return tasks;
 
 	}
-	
+
 	/**
 	 * returns the task with the given id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	public Task getTask(long id) {
 		String restrict = DbHelper.TASKS_C_ID + "=" + id;
-		Cursor cursor = database.query(true, DbHelper.TABLE_TASKS, columnsTask, restrict, null,
-				null, null, null, null);
+		Cursor cursor = database.query(true, DbHelper.TABLE_TASKS, columnsTask,
+				restrict, null, null, null, null, null);
 		if (cursor != null && cursor.getCount() > 0) {
 			cursor.moveToFirst();
 			Task t = cursorToTask(cursor);
@@ -110,6 +116,7 @@ public class TaskDAO {
 
 	/**
 	 * returns a list of all tasks with given goal
+	 * 
 	 * @param goal
 	 * @return
 	 */
@@ -129,9 +136,10 @@ public class TaskDAO {
 		return tasks;
 
 	}
-	
+
 	/**
 	 * deletes given task from database
+	 * 
 	 * @param t
 	 */
 	public void deleteTaskEntry(Task t) {
@@ -142,22 +150,25 @@ public class TaskDAO {
 
 	/**
 	 * updates given task
+	 * 
 	 * @param task
 	 * @return
 	 */
 	public boolean updateTask(Task task) {
 		ContentValues args = new ContentValues();
 		args.put(DbHelper.TASKS_C_NAME, task.getName());
-		args.put(DbHelper.TASKS_C_DEADLINE, task.getDeadline().getTimeInMillis());
+		args.put(DbHelper.TASKS_C_DEADLINE, task.getDeadline()
+				.getTimeInMillis());
 		args.put(DbHelper.TASKS_C_VALUE, task.getValue());
 		args.put(DbHelper.TASKS_C_FINISHED, task.isFinished() ? 1 : 0);
 		if (task.getFinishedAt() != null)
-			args.put(DbHelper.TASKS_C_FINISHED_AT, task.getFinishedAt().getTimeInMillis());
+			args.put(DbHelper.TASKS_C_FINISHED_AT, task.getFinishedAt()
+					.getTimeInMillis());
 		if (task.getGoal() != null)
 			args.put(DbHelper.TASKS_C_GOAL, task.getGoal().getId());
 
-		return database.update(DbHelper.TABLE_TASKS, args,
-				DbHelper.TASKS_C_ID + "=" + task.getId(), null) > 0;
+		return database.update(DbHelper.TABLE_TASKS, args, DbHelper.TASKS_C_ID
+				+ "=" + task.getId(), null) > 0;
 
 	}
 
@@ -181,12 +192,16 @@ public class TaskDAO {
 		} else if (fin == 0)
 			task.setFinished(false);
 
+		goalDAO.open();
+		Goal g = goalDAO.getGoal(cursor.getInt(3));
+		task.setGoal(g);
 		// Log.d(TAG, "tasks fin=" + fin);
 
 		Log.d(TAG, "DEBUG: converted cursor to: " + task);
 		// TODO setGoal
 		// String restrict = DbHelper.GOALS_C_ID + "=" + cursor.getInt(3);
-		// Cursor goalCursor = database.query(true, DbHelper.TABLE_GOALS, GoalDAO.columnsGoal,
+		// Cursor goalCursor = database.query(true, DbHelper.TABLE_GOALS,
+		// GoalDAO.columnsGoal,
 		// restrict,
 		// null, null, null, null, null);
 		// if (goalCursor != null && goalCursor.getCount() > 0) {
@@ -194,7 +209,6 @@ public class TaskDAO {
 		// Goal g = cursorToGoal(cursor);
 		// return g;
 		// }
-
 		// task.setGoal(cursor.getInt(3));
 
 		return task;

@@ -28,76 +28,64 @@ public class GoalOverview extends Activity {
 	private static final String TAG = GoalOverview.class.getSimpleName();
 
 	private XYPlot plot;
-	
+
 	private static TaskDAO taskDAO;
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_overview);
-		
-		
+
 		taskDAO = new TaskDAO(this);
-			
+
 		createTaskPlot();
-        
+
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-        
+
 		Log.d(TAG, "onCreate()");
 	}
-
 
 	/**
 	 * 
 	 */
 	private void createTaskPlot() {
 		plot = (XYPlot) findViewById(R.id.goal_overview_plot);
-//		
-//		// Create a couple arrays of y-values to plot:
-        Number[] series1Numbers = {1, 3, 5, 2, 0, 4, 0};
-     
-        Calendar cal = Calendar.getInstance();
-        int today = cal.get(Calendar.DAY_OF_YEAR);
-        
-        Number[] days = {
-        		today-6,
-        		today-5,
-        		today-4,
-        		today-3,
-        		today-2,
-        		today-1,
-        		today
-        };
-        
-        
-        
+		//
+		// // Create a couple arrays of y-values to plot:
+		Number[] series1Numbers = { 1, 3, 5, 2, 0, 4, 0 };
+
+		Calendar cal = Calendar.getInstance();
+		int today = cal.get(Calendar.DAY_OF_YEAR);
+
+		Number[] days = { today - 6, today - 5, today - 4, today - 3,
+				today - 2, today - 1, today };
+
 		XYSeries s1 = new SimpleXYSeries(Arrays.asList(days),
 				Arrays.asList(series1Numbers), "Tasks completed");
-//		 XYSeries s1 = new SimpleXYSeries(
-//               Arrays.asList(series1Numbers),        
-//               SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, 
-//               "Tasks completed");   
+		// XYSeries s1 = new SimpleXYSeries(
+		// Arrays.asList(series1Numbers),
+		// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
+		// "Tasks completed");
 
+		// Create a formatter to use for drawing a series using
+		// LineAndPointRenderer
+		// and configure it from xml:
+		LineAndPointFormatter series1Format = new LineAndPointFormatter();
+		series1Format.setPointLabelFormatter(new PointLabelFormatter());
+		series1Format.configure(getApplicationContext(),
+				R.xml.line_point_formatter_with_plf1);
 
-       // Create a formatter to use for drawing a series using LineAndPointRenderer
-        // and configure it from xml:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.setPointLabelFormatter(new PointLabelFormatter());
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_plf1);
-        
-        plot.addSeries(s1, series1Format);
+		plot.addSeries(s1, series1Format);
 
-//        // reduce the number of range labels
-        plot.setTicksPerRangeLabel(5);
-        //plot.getGraphWidget().setDomainLabelOrientation(-45);
+		// // reduce the number of range labels
+		plot.setTicksPerRangeLabel(5);
+		// plot.getGraphWidget().setDomainLabelOrientation(-45);
 
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        //for debug
-        //plot.getLayoutManager().setMarkupEnabled(true);
+		plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
+		// for debug
+		// plot.getLayoutManager().setMarkupEnabled(true);
 	}
-	
+
 }

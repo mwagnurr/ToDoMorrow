@@ -29,7 +29,6 @@ public class GoalForm extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_form);
 	}
-	
 
 	public void addDeadlineChecked(View view) {
 		Log.d(TAG, "addDeadlineChecked()");
@@ -55,7 +54,7 @@ public class GoalForm extends Activity {
 
 			Log.d(TAG, "added dynamic layout content for deadline");
 		} else {
-			
+
 			deadDate = null;
 			deadTime = null;
 			lay.removeAllViews();
@@ -65,23 +64,22 @@ public class GoalForm extends Activity {
 		}
 
 	}
-	
-	public void addGoalButtonClick(View v){
+
+	public void addGoalButtonClick(View v) {
 		Log.d(TAG, "addGoal button clicked");
 		EditText nameReader = (EditText) findViewById(R.id.goal_form_name_reader);
 		String name = nameReader.getText().toString();
 
-		//reply.putExtra("goal_name", name);
-		
+		// reply.putExtra("goal_name", name);
+
 		Calendar calendar = null;
-		
-		if(deadlineChecked){
-			
+
+		if (deadlineChecked) {
+
 			int day = deadDate.getDayOfMonth();
 			int month = deadDate.getMonth();
 			int year = deadDate.getYear();
 
-			
 			int hour = deadTime.getCurrentHour();
 			int min = deadTime.getCurrentMinute();
 
@@ -89,20 +87,20 @@ public class GoalForm extends Activity {
 			calendar.set(Calendar.HOUR_OF_DAY, hour);
 			calendar.set(Calendar.MINUTE, min);
 			calendar.set(Calendar.SECOND, 0);
-			
+
 			calendar.set(Calendar.DAY_OF_MONTH, day);
 			calendar.set(Calendar.MONTH, month);
 			calendar.set(Calendar.YEAR, year);
-			
+
 			Log.d(TAG, "created calendar: " + calendar);
-			
-			//reply.putExtra("goal_deadline", calendar);	
+
+			// reply.putExtra("goal_deadline", calendar);
 		}
-		
+
 		GoalDAO dao = new GoalDAO(this);
 		dao.open();
 		Goal goal = dao.createGoalEntry(name, calendar);
-		
+
 		Intent reply = new Intent();
 		reply.putExtra("goal", goal);
 		setResult(RESULT_OK, reply);

@@ -28,7 +28,6 @@ public class GoalList extends Activity {
 	private ListView listView;
 	private GoalAdapter adapter;
 	private static GoalDAO datasource;
-	private List<Goal> goals;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +74,9 @@ public class GoalList extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	public void addGoal(View view){
-		Intent intent = new Intent (this, GoalForm.class);
+
+	public void addGoal(View view) {
+		Intent intent = new Intent(this, GoalForm.class);
 		startActivityForResult(intent, 0);
 	}
 

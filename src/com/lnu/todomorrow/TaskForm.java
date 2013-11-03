@@ -61,6 +61,7 @@ public class TaskForm extends Activity {
 			}
 
 		});
+
 		goalDB = new GoalDAO(this);
 		addItemsToSpinner();
 		addSpinnerItemClickListener();
@@ -77,12 +78,11 @@ public class TaskForm extends Activity {
 		g = goalDB.getAllGoals();
 		goals = new ArrayList<String>();
 
-		goals.add("Select Goal");
-		goals.add("New Goal");
 		for (Goal go : g) {
 			goals.add(go.getName());
 		}
-
+		goals.add("New Goal");
+		
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, goals);
 		dataAdapter
@@ -136,8 +136,8 @@ public class TaskForm extends Activity {
 			if (resultCode == RESULT_OK) {
 				goalDB = new GoalDAO(this);
 				addItemsToSpinner();
-				goalSpin.setSelection(goals.size() - 1);
-				goal = goals.get(goals.size() - 1).toString();
+				goalSpin.setSelection(goals.size() - 2);
+				goal = goals.get(goals.size() - 2).toString();
 			}
 		}
 	}
@@ -148,9 +148,7 @@ public class TaskForm extends Activity {
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			goal = arg0.getItemAtPosition(arg2).toString();
-			if (goal.equalsIgnoreCase("Select Goal")) {
-
-			} else if (goal.equalsIgnoreCase("New Goal")) {
+			if (goal.equalsIgnoreCase("New Goal")) {
 				Intent intent = new Intent();
 				intent.setClass(TaskForm.this, GoalForm.class);
 				TaskForm.this.startActivityForResult(intent, 0);

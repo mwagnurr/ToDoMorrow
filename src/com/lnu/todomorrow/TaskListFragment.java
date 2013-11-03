@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
+import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
 import com.lnu.todomorrow.utils.TimeUtil;
 
@@ -28,6 +30,7 @@ public class TaskListFragment extends ListFragment {
 	private MyAdapter adapter;
 	private List<Task> tasks;
 	private ScoreManager scoreMan;
+	private GoalDAO goalDAO;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class TaskListFragment extends ListFragment {
 		taskDAO.open();
 		tasks = taskDAO.getAllTasks();
 
+		goalDAO = new GoalDAO(getActivity());
+
 		scoreMan = new ScoreManager();
 
 		adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
@@ -45,7 +50,8 @@ public class TaskListFragment extends ListFragment {
 	}
 
 	public void addTask(Task task) {
-		Log.d(TAG, "adding task to TaskListFragment adapter - " + task.getName());
+		Log.d(TAG,
+				"adding task to TaskListFragment adapter - " + task.getName());
 
 		adapter.add(task);
 		adapter.notifyDataSetChanged();
@@ -91,12 +97,14 @@ public class TaskListFragment extends ListFragment {
 			check.setOnClickListener(new CheckListener());
 			if (tasks.get(position).isFinished()) {
 				check.setEnabled(false);
-				// Log.d(TAG, "disabling checkbox because task: " + tasks.get(position));
+				// Log.d(TAG, "disabling checkbox because task: " +
+				// tasks.get(position));
 			} else
 				check.setEnabled(true);
 
 			name.setText(tasks.get(position).getName());
-			dead.setText(TimeUtil.getFormattedDate(tasks.get(position).getDeadline()));
+			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
+					.getDeadline()));
 			goal.setText("Goal");
 
 			return row;
@@ -121,9 +129,11 @@ public class TaskListFragment extends ListFragment {
 
 		@Override
 		public int compare(Task lhs, Task rhs) {
-			if (lhs.getDeadline().getTimeInMillis() < rhs.getDeadline().getTimeInMillis())
+			if (lhs.getDeadline().getTimeInMillis() < rhs.getDeadline()
+					.getTimeInMillis())
 				return -1;
-			if (lhs.getDeadline().getTimeInMillis() > rhs.getDeadline().getTimeInMillis())
+			if (lhs.getDeadline().getTimeInMillis() > rhs.getDeadline()
+					.getTimeInMillis())
 				return 1;
 			return 0;
 		}
@@ -141,12 +151,13 @@ public class TaskListFragment extends ListFragment {
 				finishTask(t);
 
 				Toast.makeText(getActivity(),
-						"Task: " + t.getName() + "Checked: " + t.isFinished(), Toast.LENGTH_LONG)
-						.show();
+						"Task: " + t.getName() + "Checked: " + t.isFinished(),
+						Toast.LENGTH_LONG).show();
 			}
 
 			if (adapter == null) {
-				adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
+				adapter = new MyAdapter(getActivity(), R.layout.row_layout,
+						tasks);
 			}
 			adapter.notifyDataSetChanged();
 		}
@@ -159,11 +170,24 @@ public class TaskListFragment extends ListFragment {
 			if (!taskDAO.updateTask(t)) {
 				Log.e(TAG, "couldnt update Task");
 			}
-			Log.d(TAG, "task - " + t.getName() + " set isfinshed to: " + t.isFinished());
+			Log.d(TAG,
+					"task - " + t.getName() + " set isfinshed to: "
+							+ t.isFinished());
 
-			// int score = scoreMan.calculateScore(t);
-			// Goal g = t.getGoal();
-			// g.addScore(score);
+			int score = scoreMan.calculateScore(t);
+			Goal g = t.getGoal();
+			System.out.println(g.getScore());
+			g.addScore(score);
+			t.setGoal(g);
+
+			if (goalDAO == null) {
+				goalDAO = new GoalDAO(getActivity());
+			}
+			goalDAO.open();
+			goalDAO.updateGoal(g);
+			System.out.println(g.getScore());
+			goalDAO.close();
+			
 		}
 
 	}

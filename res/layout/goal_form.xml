@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            <!-- dynamic content date and time picker added with java -->
+
+            <!-- dynamic content date and time picker added with java -->
         </LinearLayout>
 
         <Button
