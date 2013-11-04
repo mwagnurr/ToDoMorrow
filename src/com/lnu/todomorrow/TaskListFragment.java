@@ -177,18 +177,18 @@ public class TaskListFragment extends ListFragment {
 							+ TimeUtil.getFormattedDate(t.getFinishedAt()));
 
 			int score = scoreMan.calculateScore(t);
-			Goal g = t.getGoal();
-			System.out.println(g.getScore());
-			g.addScore(score);
-			t.setGoal(g);
-
+			
+			int id = t.getGoal().getId();
 			if (goalDAO == null) {
 				goalDAO = new GoalDAO(getActivity());
 			}
 			goalDAO.open();
+			Goal g = goalDAO.getGoal(id);
+			System.out.println(g.getScore());
+			g.addScore(score);
+			t.setGoal(g);
 			goalDAO.updateGoal(g);
 			System.out.println(g.getScore());
-			goalDAO.close();
 			
 		}
 

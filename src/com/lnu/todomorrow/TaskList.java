@@ -112,9 +112,8 @@ public class TaskList extends Activity {
 
 				dataTasks.open();
 				Task task = dataTasks.createTaskEntry(name, cal, val, goal);
-				task.setGoal(goal);
-
-				dataTasks.updateTask(task);
+//				task.setGoal(goal);
+//				dataTasks.updateTask(task);
 
 				Intent intent = new Intent(TaskList.this,
 						MyBroadcastReceiver.class);
