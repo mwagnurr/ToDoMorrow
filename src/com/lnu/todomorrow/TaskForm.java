@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -24,15 +27,40 @@ public class TaskForm extends Activity {
 	private Spinner goalSpin;
 	private TimePicker tp;
 	private String goal;
-	private int goalID;
 	private GoalDAO goalDB;
 	ArrayList<String> goals;
 	List<Goal> g;
+	private int value;
+	private TextView val;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.task_form);
+
+		val = (TextView) findViewById(R.id.value);
+		SeekBar sb = (SeekBar) findViewById(R.id.add_value);
+		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean bool) {
+
+				String v = "Value: " + Integer.toString(seekBar.getProgress());
+				val = (TextView) findViewById(R.id.value);
+				val.setText(v);
+				value = progress;
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+
+		});
 
 		goalDB = new GoalDAO(this);
 		addItemsToSpinner();
@@ -50,12 +78,11 @@ public class TaskForm extends Activity {
 		g = goalDB.getAllGoals();
 		goals = new ArrayList<String>();
 
-		goals.add("Select Goal");
-		goals.add("New Goal");
 		for (Goal go : g) {
 			goals.add(go.getName());
 		}
-
+		goals.add("New Goal");
+		
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, goals);
 		dataAdapter
@@ -78,13 +105,14 @@ public class TaskForm extends Activity {
 		int day = dp.getDayOfMonth();
 		int month = dp.getMonth();
 		int year = dp.getYear();
-		
-//		goal = goalSpin.getSelectedItem().toString();
-//		goalID = goa.getId();
+
+		// goal = goalSpin.getSelectedItem().toString();
+		// goalID = goa.getId();
 
 		EditText et = (EditText) findViewById(R.id.taskname);
-		if(et.equals("")){
-			Toast.makeText(TaskForm.this.getBaseContext(), "Please enter a name", Toast.LENGTH_SHORT).show();
+		if (et.equals("")) {
+			Toast.makeText(TaskForm.this.getBaseContext(),
+					"Please enter a name", Toast.LENGTH_SHORT).show();
 		}
 		String taskName = et.getText().toString().trim();
 
@@ -95,6 +123,7 @@ public class TaskForm extends Activity {
 		reply.putExtra("dead_m", month);
 		reply.putExtra("dead_y", year);
 		reply.putExtra("task_name", taskName);
+		reply.putExtra("value", value);
 		reply.putExtra("goal", goal);
 		setResult(RESULT_OK, reply);
 		finish();
@@ -107,8 +136,8 @@ public class TaskForm extends Activity {
 			if (resultCode == RESULT_OK) {
 				goalDB = new GoalDAO(this);
 				addItemsToSpinner();
-				goalSpin.setSelection(goals.size() - 1);
-				goal = goals.get(goals.size() - 1).toString();
+				goalSpin.setSelection(goals.size() - 2);
+				goal = goals.get(goals.size() - 2).toString();
 			}
 		}
 	}
@@ -119,9 +148,7 @@ public class TaskForm extends Activity {
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			goal = arg0.getItemAtPosition(arg2).toString();
-			if (goal.equalsIgnoreCase("Select Goal")) {
-
-			} else if (goal.equalsIgnoreCase("New Goal")) {
+			if (goal.equalsIgnoreCase("New Goal")) {
 				Intent intent = new Intent();
 				intent.setClass(TaskForm.this, GoalForm.class);
 				TaskForm.this.startActivityForResult(intent, 0);
@@ -139,4 +166,5 @@ public class TaskForm extends Activity {
 		}
 
 	}
+
 }

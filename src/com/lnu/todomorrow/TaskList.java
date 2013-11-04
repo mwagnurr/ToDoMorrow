@@ -1,7 +1,6 @@
 package com.lnu.todomorrow;
 
 import java.util.Calendar;
-import java.util.List;
 import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
@@ -20,8 +19,6 @@ import android.view.View;
 public class TaskList extends Activity {
 	private static final String TAG = TaskList.class.getSimpleName();
 	private static TaskDAO dataTasks;
-	private List<Goal> goals;
-	
 	private static GoalDAO dataGoals;
 	private TaskListFragment list;
 
@@ -29,16 +26,13 @@ public class TaskList extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_list);
-		
-		list = (TaskListFragment) getFragmentManager().findFragmentById(R.id.task_list_fragment);
-		
-		
+
+		list = (TaskListFragment) getFragmentManager().findFragmentById(
+				R.id.task_list_fragment);
+
 		dataTasks = new TaskDAO(this);
 
 		dataGoals = new GoalDAO(this);
-		dataGoals.open();
-		goals = dataGoals.getAllGoals();
-		
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -57,7 +51,7 @@ public class TaskList extends Activity {
 		getMenuInflater().inflate(R.menu.todo_list, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -97,11 +91,14 @@ public class TaskList extends Activity {
 				int h = result.getIntExtra("dead_h", 12);
 				int min = result.getIntExtra("dead_min", 00);
 
+				int val = result.getIntExtra("value", 0);
+
 				String name = result.getStringExtra("task_name");
 
-				int g = result.getIntExtra("goal" , 0);
-				Goal goal = goals.get(g);
-				
+				String g = result.getStringExtra("goal");
+				dataGoals.open();
+				Goal goal = dataGoals.getGoal(g);
+				System.out.println(goal.getName());
 
 				Calendar cal = Calendar.getInstance();
 
@@ -114,8 +111,10 @@ public class TaskList extends Activity {
 				cal.set(Calendar.YEAR, y);
 
 				dataTasks.open();
-				Task task = dataTasks.createTaskEntry(name, cal, goal);
-//				task.setGoal(dataGoals.getGoal(goal.getId()));
+				Task task = dataTasks.createTaskEntry(name, cal, val, goal);
+				task.setGoal(goal);
+
+				dataTasks.updateTask(task);
 
 				Intent intent = new Intent(TaskList.this,
 						MyBroadcastReceiver.class);
@@ -128,11 +127,11 @@ public class TaskList extends Activity {
 				Calendar currTime = Calendar.getInstance();
 				long currTimeMs = currTime.getTimeInMillis();
 				long timeDiff = deadTimeMs - currTimeMs;
+
 				// setting alarm
 				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
 				alarmMan.set(AlarmManager.RTC_WAKEUP, timeDiff, pi);
 
-				
 				Log.d(TAG, "created task: " + task);
 				list.addTask(task);
 			}

@@ -70,9 +70,11 @@ public class Task {
 
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", name=" + name + ", goal=" + goal + ", deadline="
-				+ TimeUtil.getFormattedDate(deadline) + ", finished=" + finished + ", finishedAt="
-				+ TimeUtil.getFormattedDate(finishedAt) + ", value=" + value + "]";
+		return "Task [id=" + id + ", name=" + name + ", goal=" + goal
+				+ ", deadline=" + TimeUtil.getFormattedDate(deadline)
+				+ ", finished=" + finished + ", finishedAt="
+				+ TimeUtil.getFormattedDate(finishedAt) + ", value=" + value
+				+ "]";
 	}
 
 }

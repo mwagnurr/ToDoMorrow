@@ -48,10 +48,13 @@
         android:layout_height="wrap_content"
         android:padding="4sp"
         android:text="@string/goal_overview_tasklist" />
-    
-    <fragment class="com.lnu.todomorrow.TaskListFragment"
-            android:id="@+id/goal_overview_task_list_fragment"
-            android:layout_width="match_parent" android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/goal_overview_task_list_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.lnu.todomorrow.TaskListFragment" />
+
     <ListView
         android:id="@+id/goal_tasklist"
         android:layout_width="wrap_content"

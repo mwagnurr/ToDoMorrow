@@ -32,5 +32,6 @@
     <string name="task_menu_sortByDeadline">Sort by deadline</string>
     <string name="task_menu_filterByGoal">Filter by Goal</string>
     <string name="task_menu_showGoallist">Switch to Goal list</string>
+    <string name="currentValue">0</string>
 
 </resources>

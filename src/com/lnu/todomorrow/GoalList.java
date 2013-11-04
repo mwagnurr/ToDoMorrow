@@ -74,9 +74,9 @@ public class GoalList extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	public void addGoal(View view){
-		Intent intent = new Intent (this, GoalForm.class);
+
+	public void addGoal(View view) {
+		Intent intent = new Intent(this, GoalForm.class);
 		startActivityForResult(intent, 0);
 	}
 

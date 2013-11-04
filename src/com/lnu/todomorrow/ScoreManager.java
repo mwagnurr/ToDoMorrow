@@ -4,50 +4,44 @@ import java.util.Calendar;
 
 import android.util.Log;
 
-import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
 
 public class ScoreManager {
-	
+
 	private static final String TAG = ScoreManager.class.getSimpleName();
-	
-	public ScoreManager(){
-		
+
+	public ScoreManager() {
+
 	}
-	
-	
-	public int calculateScore(Task task){
-		
-		if(!task.isFinished()){
+
+	public int calculateScore(Task task) {
+
+		if (!task.isFinished()) {
 			Log.e(TAG, "Task is not finished, can't calculate score yet");
 			return 0;
 		}
-		
-		//TODO fancy math 
-		
+
+		// TODO fancy math
+
 		int score = 0;
-		
+		int value = task.getValue();
 		Calendar deadline = task.getDeadline();
-		
+
 		long deadTimeMs = deadline.getTimeInMillis();
 		Calendar currTime = Calendar.getInstance();
 		long currTimeMs = currTime.getTimeInMillis();
-		
+
 		long timeDiff = deadTimeMs - currTimeMs;
-		
-		if(timeDiff < 0){
+
+		if (timeDiff < 0) {
 			Log.d(TAG, "calculating after deadline");
 			score += 1;
-		}else{
+		} else {
 			Log.d(TAG, "calculating before deadline");
-			score += 10;
+			score += value;
 		}
-		
-		Goal g = task.getGoal();
-		
-		
-		
+
 		return score;
-		
+
 	}
 }

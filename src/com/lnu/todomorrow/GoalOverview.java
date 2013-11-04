@@ -31,20 +31,19 @@ public class GoalOverview extends Activity {
 	private static final String TAG = GoalOverview.class.getSimpleName();
 
 	private XYPlot plot;
-	
+
 	private static TaskDAO taskDAO;
-	
+
 	private Goal thisGoal;
 	
 	private List<Integer> valuesX;
 	private List<Integer> valuesY;
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_overview);
-		
+
 		thisGoal = (Goal) getIntent().getSerializableExtra("goal");
 		taskDAO = new TaskDAO(this);
 		TextView goalName = (TextView)findViewById(R.id.goal_overview_name);
@@ -52,60 +51,57 @@ public class GoalOverview extends Activity {
 		goalName.setText(thisGoal.getName());
 		
 		createTaskPlot();
-        
+
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-        
+
 		Log.d(TAG, "onCreate()");
 	}
-
 
 	/**
 	 * 
 	 */
 	private void createTaskPlot() {
 		plot = (XYPlot) findViewById(R.id.goal_overview_plot);
-//		
-//		// Create a couple arrays of y-values to plot:
-        Number[] series1Numbers = {1, 3, 5, 2, 0, 4, 0};
-     
+		//
+		// // Create a couple arrays of y-values to plot:
+		Number[] series1Numbers = { 1, 3, 5, 2, 0, 4, 0 };
+
         taskDAO.open();
         List<Task> tasks = taskDAO.getAllTasksByGoal(thisGoal);
         
-        Calendar cal = Calendar.getInstance();
-        
-        
+		Calendar cal = Calendar.getInstance();
+
         int timeField = Calendar.DAY_OF_YEAR;
-        
         cal.set(timeField, cal.get(timeField)+15);
-        
+
         initGraphValues(tasks, cal, 31, timeField);
         
 		XYSeries s1 = new SimpleXYSeries(valuesX,
 				valuesY, "Tasks completed");
-//		 XYSeries s1 = new SimpleXYSeries(
-//               Arrays.asList(series1Numbers),        
-//               SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, 
-//               "Tasks completed");   
+		// XYSeries s1 = new SimpleXYSeries(
+		// Arrays.asList(series1Numbers),
+		// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
+		// "Tasks completed");
 
+		// Create a formatter to use for drawing a series using
+		// LineAndPointRenderer
+		// and configure it from xml:
+		LineAndPointFormatter series1Format = new LineAndPointFormatter();
+		series1Format.setPointLabelFormatter(new PointLabelFormatter());
+		series1Format.configure(getApplicationContext(),
+				R.xml.line_point_formatter_with_plf1);
 
-       // Create a formatter to use for drawing a series using LineAndPointRenderer
-        // and configure it from xml:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.setPointLabelFormatter(new PointLabelFormatter());
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_plf1);
-        
-        plot.addSeries(s1, series1Format);
+		plot.addSeries(s1, series1Format);
 
-//        // reduce the number of range labels
-        plot.setTicksPerRangeLabel(5);
+		// // reduce the number of range labels
+		plot.setTicksPerRangeLabel(5);
         plot.getGraphWidget().setDomainLabelOrientation(-45);
 
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        //for debug
-        //plot.getLayoutManager().setMarkupEnabled(true);
+		plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
+		// for debug
+		// plot.getLayoutManager().setMarkupEnabled(true);
 	}
 
 
@@ -156,5 +152,5 @@ public class GoalOverview extends Activity {
         
         valuesY = Arrays.asList(tasksFinY);
 	}
-	
+
 }

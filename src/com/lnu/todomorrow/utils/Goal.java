@@ -61,15 +61,15 @@ public class Goal implements Serializable {
 	public void setDeadline(Calendar deadline) {
 		this.deadline = deadline;
 	}
-	
-	public void addScore(int score){
+
+	public void addScore(int score) {
 		this.score += score;
 	}
 
 	@Override
 	public String toString() {
-		return "Goal [id=" + id + ", name=" + name + ", score=" + score + ", deadline="
-				+ TimeUtil.getFormattedDate(deadline) + "]";
+		return "Goal [id=" + id + ", name=" + name + ", score=" + score
+				+ ", deadline=" + TimeUtil.getFormattedDate(deadline) + "]";
 	}
 
 }
