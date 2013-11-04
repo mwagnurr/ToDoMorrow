@@ -1,6 +1,10 @@
 package com.lnu.todomorrow;
 
 import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -75,7 +79,7 @@ public class GoalOverview extends Activity {
 		if (thisGoal.getDeadline() == null) {
 			cal = Calendar.getInstance();
 
-			cal.set(timeField, cal.get(timeField) + 1);
+			cal.set(timeField, cal.get(timeField) + 8);
 		} else {
 			cal = thisGoal.getDeadline();
 		}
@@ -102,7 +106,7 @@ public class GoalOverview extends Activity {
 
 		// // reduce the number of range labels
 		//plot.setTicksPerRangeLabel(5);
-		//plot.getGraphWidget().setDomainLabelOrientation(-45);
+		plot.getGraphWidget().setDomainLabelOrientation(-45);
 		
 		
 //		plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
@@ -111,19 +115,19 @@ public class GoalOverview extends Activity {
 //	    plot.setGridPadding(0, 10, 5, 10);
 	    
 	    //plot.getDomainLabelWidget().setPaddingBottom(20);
-	    
+		
 	    
 		//background colors
 	    plot.setBackgroundColor(graphBackColor);
 	    plot.getGraphWidget().getBackgroundPaint().setColor(graphBackColor);
 	    plot.getGraphWidget().getGridBackgroundPaint().setColor(graphBackColor);
 
-	    //axis valuse color
+	    //axis values color
 	    plot.getGraphWidget().getDomainLabelPaint().setColor(graphLabelColor);
 	    plot.getGraphWidget().getRangeLabelPaint().setColor(graphLabelColor);
 	    plot.getGraphWidget().setDomainLabelVerticalOffset(2);
 
-	    plot.getGraphWidget().getDomainOriginLabelPaint().setColor(graphLabelColor);
+	    //plot.getGraphWidget().getDomainOriginLabelPaint().setColor(Color.TRANSPARENT);
 	    
 	    //axis line color
 //	    plot.getGraphWidget().getDomainOriginLinePaint().setColor(graphLabelColor);
@@ -174,22 +178,35 @@ public class GoalOverview extends Activity {
 		
 		// for debug
 		//plot.getLayoutManager().setMarkupEnabled(true);
-
+		
+		//TODO for different format
+		//plot.getGraphWidget().setDomainValueFormat(new GraphXLabelFormat());
+//		plot.getGraphWidget()
+//        .setDomainValueFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"));
+		
 		Log.d(TAG, "created graph plot!");
 	}
 
 	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX,
 			int sumValuesX, int calendarField) {
 		int maxValueX = pivotTimeX.get(calendarField);
+		
+		//pivotTimeX.
 
 		valuesX = new ArrayList<Integer>();
 		// Integer[] valuesX = new Integer[sumValuesX];
-		for (int i = 0; i < sumValuesX; i++) {
-			valuesX.add((maxValueX - sumValuesX) + i);
 
-			Log.d(TAG, "DEBUG: for i:" + i + " valueX=" + valuesX.get(i));
+		for(int i = 0; i<sumValuesX; i++){
+			int curr = (((maxValueX -sumValuesX)+i) % 12);
+			
+			if(curr<=0){
+				
+				curr = 12+curr;
+			}
+			Log.d(TAG, "DEBUG: curr"+ i +": " + curr);
+			valuesX.add(curr);
 		}
-
+		
 		List<Task> finishedTasks = new ArrayList<Task>();
 		List<Task> openTasks = new ArrayList<Task>();
 		Integer[] tasksFinY = new Integer[valuesX.size()];
@@ -225,6 +242,26 @@ public class GoalOverview extends Activity {
 		}
 
 		valuesY = Arrays.asList(tasksFinY);
+	}
+	
+	private class GraphXLabelFormat extends Format {
+		private static final long serialVersionUID = 1L;
+		
+		private final String[] LABELS_MONTHS = {"Label 1", "Label 2", "Label 3"};
+
+	    @Override
+	    public StringBuffer format(Object object, StringBuffer buffer, FieldPosition field) {
+	        int parsedInt = Math.round(Float.parseFloat(object.toString()));
+	        String labelString = LABELS_MONTHS[parsedInt % LABELS_MONTHS.length];
+
+	        buffer.append(labelString);
+	        return buffer;
+	    }
+
+	    @Override
+	    public Object parseObject(String string, ParsePosition position) {
+	        return java.util.Arrays.asList(LABELS_MONTHS).indexOf(string);
+	    }
 	}
 
 }
