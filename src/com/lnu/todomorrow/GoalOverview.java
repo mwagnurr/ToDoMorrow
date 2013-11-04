@@ -1,11 +1,14 @@
 package com.lnu.todomorrow;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
+import com.androidplot.Plot;
+import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.SizeMetrics;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -18,13 +21,9 @@ import com.lnu.todomorrow.utils.Task;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class GoalOverview extends Activity {
@@ -38,6 +37,9 @@ public class GoalOverview extends Activity {
 
 	private List<Integer> valuesX;
 	private List<Integer> valuesY;
+	
+	private int graphBackColor = Color.WHITE;
+	private int graphLabelColor = Color.BLACK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,13 +101,79 @@ public class GoalOverview extends Activity {
 		plot.addSeries(s1, series1Format);
 
 		// // reduce the number of range labels
-		plot.setTicksPerRangeLabel(5);
-		plot.getGraphWidget().setDomainLabelOrientation(-45);
+		//plot.setTicksPerRangeLabel(5);
+		//plot.getGraphWidget().setDomainLabelOrientation(-45);
+		
+		
+//		plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
+//		plot.setPlotMargins(0, 0, 0, 0);
+//	    plot.setPlotPadding(0, 0, 0, 0);
+//	    plot.setGridPadding(0, 10, 5, 10);
+	    
+	    //plot.getDomainLabelWidget().setPaddingBottom(20);
+	    
+	    
+		//background colors
+	    plot.setBackgroundColor(graphBackColor);
+	    plot.getGraphWidget().getBackgroundPaint().setColor(graphBackColor);
+	    plot.getGraphWidget().getGridBackgroundPaint().setColor(graphBackColor);
 
-		plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
+	    //axis valuse color
+	    plot.getGraphWidget().getDomainLabelPaint().setColor(graphLabelColor);
+	    plot.getGraphWidget().getRangeLabelPaint().setColor(graphLabelColor);
+	    plot.getGraphWidget().setDomainLabelVerticalOffset(2);
+
+	    plot.getGraphWidget().getDomainOriginLabelPaint().setColor(graphLabelColor);
+	    
+	    //axis line color
+//	    plot.getGraphWidget().getDomainOriginLinePaint().setColor(graphLabelColor);
+//	    plot.getGraphWidget().getRangeOriginLinePaint().setColor(graphLabelColor);
+
+	    
+	    plot.setDomainLabel("Months");
+	    plot.getDomainLabelWidget().getLabelPaint().setColor(graphLabelColor);
+	    plot.getRangeLabelWidget().getLabelPaint().setColor(graphLabelColor);
+	    
+	    plot.getLegendWidget().getTextPaint().setColor(graphLabelColor);
+	    
+	    //Sizing and positioning of graph
+//	    plot.getGraphWidget().setSize(new SizeMetrics(
+//	            0.8f, SizeLayoutType.RELATIVE,
+//	            0.8f, SizeLayoutType.RELATIVE));
+	    
+	    plot.getGraphWidget().setSize(new SizeMetrics(
+	            0, SizeLayoutType.FILL,
+	            0, SizeLayoutType.FILL));
+	    
+	    //graph positioning via margins
+	    plot.getGraphWidget().setMargins(10, 30, 10, 30);
+	    
+	    //do not change:
+	    plot.setPlotMargins(0, 0, 0, 0);
+	    plot.setPlotPadding(0, 0, 0, 0);
+	    plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
+	    
+	    
+	    //plot.getLayoutManager().getMarginPaint().setColor(Color.BLUE);
+	    //plot.getLayoutManager().getPaddingPaint().setColor(Color.RED);
+	    
+	    //grid scaling
+	    plot.getGraphWidget().setGridPaddingRight(10);
+	    plot.getGraphWidget().setGridPaddingTop(10);
+
+		//domain configuration
+		plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, valuesX.size());     
+		plot.setDomainValueFormat(new DecimalFormat("0"));
+	    plot.setDomainStepValue(1);
+		
+
+	    //range configuration
+	    plot.setRangeValueFormat(new DecimalFormat("0"));
+		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, valuesY.size());
+		plot.setRangeStepValue(1);
+		
 		// for debug
-		// plot.getLayoutManager().setMarkupEnabled(true);
+		//plot.getLayoutManager().setMarkupEnabled(true);
 
 		Log.d(TAG, "created graph plot!");
 	}
