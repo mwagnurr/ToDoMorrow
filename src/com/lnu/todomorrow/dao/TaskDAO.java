@@ -94,12 +94,12 @@ public class TaskDAO {
 		return tasks;
 
 	}
-	
+
 	public List<Task> getAllTasksByGoal(Goal goal) {
 		List<Task> tasks = new ArrayList<Task>();
 		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
-				DbHelper.TASKS_C_GOAL + " = " + goal.getId(), null,
-				null, null, null);
+				DbHelper.TASKS_C_GOAL + " = " + goal.getId(), null, null, null,
+				null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -111,26 +111,27 @@ public class TaskDAO {
 		return tasks;
 
 	}
-	
+
 	public List<Task> getAllTasks(boolean allFinishedTasks) {
-		
+
 		List<Task> tasks = new ArrayList<Task>();
-		
+
 		String selection = "";
-		
-		if(allFinishedTasks){
+
+		if (allFinishedTasks) {
 			selection = DbHelper.TASKS_C_FINISHED + "= 1";
-		}else{
+		} else {
 			selection = DbHelper.TASKS_C_FINISHED + "= 0";
 		}
-		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask, selection,
-				null, null, null, null);
+		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
+				selection, null, null, null, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Task t = cursorToTask(cursor);
 			tasks.add(t);
 			cursor.moveToNext();
-			Log.d(TAG,"DEBUG: getAllTasks("  +allFinishedTasks +") retrieved: " + t);
+			Log.d(TAG, "DEBUG: getAllTasks(" + allFinishedTasks
+					+ ") retrieved: " + t);
 		}
 		cursor.close();
 		return tasks;
@@ -157,7 +158,6 @@ public class TaskDAO {
 	 * @param goal
 	 * @return
 	 */
-
 
 	/**
 	 * deletes given task from database
@@ -211,7 +211,7 @@ public class TaskDAO {
 			Calendar finCal = Calendar.getInstance();
 			finCal.setTimeInMillis(cursor.getLong(6));
 			task.setFinishedAt(finCal);
-		} else if (fin == 0){
+		} else if (fin == 0) {
 			task.setFinished(false);
 			task.setFinishedAt(null);
 		}
@@ -228,13 +228,14 @@ public class TaskDAO {
 
 	public void updateTasksForGoal(Goal g) {
 		List<Task> taskList = getAllTasksByGoal(g);
-		
-		for (Task t : taskList){
+
+		for (Task t : taskList) {
 			t.setGoal(goalDAO.getGoal(g.getId()));
-			System.out.println("Goal Name: " + g.getName() + "Score: " + g.getScore());
+			System.out.println("Goal Name: " + g.getName() + "Score: "
+					+ g.getScore());
 			updateTask(t);
 		}
-		
+
 	}
 
 }

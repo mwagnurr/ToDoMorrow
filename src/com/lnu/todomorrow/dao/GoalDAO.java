@@ -155,7 +155,7 @@ public class GoalDAO {
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(cursor.getLong(3));
 			goal.setDeadline(cal);
-		}else{
+		} else {
 			goal.setDeadline(null);
 		}
 

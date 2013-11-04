@@ -93,7 +93,8 @@ public class GoalOverview extends Activity {
 		// and configure it from xml:
 		LineAndPointFormatter series1Format = new LineAndPointFormatter();
 		series1Format.setPointLabelFormatter(new PointLabelFormatter());
-		series1Format.configure(getApplicationContext(), R.xml.line_point_formatter_with_plf1);
+		series1Format.configure(getApplicationContext(),
+				R.xml.line_point_formatter_with_plf1);
 
 		plot.addSeries(s1, series1Format);
 
@@ -109,8 +110,8 @@ public class GoalOverview extends Activity {
 		Log.d(TAG, "created graph plot!");
 	}
 
-	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
-			int calendarField) {
+	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX,
+			int sumValuesX, int calendarField) {
 		int maxValueX = pivotTimeX.get(calendarField);
 
 		valuesX = new ArrayList<Integer>();

@@ -106,7 +106,7 @@ public class TaskListFragment extends ListFragment {
 			name.setText(tasks.get(position).getName());
 			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
 					.getDeadline()));
-			goal.setText("Goal");
+			goal.setText(tasks.get(position).getGoal().getName());
 
 			return row;
 		}
@@ -173,11 +173,12 @@ public class TaskListFragment extends ListFragment {
 				Log.e(TAG, "couldnt update Task");
 			}
 			Log.d(TAG,
-					"task - " + t.getName() + " set isfinshed to: " + t.isFinished()
+					"task - " + t.getName() + " set isfinshed to: "
+							+ t.isFinished()
 							+ TimeUtil.getFormattedDate(t.getFinishedAt()));
 
 			int score = scoreMan.calculateScore(t);
-			
+
 			int id = t.getGoal().getId();
 			if (goalDAO == null) {
 				goalDAO = new GoalDAO(getActivity());
@@ -189,7 +190,7 @@ public class TaskListFragment extends ListFragment {
 			t.setGoal(g);
 			goalDAO.updateGoal(g);
 			System.out.println(g.getScore());
-			
+
 		}
 
 	}

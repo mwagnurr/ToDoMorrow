@@ -27,8 +27,9 @@ public class TimeUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		String strDead = sdf.format(date);
 
-//		Log.d("TimeUtil", "formated date (" + cal.getTimeInMillis() + ") to: "
-//				+ strDead);
+		// Log.d("TimeUtil", "formated date (" + cal.getTimeInMillis() +
+		// ") to: "
+		// + strDead);
 		return strDead;
 	}
 

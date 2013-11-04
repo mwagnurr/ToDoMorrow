@@ -3,6 +3,7 @@ package com.lnu.todomorrow;
 import java.util.List;
 
 import com.lnu.todomorrow.dao.GoalDAO;
+import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.TimeUtil;
 
@@ -28,6 +29,7 @@ public class GoalList extends Activity {
 	private ListView listView;
 	private GoalAdapter adapter;
 	private static GoalDAO datasource;
+	private static TaskDAO taskDAO;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,9 @@ public class GoalList extends Activity {
 
 		datasource = new GoalDAO(this);
 		datasource.open();
+
+		taskDAO = new TaskDAO(this);
+		taskDAO.open();
 
 		listView = (ListView) findViewById(R.id.goal_list);
 
@@ -122,7 +127,8 @@ public class GoalList extends Activity {
 			name.setText(currGoal.getName());
 			score.setText(String.valueOf(currGoal.getScore()));
 			deadline.setText(TimeUtil.getFormattedDate(currGoal.getDeadline()));
-			tasks.setText("TODO");
+			tasks.setText(String.valueOf(taskDAO.getAllTasksByGoal(currGoal)
+					.size()));
 
 			return row;
 		}

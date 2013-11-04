@@ -82,7 +82,7 @@ public class TaskForm extends Activity {
 			goals.add(go.getName());
 		}
 		goals.add("New Goal");
-		
+
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, goals);
 		dataAdapter
