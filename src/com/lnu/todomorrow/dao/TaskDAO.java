@@ -84,6 +84,48 @@ public class TaskDAO {
 		return tasks;
 
 	}
+	
+	public List<Task> getAllTasksByGoal(Goal goal) {
+		List<Task> tasks = new ArrayList<Task>();
+		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
+				DbHelper.TASKS_C_GOAL + " = " + goal.getId(), null,
+				null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Task t = cursorToTask(cursor);
+			tasks.add(t);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return tasks;
+
+	}
+	
+	public List<Task> getAllTasks(boolean allFinishedTasks) {
+		
+		List<Task> tasks = new ArrayList<Task>();
+		
+		String selection = "";
+		
+		if(allFinishedTasks){
+			selection = DbHelper.TASKS_C_FINISHED + "= 1";
+		}else{
+			selection = DbHelper.TASKS_C_FINISHED + "= 0";
+		}
+		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask, selection,
+				null, null, null, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Task t = cursorToTask(cursor);
+			tasks.add(t);
+			cursor.moveToNext();
+			Log.d(TAG,"DEBUG: getAllTasks("  +allFinishedTasks +") retrieved: " + t);
+		}
+		cursor.close();
+		return tasks;
+
+	}
 
 	public void deleteTaskEntry(Task t) {
 		long id = t.getId();
@@ -106,22 +148,7 @@ public class TaskDAO {
 		return null;
 	}
 
-	public List<Task> getAllTasksByGoal(Goal goal) {
-		List<Task> tasks = new ArrayList<Task>();
-		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
-				"where " + DbHelper.TASKS_C_GOAL + " = " + goal.getId(), null,
-				null, null, null);
 
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Task t = cursorToTask(cursor);
-			tasks.add(t);
-			cursor.moveToNext();
-		}
-		cursor.close();
-		return tasks;
-
-	}
 
 	public void updateTask(String name, Calendar deadline, boolean finished, int value) {
 		ContentValues args = new ContentValues();

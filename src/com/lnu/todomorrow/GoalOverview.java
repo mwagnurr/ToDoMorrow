@@ -1,5 +1,6 @@
 package com.lnu.todomorrow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class GoalOverview extends Activity {
 	private static final String TAG = GoalOverview.class.getSimpleName();
@@ -34,6 +36,9 @@ public class GoalOverview extends Activity {
 	
 	private Goal thisGoal;
 	
+	private List<Integer> valuesX;
+	private List<Integer> valuesY;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,10 @@ public class GoalOverview extends Activity {
 		
 		thisGoal = (Goal) getIntent().getSerializableExtra("goal");
 		taskDAO = new TaskDAO(this);
-			
+		TextView goalName = (TextView)findViewById(R.id.goal_overview_name);
+		
+		goalName.setText(thisGoal.getName());
+		
 		createTaskPlot();
         
 		ActionBar actionBar = getActionBar();
@@ -62,25 +70,19 @@ public class GoalOverview extends Activity {
         Number[] series1Numbers = {1, 3, 5, 2, 0, 4, 0};
      
         taskDAO.open();
-        List<Task> tasks = taskDAO.getAllTasksByGoal(goal);
+        List<Task> tasks = taskDAO.getAllTasksByGoal(thisGoal);
         
         Calendar cal = Calendar.getInstance();
-        int today = cal.get(Calendar.DAY_OF_YEAR);
-        
-        Number[] days = {
-        		today-6,
-        		today-5,
-        		today-4,
-        		today-3,
-        		today-2,
-        		today-1,
-        		today
-        };
         
         
+        int timeField = Calendar.DAY_OF_YEAR;
         
-		XYSeries s1 = new SimpleXYSeries(Arrays.asList(days),
-				Arrays.asList(series1Numbers), "Tasks completed");
+        cal.set(timeField, cal.get(timeField)+15);
+        
+        initGraphValues(tasks, cal, 31, timeField);
+        
+		XYSeries s1 = new SimpleXYSeries(valuesX,
+				valuesY, "Tasks completed");
 //		 XYSeries s1 = new SimpleXYSeries(
 //               Arrays.asList(series1Numbers),        
 //               SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, 
@@ -98,12 +100,61 @@ public class GoalOverview extends Activity {
 
 //        // reduce the number of range labels
         plot.setTicksPerRangeLabel(5);
-        //plot.getGraphWidget().setDomainLabelOrientation(-45);
+        plot.getGraphWidget().setDomainLabelOrientation(-45);
 
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
         plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
         //for debug
         //plot.getLayoutManager().setMarkupEnabled(true);
+	}
+
+
+
+	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX, int sumValuesX, int calendarField) {
+		int maxValueX = pivotTimeX.get(calendarField);
+        
+        valuesX = new ArrayList<Integer>();
+        //Integer[] valuesX = new Integer[sumValuesX];
+        for(int i = 0; i<sumValuesX;i++){
+        	valuesX.add((maxValueX - sumValuesX) +i);
+        	
+        	Log.d(TAG, "DEBUG: for i:"+i + " valueX=" + valuesX.get(i));
+        }
+        
+        List<Task> finishedTasks = new ArrayList<Task>();
+        List<Task> openTasks = new ArrayList<Task>();
+        Integer[] tasksFinY = new Integer[valuesX.size()];
+        for(int i = 0; i < tasks.size(); i++){
+        	
+        	Task curr = tasks.get(i);
+        	if(curr.isFinished()){
+        		Log.d(TAG, "added finished task: " +curr);
+        		finishedTasks.add(curr);
+        		int currValue = curr.getFinishedAt().get(calendarField);
+        		for(int j = 0; j < valuesX.size(); j++){
+        			
+        			if(currValue==valuesX.get(j)){
+        				tasksFinY[j]+=1;
+        			}else{
+        				tasksFinY[j]=0;
+        			}
+        		}
+        	}else{
+        		Log.d(TAG, "added unfinished task: " +curr);
+        		
+        		openTasks.add(curr);
+        		
+        		for(int j = 0; j < valuesX.size(); j++){
+        			curr.getFinishedAt();
+        		}
+        	}
+        }
+        
+        for(int d=0; d<tasksFinY.length; d++){
+        	Log.d(TAG, "DEBUG: for d:"+d + " tasks=" + tasksFinY[d]);
+        }
+        
+        valuesY = Arrays.asList(tasksFinY);
 	}
 	
 }
