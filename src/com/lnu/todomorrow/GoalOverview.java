@@ -35,10 +35,10 @@ public class GoalOverview extends Activity {
 	private static TaskDAO taskDAO;
 
 	private Goal thisGoal;
-	
+
 	private List<Integer> valuesX;
 	private List<Integer> valuesY;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,10 +46,10 @@ public class GoalOverview extends Activity {
 
 		thisGoal = (Goal) getIntent().getSerializableExtra("goal");
 		taskDAO = new TaskDAO(this);
-		TextView goalName = (TextView)findViewById(R.id.goal_overview_name);
-		
+		TextView goalName = (TextView) findViewById(R.id.goal_overview_name);
+
 		goalName.setText(thisGoal.getName());
-		
+
 		createTaskPlot();
 
 		ActionBar actionBar = getActionBar();
@@ -63,22 +63,26 @@ public class GoalOverview extends Activity {
 	 */
 	private void createTaskPlot() {
 		plot = (XYPlot) findViewById(R.id.goal_overview_plot);
-		//
-		// // Create a couple arrays of y-values to plot:
-		Number[] series1Numbers = { 1, 3, 5, 2, 0, 4, 0 };
 
-        taskDAO.open();
-        List<Task> tasks = taskDAO.getAllTasksByGoal(thisGoal);
-        
-		Calendar cal = Calendar.getInstance();
+		taskDAO.open();
+		List<Task> tasks = taskDAO.getAllTasksByGoal(thisGoal);
 
-        int timeField = Calendar.DAY_OF_YEAR;
-        cal.set(timeField, cal.get(timeField)+15);
+		int timeField = Calendar.MONTH;
 
-        initGraphValues(tasks, cal, 31, timeField);
-        
-		XYSeries s1 = new SimpleXYSeries(valuesX,
-				valuesY, "Tasks completed");
+		Calendar cal;
+		if (thisGoal.getDeadline() == null) {
+			cal = Calendar.getInstance();
+
+			cal.set(timeField, cal.get(timeField) + 1);
+		} else {
+			cal = thisGoal.getDeadline();
+		}
+
+		initGraphValues(tasks, cal, 12, timeField);
+
+		XYSeries s1 = new SimpleXYSeries(valuesX, valuesY, "Tasks completed");
+
+		Log.d(TAG, "series 1 is: " + s1);
 		// XYSeries s1 = new SimpleXYSeries(
 		// Arrays.asList(series1Numbers),
 		// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
@@ -89,68 +93,69 @@ public class GoalOverview extends Activity {
 		// and configure it from xml:
 		LineAndPointFormatter series1Format = new LineAndPointFormatter();
 		series1Format.setPointLabelFormatter(new PointLabelFormatter());
-		series1Format.configure(getApplicationContext(),
-				R.xml.line_point_formatter_with_plf1);
+		series1Format.configure(getApplicationContext(), R.xml.line_point_formatter_with_plf1);
 
 		plot.addSeries(s1, series1Format);
 
 		// // reduce the number of range labels
 		plot.setTicksPerRangeLabel(5);
-        plot.getGraphWidget().setDomainLabelOrientation(-45);
+		plot.getGraphWidget().setDomainLabelOrientation(-45);
 
 		plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
 		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
 		// for debug
 		// plot.getLayoutManager().setMarkupEnabled(true);
+
+		Log.d(TAG, "created graph plot!");
 	}
 
-
-
-	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX, int sumValuesX, int calendarField) {
+	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
+			int calendarField) {
 		int maxValueX = pivotTimeX.get(calendarField);
-        
-        valuesX = new ArrayList<Integer>();
-        //Integer[] valuesX = new Integer[sumValuesX];
-        for(int i = 0; i<sumValuesX;i++){
-        	valuesX.add((maxValueX - sumValuesX) +i);
-        	
-        	Log.d(TAG, "DEBUG: for i:"+i + " valueX=" + valuesX.get(i));
-        }
-        
-        List<Task> finishedTasks = new ArrayList<Task>();
-        List<Task> openTasks = new ArrayList<Task>();
-        Integer[] tasksFinY = new Integer[valuesX.size()];
-        for(int i = 0; i < tasks.size(); i++){
-        	
-        	Task curr = tasks.get(i);
-        	if(curr.isFinished()){
-        		Log.d(TAG, "added finished task: " +curr);
-        		finishedTasks.add(curr);
-        		int currValue = curr.getFinishedAt().get(calendarField);
-        		for(int j = 0; j < valuesX.size(); j++){
-        			
-        			if(currValue==valuesX.get(j)){
-        				tasksFinY[j]+=1;
-        			}else{
-        				tasksFinY[j]=0;
-        			}
-        		}
-        	}else{
-        		Log.d(TAG, "added unfinished task: " +curr);
-        		
-        		openTasks.add(curr);
-        		
-        		for(int j = 0; j < valuesX.size(); j++){
-        			curr.getFinishedAt();
-        		}
-        	}
-        }
-        
-        for(int d=0; d<tasksFinY.length; d++){
-        	Log.d(TAG, "DEBUG: for d:"+d + " tasks=" + tasksFinY[d]);
-        }
-        
-        valuesY = Arrays.asList(tasksFinY);
+
+		valuesX = new ArrayList<Integer>();
+		// Integer[] valuesX = new Integer[sumValuesX];
+		for (int i = 0; i < sumValuesX; i++) {
+			valuesX.add((maxValueX - sumValuesX) + i);
+
+			Log.d(TAG, "DEBUG: for i:" + i + " valueX=" + valuesX.get(i));
+		}
+
+		List<Task> finishedTasks = new ArrayList<Task>();
+		List<Task> openTasks = new ArrayList<Task>();
+		Integer[] tasksFinY = new Integer[valuesX.size()];
+
+		// init
+		for (int x = 0; x < tasksFinY.length; x++) {
+			tasksFinY[x] = 0;
+		}
+
+		for (int i = 0; i < tasks.size(); i++) {
+
+			Task curr = tasks.get(i);
+			if (curr.isFinished()) {
+				Log.d(TAG, "added finished task: " + curr);
+				finishedTasks.add(curr);
+				int currValue = curr.getFinishedAt().get(calendarField);
+				for (int j = 0; j < valuesX.size(); j++) {
+
+					if (currValue == valuesX.get(j)) {
+						tasksFinY[j] += 1;
+					}
+				}
+			} else {
+				Log.d(TAG, "added unfinished task: " + curr);
+
+				openTasks.add(curr);
+
+			}
+		}
+
+		for (int d = 0; d < tasksFinY.length; d++) {
+			Log.d(TAG, "DEBUG: for d:" + d + " tasks=" + tasksFinY[d]);
+		}
+
+		valuesY = Arrays.asList(tasksFinY);
 	}
 
 }

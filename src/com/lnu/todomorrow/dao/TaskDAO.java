@@ -39,7 +39,7 @@ public class TaskDAO {
 	 * @throws SQLException
 	 */
 	public void open() throws SQLException {
-		Log.d(TAG, "opened Databaseconnection");
+		Log.d(TAG, "opened Database connection");
 		database = dbHelper.getWritableDatabase();
 	}
 
@@ -47,6 +47,7 @@ public class TaskDAO {
 	 * closes database connection
 	 */
 	public void close() {
+		Log.d(TAG, "closed Database connection");
 		dbHelper.close();
 	}
 
@@ -221,18 +222,6 @@ public class TaskDAO {
 		// Log.d(TAG, "tasks fin=" + fin);
 
 		Log.d(TAG, "DEBUG: converted cursor to: " + task);
-		// TODO setGoal
-		// String restrict = DbHelper.GOALS_C_ID + "=" + cursor.getInt(3);
-		// Cursor goalCursor = database.query(true, DbHelper.TABLE_GOALS,
-		// GoalDAO.columnsGoal,
-		// restrict,
-		// null, null, null, null, null);
-		// if (goalCursor != null && goalCursor.getCount() > 0) {
-		// goalCursor.moveToFirst();
-		// Goal g = cursorToGoal(cursor);
-		// return g;
-		// }
-		// task.setGoal(cursor.getInt(3));
 
 		return task;
 	}

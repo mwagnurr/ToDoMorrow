@@ -1,5 +1,6 @@
 package com.lnu.todomorrow;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -167,12 +168,13 @@ public class TaskListFragment extends ListFragment {
 		 */
 		private void finishTask(Task t) {
 			t.setFinished(true);
+			t.setFinishedAt(Calendar.getInstance());
 			if (!taskDAO.updateTask(t)) {
 				Log.e(TAG, "couldnt update Task");
 			}
 			Log.d(TAG,
-					"task - " + t.getName() + " set isfinshed to: "
-							+ t.isFinished());
+					"task - " + t.getName() + " set isfinshed to: " + t.isFinished()
+							+ TimeUtil.getFormattedDate(t.getFinishedAt()));
 
 			int score = scoreMan.calculateScore(t);
 			Goal g = t.getGoal();
