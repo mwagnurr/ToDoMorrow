@@ -5,6 +5,8 @@ import java.util.List;
 import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
+
+import com.lnu.todomorrow.utils.TestDataCreator;
 import com.lnu.todomorrow.utils.TimeUtil;
 
 import android.app.ActionBar;
@@ -28,7 +30,7 @@ public class GoalList extends Activity {
 	private static final String TAG = GoalList.class.getSimpleName();
 	private ListView listView;
 	private GoalAdapter adapter;
-	private static GoalDAO datasource;
+	private static GoalDAO goalDAO;
 	private static TaskDAO taskDAO;
 
 	@Override
@@ -36,16 +38,15 @@ public class GoalList extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_goal_list);
 
-		datasource = new GoalDAO(this);
-		datasource.open();
+		goalDAO = new GoalDAO(this);
+		goalDAO.open();
 
 		taskDAO = new TaskDAO(this);
 		taskDAO.open();
 
 		listView = (ListView) findViewById(R.id.goal_list);
 
-		adapter = new GoalAdapter(this, R.layout.row_layout,
-				datasource.getAllGoals());
+		adapter = new GoalAdapter(this, R.layout.row_layout, goalDAO.getAllGoals());
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnGoalItemClick());
 
@@ -57,7 +58,7 @@ public class GoalList extends Activity {
 
 	@Override
 	public void onDestroy() {
-		datasource.close();
+		goalDAO.close();
 		super.onDestroy();
 	}
 
@@ -75,6 +76,11 @@ public class GoalList extends Activity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
+		case R.id.add_testdata:
+			TestDataCreator data = new TestDataCreator(this);
+			data.createTestData();
+			this.recreate();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -86,8 +92,7 @@ public class GoalList extends Activity {
 	}
 
 	private class OnGoalItemClick implements OnItemClickListener {
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 			Goal sel = adapter.getItem(position);
 
@@ -121,14 +126,12 @@ public class GoalList extends Activity {
 			TextView name = (TextView) row.findViewById(R.id.goalrow_name);
 			TextView score = (TextView) row.findViewById(R.id.goalrow_score);
 			TextView tasks = (TextView) row.findViewById(R.id.goalrow_tasks);
-			TextView deadline = (TextView) row
-					.findViewById(R.id.goalrow_deadline);
+			TextView deadline = (TextView) row.findViewById(R.id.goalrow_deadline);
 
 			name.setText(currGoal.getName());
 			score.setText(String.valueOf(currGoal.getScore()));
 			deadline.setText(TimeUtil.getFormattedDate(currGoal.getDeadline()));
-			tasks.setText(String.valueOf(taskDAO.getAllTasksByGoal(currGoal)
-					.size()));
+			tasks.setText(String.valueOf(taskDAO.getAllTasksByGoal(currGoal).size()));
 
 			return row;
 		}
@@ -136,8 +139,7 @@ public class GoalList extends Activity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent result) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent result) {
 		if (resultCode == RESULT_OK) {
 
 			Goal goal = (Goal) result.getSerializableExtra("goal");
@@ -147,4 +149,5 @@ public class GoalList extends Activity {
 			Log.d(TAG, "received result: " + goal);
 		}
 	}
+
 }

@@ -221,7 +221,7 @@ public class TaskDAO {
 		task.setGoal(g);
 		// Log.d(TAG, "tasks fin=" + fin);
 
-		Log.d(TAG, "DEBUG: converted cursor to: " + task);
+		//Log.d(TAG, "DEBUG: converted cursor to: " + task);
 
 		return task;
 	}
