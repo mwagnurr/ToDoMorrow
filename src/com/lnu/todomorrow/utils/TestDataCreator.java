@@ -18,6 +18,10 @@ public class TestDataCreator {
 		goalDAO = new GoalDAO(context);
 		taskDAO = new TaskDAO(context);
 	}
+	
+	//TODO performance test data (for graph initialisation), also as stress test for layout and stuff
+	
+	
 
 	/**
 	 * method for convenience
