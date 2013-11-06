@@ -1,11 +1,11 @@
 package com.lnu.todomorrow;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,6 +25,7 @@ import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
@@ -40,9 +41,6 @@ public class GoalOverview extends Activity {
 	private static TaskDAO taskDAO;
 
 	private Goal thisGoal;
-
-	private List<Integer> valuesX;
-	private List<Integer> valuesY;
 
 	private int graphBackColor = Color.WHITE;
 	private int graphLabelColor = Color.BLACK;
@@ -67,8 +65,9 @@ public class GoalOverview extends Activity {
 	}
 
 	/**
-	 * 
+	 * fetches data and creates graph with current settings
 	 */
+	@SuppressLint("SimpleDateFormat")
 	private void createTaskPlot() {
 		plot = (XYPlot) findViewById(R.id.goal_overview_plot);
 
@@ -85,23 +84,30 @@ public class GoalOverview extends Activity {
 		} else {
 			cal = thisGoal.getDeadline();
 		}
+		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
 
-		initGraphValues(tasks, cal, 12, timeField);
+		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
 
-		XYSeries s1 = new SimpleXYSeries(valuesX, valuesY, "Tasks completed");
+		configureGraph(s1);
 
-		Log.d(TAG, "series 1 is: " + s1);
-		// XYSeries s1 = new SimpleXYSeries(
-		// Arrays.asList(series1Numbers),
-		// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-		// "Tasks completed");
+		Log.d(TAG, "created graph plot!");
+	}
 
+	/**
+	 * configures graph display (background/line/text colors, layout etc)
+	 * 
+	 * @param s1
+	 */
+	private void configureGraph(XYSeries s1) {
 		// Create a formatter to use for drawing a series using
 		// LineAndPointRenderer
 		// and configure it from xml:
 		LineAndPointFormatter series1Format = new LineAndPointFormatter();
-		series1Format.setPointLabelFormatter(new PointLabelFormatter());
-		series1Format.configure(getApplicationContext(), R.xml.line_point_formatter_with_plf1);
+		// hide point label text
+		PointLabelFormatter pointLabel = new PointLabelFormatter();
+		pointLabel.getTextPaint().setColor(Color.TRANSPARENT);
+		series1Format.setPointLabelFormatter(pointLabel);
+		series1Format.configure(getApplicationContext(), R.xml.line_point_formatter_tasks_completed);
 
 		plot.addSeries(s1, series1Format);
 
@@ -117,7 +123,7 @@ public class GoalOverview extends Activity {
 		// axis values color
 		plot.getGraphWidget().getDomainLabelPaint().setColor(graphLabelColor);
 		plot.getGraphWidget().getRangeLabelPaint().setColor(graphLabelColor);
-		plot.getGraphWidget().setDomainLabelVerticalOffset(2);
+		plot.getGraphWidget().setDomainLabelVerticalOffset(1);
 
 		// plot.getGraphWidget().getDomainOriginLabelPaint().setColor(Color.TRANSPARENT);
 
@@ -130,11 +136,6 @@ public class GoalOverview extends Activity {
 		plot.getRangeLabelWidget().getLabelPaint().setColor(graphLabelColor);
 
 		plot.getLegendWidget().getTextPaint().setColor(graphLabelColor);
-
-		// Sizing and positioning of graph
-		// plot.getGraphWidget().setSize(new SizeMetrics(
-		// 0.8f, SizeLayoutType.RELATIVE,
-		// 0.8f, SizeLayoutType.RELATIVE));
 
 		plot.getGraphWidget().setSize(
 				new SizeMetrics(0, SizeLayoutType.FILL, 0, SizeLayoutType.FILL));
@@ -151,39 +152,22 @@ public class GoalOverview extends Activity {
 		plot.getGraphWidget().setGridPaddingRight(10);
 		plot.getGraphWidget().setGridPaddingTop(10);
 
-		// domain configuration
-		plot.setDomainStep(XYStepMode.SUBDIVIDE, valuesX.size());
-		// plot.setDomainValueFormat(new DecimalFormat("0"));
-		// plot.setDomainStepValue(1);
-
-		// range configuration
-		plot.setRangeValueFormat(new DecimalFormat("0"));
-		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, valuesY.size());
-		plot.setRangeStepValue(1);
-
 		// for debug
 		// plot.getLayoutManager().setMarkupEnabled(true);
 
-		// TODO for different format
 		plot.getGraphWidget().setDomainValueFormat(new GraphXLabelFormat());
-		// plot.getGraphWidget()
-		// .setDomainValueFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"));
-
-		Log.d(TAG, "created graph plot!");
 	}
 
-	// TODO do on seperate Thread and/or performance optimization
-	private void initGraphValues(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
-			int calendarField) {
+	private XYSeries initGraphSeries(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
+			int calendarField, DateFormat dateFormat) {
 
 		// setup
 		int decrement = -1;
 		Integer[] valXInt = new Integer[sumValuesX];
 		Integer[] valYInt = new Integer[sumValuesX];
 		for (int y = 0; y < sumValuesX; y++) {
-			valYInt[y] = 0;
+			valYInt[y] = 0; // init array
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/yy");
 
 		// Laufzeit: L( sumValuesX * tasks.size() + C)
 		for (int i = 0; i < sumValuesX; i++) {
@@ -195,19 +179,15 @@ public class GoalOverview extends Activity {
 			// decrement calendar
 			pivotTimeX.add(calendarField, decrement);
 
-			// diff = (currLong - pivotTimeX.getTimeInMillis());
-			//
-			// Log.d(TAG, "DEBUGGGGG: CURR[" +i+"] = " + curr + " while currLong was: " + currLong);
-			// Log.d(TAG, "diff = " + diff);
-
-			String strCurrPivotTime = sdf.format(pivotTimeX.getTime());
+			String strCurrPivotTime = dateFormat.format(pivotTimeX.getTime());
 
 			for (int j = 0; j < tasks.size(); j++) {
 				Task currTask = tasks.get(j);
 
 				if (currTask.isFinished()) {
 
-					String strCurrFinishedAt = sdf.format(currTask.getFinishedAt().getTime());
+					String strCurrFinishedAt = dateFormat
+							.format(currTask.getFinishedAt().getTime());
 					if (strCurrPivotTime.equals(strCurrFinishedAt)) {
 						valYInt[i] += 1;
 						Log.d(TAG, "task " + currTask.getName() + " was completed "
@@ -218,20 +198,32 @@ public class GoalOverview extends Activity {
 			}
 
 		}
-		valuesX = Arrays.asList(valXInt);
-		valuesY = Arrays.asList(valYInt);
+
+		// List<Integer> valuesX = Arrays.asList(valXInt);
+		// List<Integer> valuesY = Arrays.asList(valYInt);
+
+		XYSeries series = new SimpleXYSeries(Arrays.asList(valXInt), Arrays.asList(valYInt),
+				"Tasks completed");
+
+		// domain configuration
+		plot.setDomainStep(XYStepMode.SUBDIVIDE, valXInt.length);
+		// plot.setDomainValueFormat(new DecimalFormat("0"));
+		// plot.setDomainStepValue(1);
+
+		// range configuration
+		plot.setRangeValueFormat(new DecimalFormat("0"));
+		plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, valYInt.length);
+		plot.setRangeStepValue(1);
 
 		// for check
-		Log.d(TAG, "valuesX size: " + valuesX.size() + ", valuesY size: " + valuesY.size());
-		for (int i = 0; i < valuesX.size(); i++) {
-
-			Log.d(TAG, "X: " + valuesX.get(i) + " | Y: " + valuesY.get(i));
-		}
+		Log.d(TAG, "Successfully initialized graph values.");
+		return series;
 	}
 
 	private class GraphXLabelFormat extends Format {
 		private static final long serialVersionUID = 1L;
 
+		@SuppressLint("SimpleDateFormat")
 		private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
 
 		@Override

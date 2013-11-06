@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.lnu.todomorrow.utils.Goal;
-import com.lnu.todomorrow.utils.Task;
 
 import android.content.ContentValues;
 import android.content.Context;
