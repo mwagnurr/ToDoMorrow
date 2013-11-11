@@ -111,6 +111,36 @@ public class TaskDAO {
 		return tasks;
 
 	}
+	
+//	public List<Task> getAllTasksFilteredByGoals(List<Goal> goals) {
+//		
+//		if(goals.size()<=0){
+//			Log.e(TAG, "goal list to filter is empty");
+//			return null;
+//		}
+//		String selection = "";
+//		
+//		for(int i = 0; i < goals.size(); i++){	
+//			selection+= DbHelper.TASKS_C_GOAL + " = " + goals.get(i).getId();
+//			
+//		}
+//		
+//		selection.
+//		List<Task> tasks = new ArrayList<Task>();
+//		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
+//				, null, null, null,
+//				null);
+//
+//		cursor.moveToFirst();
+//		while (!cursor.isAfterLast()) {
+//			Task t = cursorToTask(cursor);
+//			tasks.add(t);
+//			cursor.moveToNext();
+//		}
+//		cursor.close();
+//		return tasks;
+//
+//	}
 
 	public List<Task> getAllTasks(boolean allFinishedTasks) {
 

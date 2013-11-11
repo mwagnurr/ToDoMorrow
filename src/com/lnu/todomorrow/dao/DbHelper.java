@@ -30,11 +30,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	 */
 	public static final String TASKS_C_GOAL = "goal";
 
-	// pls do not autoformat me ;)
+	//@formatter:off - pls do not autoformat me ;)
 	private static final String DATABASE_CREATE_GOALS = "create table "
-			+ TABLE_GOALS + " (" + GOALS_C_ID
-			+ " integer primary key autoincrement, " + GOALS_C_NAME
-			+ " text not null, " + GOALS_C_SCORE + " integer, "
+			+ TABLE_GOALS + " (" 
+			+ GOALS_C_ID + " integer primary key autoincrement, " 
+			+ GOALS_C_NAME + " text not null, " 
+			+ GOALS_C_SCORE + " integer, "
 			+ GOALS_C_DEADLINE + " datetime);";
 
 	private static final String DATABASE_CREATE_TASKS = "create table "

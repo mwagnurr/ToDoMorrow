@@ -33,21 +33,37 @@ public class TaskListFragment extends ListFragment {
 	private ScoreManager scoreMan;
 	private GoalDAO goalDAO;
 
+	
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
 		taskDAO = new TaskDAO(getActivity());
 		taskDAO.open();
 		tasks = taskDAO.getAllTasks();
-
+//		/this.on
 		goalDAO = new GoalDAO(getActivity());
 
 		scoreMan = new ScoreManager();
-
 		adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
 		setListAdapter(adapter);
 
+	}
+	
+	public void filterByGoal(Goal goal) {
+		Log.d(TAG, "filtering task fragment by goal: " + goal.getName());
+
+		taskDAO.open();
+		tasks = taskDAO.getAllTasksByGoal(goal);
+		if (adapter == null) {
+			adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
+			//setListAdapter(adapter);
+		} else {
+			adapter.clear();
+			adapter.addAll(tasks);
+			adapter.notifyDataSetChanged();
+		}
+		//setListAdapter(adapter);
 	}
 
 	public void addTask(Task task) {
@@ -68,7 +84,7 @@ public class TaskListFragment extends ListFragment {
 		adapter.notifyDataSetChanged();
 	}
 
-	class MyAdapter extends ArrayAdapter<Task> {
+	private class MyAdapter extends ArrayAdapter<Task> {
 		private List<Task> tasks;
 
 		public MyAdapter(Context context, int resource, List<Task> objects) {
@@ -113,7 +129,7 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
-	public class BooleanComparator implements Comparator<Task> {
+	private class BooleanComparator implements Comparator<Task> {
 
 		@Override
 		public int compare(Task lhs, Task rhs) {
@@ -126,7 +142,7 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
-	public class DateComparator implements Comparator<Task> {
+	private class DateComparator implements Comparator<Task> {
 
 		@Override
 		public int compare(Task lhs, Task rhs) {
@@ -141,7 +157,7 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
-	public class CheckListener implements OnClickListener {
+	private class CheckListener implements OnClickListener {
 
 		@Override
 		public void onClick(View arg0) {
@@ -194,4 +210,9 @@ public class TaskListFragment extends ListFragment {
 		}
 
 	}
+	
+	public interface OnTaskChangedListener {
+		//TODO let activities implement 
+        public void onTaskChanged();
+    }
 }

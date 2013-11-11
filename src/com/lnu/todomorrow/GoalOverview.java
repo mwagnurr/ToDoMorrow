@@ -55,6 +55,12 @@ public class GoalOverview extends Activity {
 		TextView goalName = (TextView) findViewById(R.id.goal_overview_name);
 
 		goalName.setText(thisGoal.getName());
+		
+		//ExampleFragment fragment = (ExampleFragment) getFragmentManager().findFragmentById(R.id.example_fragment);
+		TaskListFragment listFragment = (TaskListFragment) getFragmentManager().findFragmentById(
+				R.id.goal_overview_task_list_fragment);
+		
+		listFragment.filterByGoal(thisGoal);
 
 		createTaskPlot();
 
@@ -76,6 +82,8 @@ public class GoalOverview extends Activity {
 
 		int timeField = Calendar.MONTH;
 
+		// definition of how far the graph should draw on X axis - either to deadline or to
+		// curr month + 1
 		Calendar cal;
 		if (thisGoal.getDeadline() == null) {
 			cal = Calendar.getInstance();
@@ -88,7 +96,18 @@ public class GoalOverview extends Activity {
 
 		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
 
-		configureGraph(s1);
+		// Formatter for graph line and point, partly defined in XML
+		LineAndPointFormatter series1Format = new LineAndPointFormatter();
+		// hide point label text
+		PointLabelFormatter pointLabel = new PointLabelFormatter();
+		pointLabel.getTextPaint().setColor(Color.TRANSPARENT);
+		series1Format.setPointLabelFormatter(pointLabel);
+		series1Format
+				.configure(getApplicationContext(), R.xml.line_point_formatter_tasks_completed);
+
+		plot.addSeries(s1, series1Format);
+
+		configureGraph();
 
 		Log.d(TAG, "created graph plot!");
 	}
@@ -98,18 +117,7 @@ public class GoalOverview extends Activity {
 	 * 
 	 * @param s1
 	 */
-	private void configureGraph(XYSeries s1) {
-		// Create a formatter to use for drawing a series using
-		// LineAndPointRenderer
-		// and configure it from xml:
-		LineAndPointFormatter series1Format = new LineAndPointFormatter();
-		// hide point label text
-		PointLabelFormatter pointLabel = new PointLabelFormatter();
-		pointLabel.getTextPaint().setColor(Color.TRANSPARENT);
-		series1Format.setPointLabelFormatter(pointLabel);
-		series1Format.configure(getApplicationContext(), R.xml.line_point_formatter_tasks_completed);
-
-		plot.addSeries(s1, series1Format);
+	private void configureGraph() {
 
 		// testTutorialCode(series1Format);
 

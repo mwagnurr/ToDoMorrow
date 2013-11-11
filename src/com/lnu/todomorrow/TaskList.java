@@ -61,7 +61,7 @@ public class TaskList extends Activity {
 			startActivity(intent1);
 			return true;
 		case R.id.filter_by_goal:
-			// code for filtering by goal
+			//TODO code for filtering by goal
 		case R.id.show_goalList:
 			Intent intent = new Intent(this, GoalList.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

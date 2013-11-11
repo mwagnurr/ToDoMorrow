@@ -122,9 +122,42 @@ public class TestDataCreator {
 
 		value = 50;
 
-		Task task4 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal1);
+		Task task4 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal2);
 
 		Log.d(TAG, "TESTDATA created: " + task4);
+		
+		taskName = "Taska";
+
+		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
+		calendarTask.set(Calendar.MINUTE, 40);
+		calendarTask.set(Calendar.SECOND, 0);
+
+		calendarTask.set(Calendar.DAY_OF_MONTH, 7);
+		calendarTask.set(Calendar.MONTH, 11);
+		calendarTask.set(Calendar.YEAR, 2013);
+
+		value = 50;
+
+		Task taska = taskDAO.createTaskEntry(taskName, calendarTask, value, goal3);
+
+		Log.d(TAG, "TESTDATA created: " + taska);
+		
+		
+		taskName = "Taskb";
+
+		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
+		calendarTask.set(Calendar.MINUTE, 40);
+		calendarTask.set(Calendar.SECOND, 0);
+
+		calendarTask.set(Calendar.DAY_OF_MONTH, 9);
+		calendarTask.set(Calendar.MONTH, 11);
+		calendarTask.set(Calendar.YEAR, 2013);
+
+		value = 50;
+
+		Task taskb = taskDAO.createTaskEntry(taskName, calendarTask, value, goal3);
+
+		Log.d(TAG, "TESTDATA created: " + taskb);
 
 		goalDAO.close();
 		taskDAO.close();
