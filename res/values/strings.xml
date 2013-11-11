@@ -33,5 +33,7 @@
     <string name="task_menu_filterByGoal">Filter by Goal</string>
     <string name="task_menu_showGoallist">Switch to Goal list</string>
     <string name="currentValue">0</string>
+    <string name="notificationText">   Value: </string>
+    <string name="title_activity_dialog__postpone">Dialog_Postpone</string>
 
 </resources>

@@ -112,24 +112,21 @@ public class TaskList extends Activity {
 
 				dataTasks.open();
 				Task task = dataTasks.createTaskEntry(name, cal, val, goal);
-				// task.setGoal(goal);
-				// dataTasks.updateTask(task);
 
+				// creating intent for alarmManager
 				Intent intent = new Intent(TaskList.this,
 						MyBroadcastReceiver.class);
+				intent.putExtra("name", task.getName());
+				intent.putExtra("goal", task.getGoal().getName());
+				intent.putExtra("value", task.getValue());
 				PendingIntent pi = PendingIntent.getBroadcast(TaskList.this, 0,
-						intent, 0);
-
-				// calculation of time difference between now and
-				// deadline of taks
-				long deadTimeMs = task.getDeadline().getTimeInMillis();
-				Calendar currTime = Calendar.getInstance();
-				long currTimeMs = currTime.getTimeInMillis();
-				long timeDiff = deadTimeMs - currTimeMs;
+						intent, PendingIntent.FLAG_UPDATE_CURRENT
+								| Intent.FILL_IN_DATA);
 
 				// setting alarm
 				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
-				alarmMan.set(AlarmManager.RTC_WAKEUP, timeDiff, pi);
+				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline()
+						.getTimeInMillis(), pi);
 
 				Log.d(TAG, "created task: " + task);
 				list.addTask(task);
