@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4sp"
+        android:text="@string/deadline_date" />
+
+    <DatePicker
+        android:id="@+id/pick_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:calendarViewShown="false" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4sp"
+        android:text="@string/deadline_time" />
+
+    <TimePicker
+        android:id="@+id/pick_deadline_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/ButtonOk"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:text="Ok"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:onClick="dialogOK"
+        android:textStyle="bold" />
+    
+     <Button
+        android:id="@+id/ButtonCancel"
+        android:layout_width="0"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:text="Cancel"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:onClick="dialogCancel"
+        android:textStyle="bold" />
+     </LinearLayout>
+
+</LinearLayout>
