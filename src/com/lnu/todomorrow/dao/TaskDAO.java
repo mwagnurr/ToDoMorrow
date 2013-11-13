@@ -127,7 +127,7 @@ public class TaskDAO {
 		
 		selection = selection.substring(0, selection.length() - orStr.length());
 		
-		Log.d(TAG, "DEBUG: selection string = " + selection);
+		Log.d(TAG, "DEBUG: selection string: " + selection);
 		
 		List<Task> tasks = new ArrayList<Task>();
 		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,

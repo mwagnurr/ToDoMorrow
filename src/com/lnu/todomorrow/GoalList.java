@@ -53,7 +53,7 @@ public class GoalList extends Activity {
 		listView.setOnItemClickListener(new OnGoalItemClick());
 
 		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		//actionBar.setDisplayHomeAsUpEnabled(true);
 
 		Log.d(TAG, "onCreate()");
 	}

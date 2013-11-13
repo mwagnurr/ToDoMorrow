@@ -50,10 +50,9 @@ public class TaskListFragment extends ListFragment {
 		} else {
 			filterGoalList = new ArrayList<Goal>();
 		}
-		taskDAO.open();
-		tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
 
-		adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
+		fetchFilteredTasks();
+
 		setListAdapter(adapter);
 
 	}
@@ -68,10 +67,16 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	public void setFilterGoalList(ArrayList<Goal> filterGoals) {
+		Log.d(TAG, "filtering task fragment by goals");
+
+		this.filterGoalList = filterGoals;
+		fetchFilteredTasks();
+
+	}
+
 	public void filterByGoal(Goal goal) {
 		Log.d(TAG, "filtering task fragment by goal: " + goal.getName());
-
-		Log.d(TAG, "DEBUG: goalFilterListsize: " + filterGoalList.size());
 
 		if (filterListContainsGoal(goal)) {
 			Log.d(TAG, "goal: " + goal.getName() + " already filtered");
@@ -79,7 +84,13 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		filterGoalList.add(goal);
+		fetchFilteredTasks();
+	}
 
+	/**
+	 * 
+	 */
+	private void fetchFilteredTasks() {
 		taskDAO.open();
 		tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
 		if (adapter == null) {
@@ -89,19 +100,6 @@ public class TaskListFragment extends ListFragment {
 			adapter.clear();
 			adapter.addAll(tasks);
 			adapter.notifyDataSetChanged();
-
-			Log.d(TAG, "successfully filtered.");
-		}
-		// setListAdapter(adapter);
-	}
-
-	public void removeFilterByGoal(Goal goal) {
-		if (filterListContainsGoal(goal)) {
-			Log.d(TAG, "removeFilterByGoal - removing from filter list goal: " + goal.getName());
-
-			filterGoalList.remove(goal); // TODO change
-		} else {
-			Log.d(TAG, "removeFilterByGoal - not in filter list goal: " + goal.getName());
 		}
 	}
 

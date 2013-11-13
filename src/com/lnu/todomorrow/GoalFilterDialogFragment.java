@@ -1,5 +1,6 @@
 package com.lnu.todomorrow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lnu.todomorrow.dao.GoalDAO;
@@ -10,19 +11,22 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 public class GoalFilterDialogFragment extends DialogFragment {
 	private static final String TAG = GoalFilterDialogFragment.class.getSimpleName();
-	private ArrayAdapter<Goal> dataAdapter;
 
+	private List<Goal> goals;
+	private List<Goal> goalsFilterList;
+	private boolean[] goalChecked;
+
+	/**
+	 * Callback interface which has to be implemented by the activity using this fragment
+	 */
 	public interface GoalFilterDialogListener {
-		public void onGoalFilterDialogSelection(Goal selectedGoal);
+		public void onGoalFilterDialogSubmit(List<Goal> filteredGoals);
 	}
 
 	private GoalFilterDialogListener dialogListener;
@@ -46,25 +50,20 @@ public class GoalFilterDialogFragment extends DialogFragment {
 
 		GoalDAO dataGoal = new GoalDAO(getActivity());
 		dataGoal.open();
-		List<Goal> goals = dataGoal.getAllGoals();
-
-		dataAdapter = new ArrayAdapter<Goal>(getActivity(), android.R.layout.select_dialog_item,
-				goals) {
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				TextView tv;
-				if (convertView == null) {
-					tv = new TextView(getActivity());
-				} else {
-					tv = (TextView) convertView;
-				}
-				tv.setText(getItem(position).getName());
-				return tv;
-			}
-		};
+		goals = dataGoal.getAllGoals();
+		goalsFilterList = new ArrayList<Goal>();
 
 		builder.setTitle(R.string.dialog_goal_selection_title);
-		builder.setAdapter(dataAdapter, new SelectionClickListener());
+
+		String[] goalNames = new String[goals.size()];
+		goalChecked = new boolean[goals.size()];
+
+		for (int i = 0; i < goals.size(); i++) {
+			goalNames[i] = goals.get(i).getName();
+			goalChecked[i] = false;
+		}
+		builder.setMultiChoiceItems(goalNames, goalChecked, new MultiChoiceSlectionListener());
+		builder.setPositiveButton(R.string.dialog_goal_selection_ok, new OkClickListener());
 		builder.setNegativeButton(R.string.dialog_goal_selection_cancel, new CancelClickListener());
 
 		Log.d(TAG, "creating dialog");
@@ -72,13 +71,31 @@ public class GoalFilterDialogFragment extends DialogFragment {
 		return builder.create();
 	}
 
-	private class SelectionClickListener implements DialogInterface.OnClickListener {
+	private class MultiChoiceSlectionListener implements OnMultiChoiceClickListener {
+
+		@Override
+		public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+			Goal goal = goals.get(which);
+			if (isChecked) {
+				Log.d(TAG, "adding goal " + goal.getName());
+				goalsFilterList.add(goal);
+
+			} else {
+				Log.d(TAG, "removing goal " + goal.getName());
+				if (!goalsFilterList.remove(goal))
+					Log.e(TAG, "goal not in list");
+			}
+
+		}
+
+	}
+
+	private class OkClickListener implements DialogInterface.OnClickListener {
 
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			Goal goal = dataAdapter.getItem(which);
-			Log.d(TAG, "Selected goal: " + goal.getName());
-			dialogListener.onGoalFilterDialogSelection(goal);
+			Log.d(TAG, "Clicked Ok - filterList size: " + goalsFilterList.size());
+			dialogListener.onGoalFilterDialogSubmit(goalsFilterList);
 		}
 
 	}

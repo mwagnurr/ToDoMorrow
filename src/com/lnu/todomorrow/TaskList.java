@@ -1,6 +1,8 @@
 package com.lnu.todomorrow;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import com.lnu.todomorrow.GoalFilterDialogFragment.GoalFilterDialogListener;
 import com.lnu.todomorrow.dao.*;
@@ -145,9 +147,11 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 	}
 
 	@Override
-	public void onGoalFilterDialogSelection(Goal selectedGoal) {
-		Log.d(TAG, "Receveid selected filter goal: " + selectedGoal.getName());
-		list.filterByGoal(selectedGoal);	
+	public void onGoalFilterDialogSubmit(List<Goal> filteredGoals)  {
+		Log.d(TAG, "Receveid selected filter goals");
+		list.setFilterGoalList((ArrayList<Goal>) filteredGoals);
 	}
+
+
 
 }

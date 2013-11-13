@@ -35,7 +35,8 @@
     <string name="currentValue">0</string>
     <string name="notificationText">   Value: </string>
     <string name="title_activity_dialog__postpone">Dialog_Postpone</string>
-    <string name="dialog_goal_selection_title">Select a goal:</string>
+    <string name="dialog_goal_selection_title">Select goals which should be shown:</string>
     <string name="dialog_goal_selection_cancel">Cancel</string>
+    <string name="dialog_goal_selection_ok">Ok</string>
 
 </resources>
