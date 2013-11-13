@@ -18,10 +18,9 @@ public class TestDataCreator {
 		goalDAO = new GoalDAO(context);
 		taskDAO = new TaskDAO(context);
 	}
-	
-	//TODO performance test data (for graph initialisation), also as stress test for layout and stuff
-	
-	
+
+	// may - TODO performance test data (for graph initialisation), also as stress test for layout
+	// and stuff
 
 	/**
 	 * method for convenience
@@ -61,6 +60,8 @@ public class TestDataCreator {
 
 		Log.d(TAG, "TESTDATA created: " + goal3);
 
+		// ! NEW TASK
+
 		String taskName = "Task1";
 
 		Calendar calendarTask = Calendar.getInstance();
@@ -78,6 +79,8 @@ public class TestDataCreator {
 
 		Log.d(TAG, "TESTDATA created: " + task1);
 
+		// ! NEW TASK
+
 		taskName = "Task2";
 
 		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
@@ -93,6 +96,8 @@ public class TestDataCreator {
 		Task task2 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal1);
 
 		Log.d(TAG, "TESTDATA created: " + task2);
+
+		// ! NEW TASK
 
 		taskName = "Task3";
 
@@ -110,6 +115,8 @@ public class TestDataCreator {
 
 		Log.d(TAG, "TESTDATA created: " + task3);
 
+		// ! NEW TASK
+
 		taskName = "Task4";
 
 		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
@@ -122,10 +129,15 @@ public class TestDataCreator {
 
 		value = 50;
 
-		Task task4 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal2);
+		Task task4 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal1);
+
+		task4.setFinished(true);
+		task4.setFinishedAt(Calendar.getInstance());
 
 		Log.d(TAG, "TESTDATA created: " + task4);
-		
+
+		// ! NEW TASK
+
 		taskName = "Taska";
 
 		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
@@ -141,8 +153,27 @@ public class TestDataCreator {
 		Task taska = taskDAO.createTaskEntry(taskName, calendarTask, value, goal3);
 
 		Log.d(TAG, "TESTDATA created: " + taska);
-		
-		
+
+		// ! NEW TASK
+
+		taskName = "TaskA1";
+
+		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
+		calendarTask.set(Calendar.MINUTE, 40);
+		calendarTask.set(Calendar.SECOND, 0);
+
+		calendarTask.set(Calendar.DAY_OF_MONTH, 9);
+		calendarTask.set(Calendar.MONTH, 11);
+		calendarTask.set(Calendar.YEAR, 2013);
+
+		value = 100;
+
+		Task taskA1 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal2);
+
+		Log.d(TAG, "TESTDATA created: " + taskA1);
+
+		// ! NEW TASK
+
 		taskName = "Taskb";
 
 		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
@@ -156,6 +187,24 @@ public class TestDataCreator {
 		value = 50;
 
 		Task taskb = taskDAO.createTaskEntry(taskName, calendarTask, value, goal3);
+
+		Log.d(TAG, "TESTDATA created: " + taskb);
+
+		// ! NEW TASK
+
+		taskName = "Taskc";
+
+		calendarTask.set(Calendar.HOUR_OF_DAY, 15);
+		calendarTask.set(Calendar.MINUTE, 40);
+		calendarTask.set(Calendar.SECOND, 0);
+
+		calendarTask.set(Calendar.DAY_OF_MONTH, 9);
+		calendarTask.set(Calendar.MONTH, 11);
+		calendarTask.set(Calendar.YEAR, 2013);
+
+		value = 50;
+
+		Task taskc = taskDAO.createTaskEntry(taskName, calendarTask, value, goal3);
 
 		Log.d(TAG, "TESTDATA created: " + taskb);
 

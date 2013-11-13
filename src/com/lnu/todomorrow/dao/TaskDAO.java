@@ -39,15 +39,15 @@ public class TaskDAO {
 	 * @throws SQLException
 	 */
 	public void open() throws SQLException {
-		Log.d(TAG, "opened Database connection");
+		//Log.d(TAG, "opened Database connection");
 		database = dbHelper.getWritableDatabase();
 	}
 
 	/**
 	 * closes database connection
 	 */
-	public void close() {
-		Log.d(TAG, "closed Database connection");
+	public void close() { 
+		//Log.d(TAG, "closed Database connection");
 		dbHelper.close();
 	}
 
@@ -109,38 +109,41 @@ public class TaskDAO {
 		}
 		cursor.close();
 		return tasks;
-
 	}
 	
-//	public List<Task> getAllTasksFilteredByGoals(List<Goal> goals) {
-//		
-//		if(goals.size()<=0){
-//			Log.e(TAG, "goal list to filter is empty");
-//			return null;
-//		}
-//		String selection = "";
-//		
-//		for(int i = 0; i < goals.size(); i++){	
-//			selection+= DbHelper.TASKS_C_GOAL + " = " + goals.get(i).getId();
-//			
-//		}
-//		
-//		selection.
-//		List<Task> tasks = new ArrayList<Task>();
-//		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
-//				, null, null, null,
-//				null);
-//
-//		cursor.moveToFirst();
-//		while (!cursor.isAfterLast()) {
-//			Task t = cursorToTask(cursor);
-//			tasks.add(t);
-//			cursor.moveToNext();
-//		}
-//		cursor.close();
-//		return tasks;
-//
-//	}
+	public List<Task> getAllTasksFilteredByGoals(List<Goal> goals) {
+		
+		if(goals.size()<=0){
+			Log.d(TAG, "goal list to filter is empty - get all tasks instead");
+			return getAllTasks();
+		}
+		String selection = "";
+		
+		String orStr = " OR ";
+		
+		for(int i = 0; i < goals.size(); i++){	
+			selection+= DbHelper.TASKS_C_GOAL + " = " + goals.get(i).getId() + orStr;	
+		}
+		
+		selection = selection.substring(0, selection.length() - orStr.length());
+		
+		Log.d(TAG, "DEBUG: selection string = " + selection);
+		
+		List<Task> tasks = new ArrayList<Task>();
+		Cursor cursor = database.query(DbHelper.TABLE_TASKS, columnsTask,
+				selection, null, null, null,
+				null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Task t = cursorToTask(cursor);
+			tasks.add(t);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return tasks;
+
+	}
 
 	public List<Task> getAllTasks(boolean allFinishedTasks) {
 

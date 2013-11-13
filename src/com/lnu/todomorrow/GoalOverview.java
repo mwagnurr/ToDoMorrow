@@ -28,12 +28,14 @@ import com.lnu.todomorrow.utils.Task;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
-public class GoalOverview extends Activity {
+public class GoalOverview extends Activity{
 	private static final String TAG = GoalOverview.class.getSimpleName();
 
 	private XYPlot plot;
@@ -55,11 +57,12 @@ public class GoalOverview extends Activity {
 		TextView goalName = (TextView) findViewById(R.id.goal_overview_name);
 
 		goalName.setText(thisGoal.getName());
-		
-		//ExampleFragment fragment = (ExampleFragment) getFragmentManager().findFragmentById(R.id.example_fragment);
+
+		// ExampleFragment fragment = (ExampleFragment)
+		// getFragmentManager().findFragmentById(R.id.example_fragment);
 		TaskListFragment listFragment = (TaskListFragment) getFragmentManager().findFragmentById(
 				R.id.goal_overview_task_list_fragment);
-		
+
 		listFragment.filterByGoal(thisGoal);
 
 		createTaskPlot();
@@ -68,6 +71,19 @@ public class GoalOverview extends Activity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		Log.d(TAG, "onCreate() finished");
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent intent1 = new Intent(this, GoalList.class);
+			intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent1);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/**
@@ -256,7 +272,7 @@ public class GoalOverview extends Activity {
 	 * 
 	 * @param series1Format
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "rawtypes" })
 	private void testTutorialCode(XYSeriesFormatter series1Format) {
 		Number[] numSightings = { 5, 8, 9, 2, 5 };
 		// Number[] years = {
@@ -279,5 +295,4 @@ public class GoalOverview extends Activity {
 		plot.setDomainStep(XYStepMode.SUBDIVIDE, years.length);
 		plot.addSeries(series2, series1Format);
 	}
-
 }

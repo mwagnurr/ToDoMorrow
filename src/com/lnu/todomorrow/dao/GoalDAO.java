@@ -34,12 +34,12 @@ public class GoalDAO {
 	 * @throws SQLException
 	 */
 	public void open() throws SQLException {
-		Log.d(TAG, "opened Database connection");
+		//Log.d(TAG, "opened Database connection");
 		database = dbHelper.getWritableDatabase();
 	}
 
 	public void close() {
-		Log.d(TAG, "closed Database connection");
+		//Log.d(TAG, "closed Database connection");
 		dbHelper.close();
 	}
 

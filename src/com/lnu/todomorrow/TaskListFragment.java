@@ -1,5 +1,6 @@
 package com.lnu.todomorrow;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,47 +29,94 @@ public class TaskListFragment extends ListFragment {
 	private static final String TAG = TaskListFragment.class.getSimpleName();
 
 	private TaskDAO taskDAO;
-	private MyAdapter adapter;
+	private TaskListAdapter adapter;
 	private List<Task> tasks;
 	private ScoreManager scoreMan;
 	private GoalDAO goalDAO;
 
-	
+	private ArrayList<Goal> filterGoalList;
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		taskDAO = new TaskDAO(getActivity());
-		taskDAO.open();
-		tasks = taskDAO.getAllTasks();
-//		/this.on
 		goalDAO = new GoalDAO(getActivity());
-
 		scoreMan = new ScoreManager();
-		adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
+
+		if (savedInstanceState != null) {
+			filterGoalList = (ArrayList<Goal>) savedInstanceState.getSerializable("filterGoalList");
+		} else {
+			filterGoalList = new ArrayList<Goal>();
+		}
+		taskDAO.open();
+		tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
+
+		adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 		setListAdapter(adapter);
 
 	}
-	
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		savedInstanceState.putSerializable("filterGoalList", filterGoalList);
+
+		Log.d(TAG, "Saving Fragment state");
+
+	}
+
 	public void filterByGoal(Goal goal) {
 		Log.d(TAG, "filtering task fragment by goal: " + goal.getName());
 
+		Log.d(TAG, "DEBUG: goalFilterListsize: " + filterGoalList.size());
+
+		if (filterListContainsGoal(goal)) {
+			Log.d(TAG, "goal: " + goal.getName() + " already filtered");
+			return;
+		}
+
+		filterGoalList.add(goal);
+
 		taskDAO.open();
-		tasks = taskDAO.getAllTasksByGoal(goal);
+		tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
 		if (adapter == null) {
-			adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
-			//setListAdapter(adapter);
+			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
+			// setListAdapter(adapter);
 		} else {
 			adapter.clear();
 			adapter.addAll(tasks);
 			adapter.notifyDataSetChanged();
+
+			Log.d(TAG, "successfully filtered.");
 		}
-		//setListAdapter(adapter);
+		// setListAdapter(adapter);
+	}
+
+	public void removeFilterByGoal(Goal goal) {
+		if (filterListContainsGoal(goal)) {
+			Log.d(TAG, "removeFilterByGoal - removing from filter list goal: " + goal.getName());
+
+			filterGoalList.remove(goal); // TODO change
+		} else {
+			Log.d(TAG, "removeFilterByGoal - not in filter list goal: " + goal.getName());
+		}
+	}
+
+	private boolean filterListContainsGoal(Goal goal) {
+		for (int i = 0; i < filterGoalList.size(); i++) {
+			if (filterGoalList.get(i).getId() == goal.getId()) {
+				return true;
+			}
+			// if(filterGoalList.contains(goal))
+		}
+		return false;
 	}
 
 	public void addTask(Task task) {
-		Log.d(TAG,
-				"adding task to TaskListFragment adapter - " + task.getName());
+		Log.d(TAG, "adding task to TaskListFragment adapter - " + task.getName());
 
 		adapter.add(task);
 		adapter.notifyDataSetChanged();
@@ -79,15 +127,15 @@ public class TaskListFragment extends ListFragment {
 		Collections.sort(tasks, new DateComparator());
 
 		if (adapter == null) {
-			adapter = new MyAdapter(getActivity(), R.layout.row_layout, tasks);
+			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 		}
 		adapter.notifyDataSetChanged();
 	}
 
-	private class MyAdapter extends ArrayAdapter<Task> {
+	private class TaskListAdapter extends ArrayAdapter<Task> {
 		private List<Task> tasks;
 
-		public MyAdapter(Context context, int resource, List<Task> objects) {
+		public TaskListAdapter(Context context, int resource, List<Task> objects) {
 			super(context, resource, objects);
 			tasks = objects;
 		}
@@ -120,8 +168,7 @@ public class TaskListFragment extends ListFragment {
 				check.setEnabled(true);
 
 			name.setText(tasks.get(position).getName());
-			dead.setText(TimeUtil.getFormattedDate(tasks.get(position)
-					.getDeadline()));
+			dead.setText(TimeUtil.getFormattedDate(tasks.get(position).getDeadline()));
 			goal.setText(tasks.get(position).getGoal().getName());
 
 			return row;
@@ -146,11 +193,9 @@ public class TaskListFragment extends ListFragment {
 
 		@Override
 		public int compare(Task lhs, Task rhs) {
-			if (lhs.getDeadline().getTimeInMillis() < rhs.getDeadline()
-					.getTimeInMillis())
+			if (lhs.getDeadline().getTimeInMillis() < rhs.getDeadline().getTimeInMillis())
 				return -1;
-			if (lhs.getDeadline().getTimeInMillis() > rhs.getDeadline()
-					.getTimeInMillis())
+			if (lhs.getDeadline().getTimeInMillis() > rhs.getDeadline().getTimeInMillis())
 				return 1;
 			return 0;
 		}
@@ -168,13 +213,12 @@ public class TaskListFragment extends ListFragment {
 				finishTask(t);
 
 				Toast.makeText(getActivity(),
-						"Task: " + t.getName() + "Checked: " + t.isFinished(),
-						Toast.LENGTH_LONG).show();
+						"Task: " + t.getName() + "Checked: " + t.isFinished(), Toast.LENGTH_LONG)
+						.show();
 			}
 
 			if (adapter == null) {
-				adapter = new MyAdapter(getActivity(), R.layout.row_layout,
-						tasks);
+				adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 			}
 			adapter.notifyDataSetChanged();
 		}
@@ -189,8 +233,7 @@ public class TaskListFragment extends ListFragment {
 				Log.e(TAG, "couldnt update Task");
 			}
 			Log.d(TAG,
-					"task - " + t.getName() + " set isfinshed to: "
-							+ t.isFinished()
+					"task - " + t.getName() + " set isfinshed to: " + t.isFinished()
 							+ TimeUtil.getFormattedDate(t.getFinishedAt()));
 
 			int score = scoreMan.calculateScore(t);
@@ -210,9 +253,9 @@ public class TaskListFragment extends ListFragment {
 		}
 
 	}
-	
+
 	public interface OnTaskChangedListener {
-		//TODO let activities implement 
-        public void onTaskChanged();
-    }
+		// TODO let activities implement
+		public void onTaskChanged();
+	}
 }

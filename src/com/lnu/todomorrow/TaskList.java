@@ -1,6 +1,8 @@
 package com.lnu.todomorrow;
 
 import java.util.Calendar;
+
+import com.lnu.todomorrow.GoalFilterDialogFragment.GoalFilterDialogListener;
 import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
@@ -8,6 +10,7 @@ import com.lnu.todomorrow.utils.Task;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class TaskList extends Activity {
+public class TaskList extends Activity implements GoalFilterDialogListener {
 	private static final String TAG = TaskList.class.getSimpleName();
 	private static TaskDAO dataTasks;
 	private static GoalDAO dataGoals;
@@ -27,8 +30,7 @@ public class TaskList extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_list);
 
-		list = (TaskListFragment) getFragmentManager().findFragmentById(
-				R.id.task_list_fragment);
+		list = (TaskListFragment) getFragmentManager().findFragmentById(R.id.task_list_fragment);
 
 		dataTasks = new TaskDAO(this);
 
@@ -41,7 +43,9 @@ public class TaskList extends Activity {
 
 	@Override
 	public void onDestroy() {
+		Log.d(TAG, "destroying activity");
 		dataTasks.close();
+		dataGoals.close();
 		super.onDestroy();
 	}
 
@@ -50,6 +54,12 @@ public class TaskList extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.todo_list, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void showGoalFilterDialog() {
+		DialogFragment dialog = new GoalFilterDialogFragment();
+		dialog.show(getFragmentManager(), "FilterGoalDialogFragment");
+		Log.d(TAG, "showing filter dialog");
 	}
 
 	@Override
@@ -61,7 +71,8 @@ public class TaskList extends Activity {
 			startActivity(intent1);
 			return true;
 		case R.id.filter_by_goal:
-			//TODO code for filtering by goal
+			showGoalFilterDialog();
+			return true;
 		case R.id.show_goalList:
 			Intent intent = new Intent(this, GoalList.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -69,6 +80,7 @@ public class TaskList extends Activity {
 			return true;
 		case R.id.sort_by_deadline:
 			list.sortListByDeadline();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -81,6 +93,7 @@ public class TaskList extends Activity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent result) {
+		Log.d(TAG, "received result");
 		switch (requestCode) {
 		case 0:
 			if (resultCode == RESULT_OK) {
@@ -114,23 +127,27 @@ public class TaskList extends Activity {
 				Task task = dataTasks.createTaskEntry(name, cal, val, goal);
 
 				// creating intent for alarmManager
-				Intent intent = new Intent(TaskList.this,
-						MyBroadcastReceiver.class);
+				Intent intent = new Intent(TaskList.this, MyBroadcastReceiver.class);
 				intent.putExtra("name", task.getName());
 				intent.putExtra("goal", task.getGoal().getName());
 				intent.putExtra("value", task.getValue());
-				PendingIntent pi = PendingIntent.getBroadcast(TaskList.this, 0,
-						intent, PendingIntent.FLAG_UPDATE_CURRENT
-								| Intent.FILL_IN_DATA);
+				PendingIntent pi = PendingIntent.getBroadcast(TaskList.this, 0, intent,
+						PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
 
 				// setting alarm
 				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
-				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline()
-						.getTimeInMillis(), pi);
+				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
 
 				Log.d(TAG, "created task: " + task);
 				list.addTask(task);
 			}
 		}
 	}
+
+	@Override
+	public void onGoalFilterDialogSelection(Goal selectedGoal) {
+		Log.d(TAG, "Receveid selected filter goal: " + selectedGoal.getName());
+		list.filterByGoal(selectedGoal);	
+	}
+
 }

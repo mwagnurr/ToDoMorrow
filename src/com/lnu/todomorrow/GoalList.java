@@ -32,6 +32,8 @@ public class GoalList extends Activity {
 	private GoalAdapter adapter;
 	private static GoalDAO goalDAO;
 	private static TaskDAO taskDAO;
+	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,6 @@ public class GoalList extends Activity {
 		adapter = new GoalAdapter(this, R.layout.row_layout, goalDAO.getAllGoals());
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnGoalItemClick());
-		
-
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
