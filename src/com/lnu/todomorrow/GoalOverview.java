@@ -35,7 +35,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class GoalOverview extends Activity{
+public class GoalOverview extends Activity {
 	private static final String TAG = GoalOverview.class.getSimpleName();
 
 	private XYPlot plot;
@@ -69,8 +69,19 @@ public class GoalOverview extends Activity{
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		
+		//TODO add "add Task" button (or similar) in goal overview
+		
+		//TODO add sorting options for taskfragment list
 
 		Log.d(TAG, "onCreate() finished");
+	}
+
+	@Override
+	public void onDestroy() {
+		if (taskDAO != null)
+			taskDAO.close();
+		super.onDestroy();
 	}
 
 	@Override
@@ -110,6 +121,7 @@ public class GoalOverview extends Activity{
 		}
 		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
 
+		//TODO maybe add another plot series for non completed tasks
 		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
 
 		// Formatter for graph line and point, partly defined in XML
@@ -182,6 +194,7 @@ public class GoalOverview extends Activity{
 		plot.getGraphWidget().setDomainValueFormat(new GraphXLabelFormat());
 	}
 
+	//TODO further testing and tweaking correct graph display
 	private XYSeries initGraphSeries(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
 			int calendarField, DateFormat dateFormat) {
 

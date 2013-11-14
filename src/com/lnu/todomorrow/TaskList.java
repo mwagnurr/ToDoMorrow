@@ -1,11 +1,9 @@
 package com.lnu.todomorrow;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import com.lnu.todomorrow.GoalFilterDialogFragment.GoalFilterDialogListener;
-import com.lnu.todomorrow.dao.*;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
 import com.lnu.todomorrow.utils.Task;
@@ -23,8 +21,7 @@ import android.view.View;
 
 public class TaskList extends Activity implements GoalFilterDialogListener {
 	private static final String TAG = TaskList.class.getSimpleName();
-	private static TaskDAO dataTasks;
-	private static GoalDAO dataGoals;
+	// private static TaskDAO dataTasks;
 	private TaskListFragment list;
 
 	@Override
@@ -34,10 +31,6 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 
 		list = (TaskListFragment) getFragmentManager().findFragmentById(R.id.task_list_fragment);
 
-		dataTasks = new TaskDAO(this);
-
-		dataGoals = new GoalDAO(this);
-
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -46,8 +39,6 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "destroying activity");
-		dataTasks.close();
-		dataGoals.close();
 		super.onDestroy();
 	}
 
@@ -99,34 +90,13 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 		switch (requestCode) {
 		case 0:
 			if (resultCode == RESULT_OK) {
-				int y = result.getIntExtra("dead_y", 2013);
-				int m = result.getIntExtra("dead_m", 1);
-				int d = result.getIntExtra("dead_d", 1);
 
-				int h = result.getIntExtra("dead_h", 12);
-				int min = result.getIntExtra("dead_min", 00);
+				Task task = (Task) result.getSerializableExtra("task");
 
-				int val = result.getIntExtra("value", 0);
-
-				String name = result.getStringExtra("task_name");
-
-				String g = result.getStringExtra("goal");
-				dataGoals.open();
-				Goal goal = dataGoals.getGoal(g);
-				System.out.println(goal.getName());
-
-				Calendar cal = Calendar.getInstance();
-
-				cal.set(Calendar.HOUR_OF_DAY, h);
-				cal.set(Calendar.MINUTE, min);
-				cal.set(Calendar.SECOND, 0);
-
-				cal.set(Calendar.DAY_OF_MONTH, d);
-				cal.set(Calendar.MONTH, m);
-				cal.set(Calendar.YEAR, y);
-
-				dataTasks.open();
-				Task task = dataTasks.createTaskEntry(name, cal, val, goal);
+				if (task == null) {
+					Log.e(TAG, "received as task null");
+					return;
+				}
 
 				// creating intent for alarmManager
 				Intent intent = new Intent(TaskList.this, MyBroadcastReceiver.class);
@@ -147,11 +117,9 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 	}
 
 	@Override
-	public void onGoalFilterDialogSubmit(List<Goal> filteredGoals)  {
+	public void onGoalFilterDialogSubmit(List<Goal> filteredGoals) {
 		Log.d(TAG, "Receveid selected filter goals");
 		list.setFilterGoalList((ArrayList<Goal>) filteredGoals);
 	}
-
-
 
 }

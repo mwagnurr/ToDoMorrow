@@ -8,7 +8,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "todomorrow.db";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 7;
 
 	// GOALS table columns
 	public static final String TABLE_GOALS = "goals";
@@ -34,16 +34,19 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE_GOALS = "create table "
 			+ TABLE_GOALS + " (" 
 			+ GOALS_C_ID + " integer primary key autoincrement, " 
-			+ GOALS_C_NAME + " text not null, " 
+			+ GOALS_C_NAME + " text not null unique, " 
 			+ GOALS_C_SCORE + " integer, "
 			+ GOALS_C_DEADLINE + " datetime);";
 
 	private static final String DATABASE_CREATE_TASKS = "create table "
 			+ TABLE_TASKS + " (" + TASKS_C_ID
-			+ " integer primary key autoincrement, " + TASKS_C_NAME
-			+ " text not null, " + TASKS_C_DEADLINE + " datetime, "
-			+ TASKS_C_VALUE + " integer, " + TASKS_C_FINISHED + " integer, "
-			+ TASKS_C_FINISHED_AT + " datetime," + TASKS_C_GOAL + " integer, "
+			+ " integer primary key autoincrement, " 
+			+ TASKS_C_NAME + " text not null, " 
+			+ TASKS_C_DEADLINE + " datetime, "
+			+ TASKS_C_VALUE + " integer, " 
+			+ TASKS_C_FINISHED + " integer, "
+			+ TASKS_C_FINISHED_AT + " datetime," 
+			+ TASKS_C_GOAL + " integer, "
 			+ "foreign key(" + TASKS_C_GOAL + ") references " + TABLE_GOALS
 			+ "(" + GOALS_C_ID + ")" + ");";
 

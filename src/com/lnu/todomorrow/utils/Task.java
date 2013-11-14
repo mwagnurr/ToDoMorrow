@@ -1,9 +1,10 @@
 package com.lnu.todomorrow.utils;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Task {
-
+public class Task implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private String name;
 	private Goal goal;

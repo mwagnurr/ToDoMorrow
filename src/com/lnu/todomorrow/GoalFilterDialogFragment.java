@@ -63,8 +63,8 @@ public class GoalFilterDialogFragment extends DialogFragment {
 			goalChecked[i] = false;
 		}
 		builder.setMultiChoiceItems(goalNames, goalChecked, new MultiChoiceSlectionListener());
-		builder.setPositiveButton(R.string.dialog_goal_selection_ok, new OkClickListener());
-		builder.setNegativeButton(R.string.dialog_goal_selection_cancel, new CancelClickListener());
+		builder.setPositiveButton(android.R.string.ok, new OkClickListener());
+		builder.setNegativeButton(android.R.string.cancel, new CancelClickListener());
 
 		Log.d(TAG, "creating dialog");
 

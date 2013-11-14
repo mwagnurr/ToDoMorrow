@@ -9,7 +9,6 @@ import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.TestDataCreator;
 import com.lnu.todomorrow.utils.TimeUtil;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,8 +31,6 @@ public class GoalList extends Activity {
 	private GoalAdapter adapter;
 	private static GoalDAO goalDAO;
 	private static TaskDAO taskDAO;
-	
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +49,13 @@ public class GoalList extends Activity {
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnGoalItemClick());
 
-		ActionBar actionBar = getActionBar();
-		//actionBar.setDisplayHomeAsUpEnabled(true);
-
 		Log.d(TAG, "onCreate()");
 	}
 
 	@Override
 	public void onDestroy() {
-		goalDAO.close();
+		if (goalDAO != null)
+			goalDAO.close();
 		super.onDestroy();
 	}
 
@@ -149,6 +144,8 @@ public class GoalList extends Activity {
 			adapter.notifyDataSetChanged();
 
 			Log.d(TAG, "received result: " + goal);
+		} else {
+			Log.e(TAG, "receveid bad result");
 		}
 	}
 

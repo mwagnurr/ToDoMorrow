@@ -54,6 +54,8 @@ public class TaskListFragment extends ListFragment {
 		fetchFilteredTasks();
 
 		setListAdapter(adapter);
+		// TODO add context menu to edit Tasks (maybe refactoring in TaskForm, or new
+		// TaskUpdateForm), and for deleting
 
 	}
 
@@ -253,7 +255,6 @@ public class TaskListFragment extends ListFragment {
 	}
 
 	public interface OnTaskChangedListener {
-		// TODO let activities implement
 		public void onTaskChanged();
 	}
 }

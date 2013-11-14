@@ -2,13 +2,20 @@ package com.lnu.todomorrow;
 
 import java.util.Calendar;
 
+import com.lnu.todomorrow.dao.DAOException;
 import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.utils.Goal;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -28,6 +35,10 @@ public class GoalForm extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_form);
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
 	}
 
 	public void addDeadlineChecked(View view) {
@@ -41,6 +52,7 @@ public class GoalForm extends Activity {
 			dateText.setText("Date of Deadline: ");
 			lay.addView(dateText);
 
+			//TODO change date picker view
 			deadDate = new DatePicker(this);
 			lay.addView(deadDate);
 			TextView timeText = new TextView(this);
@@ -68,11 +80,19 @@ public class GoalForm extends Activity {
 	public void addGoalButtonClick(View v) {
 		Log.d(TAG, "addGoal button clicked");
 		EditText nameReader = (EditText) findViewById(R.id.goal_form_name_reader);
-		String name = nameReader.getText().toString();
+		String goalName = nameReader.getText().toString();
 
-		// reply.putExtra("goal_name", name);
+		if (goalName.isEmpty()) {
+			Log.e(TAG, "goal name is empty");
+			createAlert(getResources().getString(R.string.alert_goal_name_empty)).show();
+			return;
+		} else if (goalName.length() > 14) {
+			// TODO change goal length with layout change; maybe - change layout to support longer
+			createAlert(getResources().getString(R.string.alert_goal_name_toolong)).show();
+			return;
+		}
 
-		Calendar calendar = null;
+		Calendar deadline = null;
 
 		if (deadlineChecked) {
 
@@ -83,27 +103,114 @@ public class GoalForm extends Activity {
 			int hour = deadTime.getCurrentHour();
 			int min = deadTime.getCurrentMinute();
 
-			calendar = Calendar.getInstance();
-			calendar.set(Calendar.HOUR_OF_DAY, hour);
-			calendar.set(Calendar.MINUTE, min);
-			calendar.set(Calendar.SECOND, 0);
+			deadline = createCalendar(day, month, year, hour, min);
 
-			calendar.set(Calendar.DAY_OF_MONTH, day);
-			calendar.set(Calendar.MONTH, month);
-			calendar.set(Calendar.YEAR, year);
+			if (deadline.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+				Log.e(TAG, "deadline is in the past");
+				createAlert(getResources().getString(R.string.alert_goal_deadlinepast)).show();
+				return;
+			}
 
-			Log.d(TAG, "created calendar: " + calendar);
-
-			// reply.putExtra("goal_deadline", calendar);
 		}
 
 		GoalDAO dao = new GoalDAO(this);
 		dao.open();
-		Goal goal = dao.createGoalEntry(name, calendar);
 
 		Intent reply = new Intent();
+
+		Goal goal = null;
+		try {
+			goal = dao.createGoalEntry(goalName, deadline);
+
+		} catch (DAOException e) {
+
+			Log.e(TAG, "Error in goal creation: " + e.getMessage());
+			// e.printStackTrace();
+			createAlert(getResources().getString(R.string.alert_goal_notunique)).show();
+
+			return;
+		}
+
 		reply.putExtra("goal", goal);
 		setResult(RESULT_OK, reply);
 		finish();
 	}
+
+	/**
+	 * @param day
+	 * @param month
+	 * @param year
+	 * @param hour
+	 * @param min
+	 * @return
+	 */
+	private Calendar createCalendar(int day, int month, int year, int hour, int min) {
+		Calendar calendar;
+		calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, min);
+		calendar.set(Calendar.SECOND, 0);
+
+		calendar.set(Calendar.DAY_OF_MONTH, day);
+		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.YEAR, year);
+		return calendar;
+	}
+
+	private AlertDialog createAlert(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// builder.setMessage(R.string.alert_msg);
+
+		builder.setMessage(message);
+		builder.setCancelable(false);
+		builder.setPositiveButton(getResources().getString(android.R.string.ok),
+				new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+		return builder.create();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent intent1 = createBackIntent();
+			startActivity(intent1);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/**
+	 * creates dynamically an intent to send back to the calling activity (startActivityForResult)
+	 * 
+	 * @return
+	 */
+	private Intent createBackIntent() {
+		Intent intent1;
+		// determine which activity called the form and return correspondingly
+		ComponentName caller = getCallingActivity();
+		if (caller != null) {
+			Log.d(TAG, "bla. " + caller.getClassName());
+			Class<?> cls = null;
+			try {
+				cls = Class.forName(caller.getClassName());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			intent1 = new Intent(this, cls);
+			intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		} else {
+			intent1 = new Intent(this, GoalList.class);
+			intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+		}
+		return intent1;
+	}
+
 }

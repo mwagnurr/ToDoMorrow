@@ -36,7 +36,12 @@
     <string name="notificationText">   Value: </string>
     <string name="title_activity_dialog__postpone">Dialog_Postpone</string>
     <string name="dialog_goal_selection_title">Select goals which should be shown:</string>
-    <string name="dialog_goal_selection_cancel">Cancel</string>
-    <string name="dialog_goal_selection_ok">Ok</string>
+    <string name="alert_goal_notunique">There is already a goal with this name in the database! Please choose a different one!</string>
+    <string name="alert_goal_name_empty">The goal name must not be empty!</string>
+    <string name="alert_goal_name_toolong">The goal name is too long!</string>
+    <string name="alert_goal_deadlinepast">The goal deadline must not be in the past!</string>
+    <string name="alert_task_name_empty">The task name must not be empty!</string>
+    <string name="alert_task_name_toolong">The task name is too long!</string>
+    <string name="alert_task_deadlinepast">The task deadline must not be in the past!</string>
 
 </resources>
