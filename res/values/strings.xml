@@ -7,6 +7,7 @@
     <string name="title_activity_goal_list">Goal List</string>
     <string name="title_activity_goal_overview">Goal Overview</string>
     <string name="title_activity_goal_form">Add Goal</string>
+    <string name="title_activity_edit">Edit Task</string>
     <string name="deadline_date">Date of Deadline</string>
     <string name="deadline_time">Time of Deadline</string>
     <string name="task_name">Description</string>
@@ -43,5 +44,6 @@
     <string name="alert_task_name_empty">The task name must not be empty!</string>
     <string name="alert_task_name_toolong">The task name is too long!</string>
     <string name="alert_task_deadlinepast">The task deadline must not be in the past!</string>
+    <string name="alert_deadline_before_goal">Task deadline must not be before Goal deadline!</string>
 
 </resources>

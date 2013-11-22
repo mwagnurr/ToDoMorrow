@@ -52,14 +52,16 @@ public class GoalForm extends Activity {
 			dateText.setText("Date of Deadline: ");
 			lay.addView(dateText);
 
-			//TODO change date picker view
+			// TODO change date picker view
 			deadDate = new DatePicker(this);
+			deadDate.setCalendarViewShown(false);
 			lay.addView(deadDate);
 			TextView timeText = new TextView(this);
 			timeText.setText("Time of Deadline: ");
 			lay.addView(timeText);
 
 			deadTime = new TimePicker(this);
+			deadTime.setIs24HourView(true);
 			lay.addView(deadTime);
 
 			deadlineChecked = true;
@@ -86,7 +88,7 @@ public class GoalForm extends Activity {
 			Log.e(TAG, "goal name is empty");
 			createAlert(getResources().getString(R.string.alert_goal_name_empty)).show();
 			return;
-		} else if (goalName.length() > 14) {
+		} else if (goalName.length() > 20) {
 			// TODO change goal length with layout change; maybe - change layout to support longer
 			createAlert(getResources().getString(R.string.alert_goal_name_toolong)).show();
 			return;

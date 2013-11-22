@@ -3,7 +3,7 @@ package com.lnu.todomorrow.utils;
 import java.io.Serializable;
 import java.util.Calendar;
 
-public class Task implements Serializable{
+public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private String name;
@@ -71,11 +71,9 @@ public class Task implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", name=" + name + ", goal=" + goal
-				+ ", deadline=" + TimeUtil.getFormattedDate(deadline)
-				+ ", finished=" + finished + ", finishedAt="
-				+ TimeUtil.getFormattedDate(finishedAt) + ", value=" + value
-				+ "]";
+		return "Task [id=" + id + ", name=" + name + ", goal=" + goal + ", deadline="
+				+ TimeUtil.getFormattedDate(deadline) + ", finished=" + finished + ", finishedAt="
+				+ TimeUtil.getFormattedDate(finishedAt) + ", value=" + value + "]";
 	}
 
 }

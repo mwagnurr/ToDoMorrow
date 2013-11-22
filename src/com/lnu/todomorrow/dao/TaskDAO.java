@@ -21,6 +21,7 @@ public class TaskDAO {
 	private SQLiteDatabase database;
 	private DbHelper dbHelper;
 	private GoalDAO goalDAO;
+	private Context context;
 
 	private String[] columnsTask = { DbHelper.TASKS_C_ID, DbHelper.TASKS_C_NAME,
 			DbHelper.TASKS_C_DEADLINE, DbHelper.TASKS_C_GOAL, DbHelper.TASKS_C_VALUE,
@@ -30,7 +31,7 @@ public class TaskDAO {
 
 	public TaskDAO(Context context) {
 		dbHelper = new DbHelper(context);
-		goalDAO = new GoalDAO(context);
+		this.context = context;
 	}
 
 	/**
@@ -257,24 +258,30 @@ public class TaskDAO {
 			task.setFinishedAt(null);
 		}
 
+		goalDAO = new GoalDAO(context);
 		goalDAO.open();
 		Goal g = goalDAO.getGoal(cursor.getInt(3));
 		task.setGoal(g);
 		// Log.d(TAG, "tasks fin=" + fin);
 
 		// Log.d(TAG, "DEBUG: converted cursor to: " + task);
-
+		goalDAO.close();
 		return task;
 	}
 
 	public void updateTasksForGoal(Goal g) {
 		List<Task> taskList = getAllTasksByGoal(g);
 
+		if(goalDAO == null){
+			goalDAO = new GoalDAO(context);
+		}
+		goalDAO.open();
 		for (Task t : taskList) {
 			t.setGoal(goalDAO.getGoal(g.getId()));
 			System.out.println("Goal Name: " + g.getName() + "Score: " + g.getScore());
 			updateTask(t);
 		}
+		goalDAO.close();
 
 	}
 

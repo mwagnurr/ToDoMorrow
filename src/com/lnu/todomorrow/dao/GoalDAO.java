@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.lnu.todomorrow.utils.Goal;
+import com.lnu.todomorrow.utils.Task;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,6 +20,8 @@ public class GoalDAO {
 	// Database fields
 	private SQLiteDatabase database;
 	private DbHelper dbHelper;
+	private TaskDAO taskDb;
+	private Context context;
 	protected static String[] columnsGoal = { DbHelper.GOALS_C_ID, DbHelper.GOALS_C_NAME,
 			DbHelper.GOALS_C_SCORE, DbHelper.GOALS_C_DEADLINE };
 
@@ -26,6 +29,7 @@ public class GoalDAO {
 
 	public GoalDAO(Context context) {
 		dbHelper = new DbHelper(context);
+		this.context = context;
 	}
 
 	/**
@@ -36,6 +40,7 @@ public class GoalDAO {
 	public void open() throws SQLException {
 		// Log.d(TAG, "opened Database connection");
 		database = dbHelper.getWritableDatabase();
+
 	}
 
 	public void close() {
@@ -45,7 +50,7 @@ public class GoalDAO {
 
 	public Goal createGoalEntry(String name, Calendar deadline) throws DAOException {
 
-		if (name==null || name.isEmpty()) {
+		if (name == null || name.isEmpty()) {
 			throw new DAOException("goal name is empty");
 		}
 		ContentValues values = new ContentValues();
@@ -130,9 +135,17 @@ public class GoalDAO {
 
 	public void deleteGoal(Goal goal) {
 
+		taskDb = new TaskDAO(context);
+		taskDb.open();
 		// TODO delete goal and delete tasks of goals
+		List<Task> tasks = taskDb.getAllTasksByGoal(goal);
+		for (Task t : tasks) {
+			taskDb.deleteTaskEntry(t);
+		}
+		taskDb.close();
 
 		database.delete(DbHelper.TABLE_GOALS, DbHelper.GOALS_C_ID + " = " + goal.getId(), null);
+
 	}
 
 	private Goal cursorToGoal(Cursor cursor) {

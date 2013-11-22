@@ -28,35 +28,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
-    
-    <LinearLayout 
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/ButtonOk"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:text="Ok"
-        android:textColor="#000"
-        android:textSize="18sp"
-        android:onClick="dialogOK"
-        android:textStyle="bold" />
-    
-     <Button
-        android:id="@+id/ButtonCancel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:text="Cancel"
-        android:textColor="#000"
-        android:textSize="18sp"
-        android:onClick="dialogCancel"
-        android:textStyle="bold" />
-     </LinearLayout>
+        <Button
+            android:id="@+id/ButtonOk"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="dialogOK"
+            android:text="Ok"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/ButtonCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="dialogCancel"
+            android:text="Cancel"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>

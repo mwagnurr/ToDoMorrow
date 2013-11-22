@@ -30,6 +30,8 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 		setContentView(R.layout.activity_task_list);
 
 		list = (TaskListFragment) getFragmentManager().findFragmentById(R.id.task_list_fragment);
+		
+		
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -99,11 +101,12 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 				}
 
 				// creating intent for alarmManager
-				Intent intent = new Intent(TaskList.this, MyBroadcastReceiver.class);
+				Intent intent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
 				intent.putExtra("name", task.getName());
 				intent.putExtra("goal", task.getGoal().getName());
 				intent.putExtra("value", task.getValue());
-				PendingIntent pi = PendingIntent.getBroadcast(TaskList.this, 0, intent,
+				intent.putExtra("id", task.getId());
+				PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, intent,
 						PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
 
 				// setting alarm

@@ -68,8 +68,8 @@ public class Goal implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Goal [id=" + id + ", name=" + name + ", score=" + score
-				+ ", deadline=" + TimeUtil.getFormattedDate(deadline) + "]";
+		return "Goal [id=" + id + ", name=" + name + ", score=" + score + ", deadline="
+				+ TimeUtil.getFormattedDate(deadline) + "]";
 	}
 
 }

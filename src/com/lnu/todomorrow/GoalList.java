@@ -120,14 +120,30 @@ public class GoalList extends Activity {
 
 			Goal currGoal = getItem(position);
 
+			// TODO show deadline only when selected
+
 			TextView name = (TextView) row.findViewById(R.id.goalrow_name);
 			TextView score = (TextView) row.findViewById(R.id.goalrow_score);
 			TextView tasks = (TextView) row.findViewById(R.id.goalrow_tasks);
 			TextView deadline = (TextView) row.findViewById(R.id.goalrow_deadline);
 
-			name.setText(currGoal.getName());
+			String n = currGoal.getName();
+			String nShort = n;
+			System.out.println(n);
+			if (n.length() > 10) {
+				nShort = n.replace(" ", "\n");
+				System.out.println(nShort);
+			}
+			name.setText(nShort);
 			score.setText(String.valueOf(currGoal.getScore()));
-			deadline.setText(TimeUtil.getFormattedDate(currGoal.getDeadline()));
+			if (currGoal.getDeadline() != null) {
+				deadline.setText(TimeUtil.getFormattedDate(currGoal.getDeadline()));
+			} else {
+				TextView labelDead = (TextView) row.findViewById(R.id.goalrow_deadline_label);
+				deadline.setVisibility(View.GONE);
+				labelDead.setVisibility(View.GONE);
+			}
+
 			tasks.setText(String.valueOf(taskDAO.getAllTasksByGoal(currGoal).size()));
 
 			return row;

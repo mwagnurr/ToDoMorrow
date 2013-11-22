@@ -36,6 +36,13 @@
         android:padding="4sp"
         android:text="@string/goal_overview_tasklist" />
 
+    <Button
+        android:id="@+id/overview_new_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addTask"
+        android:text="@string/addTask" />
+
     <fragment
         android:id="@+id/goal_overview_task_list_fragment"
         android:layout_width="match_parent"

@@ -42,9 +42,13 @@
         <receiver android:name="com.lnu.todomorrow.utils.MyBroadcastReceiver" />
 
         <activity
-            android:name="com.lnu.todomorrow.Dialog_Postpone"
+            android:name="com.lnu.todomorrow.DialogPostpone"
             android:label="@string/title_activity_dialog__postpone"
             android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.lnu.todomorrow.EditTask"
+            android:label="@string/title_activity_edit" >
         </activity>
     </application>
 

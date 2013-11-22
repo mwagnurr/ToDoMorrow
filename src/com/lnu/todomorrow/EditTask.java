@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -33,12 +34,16 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class TaskForm extends Activity {
-	private static final String TAG = TaskForm.class.getSimpleName();
+public class EditTask extends Activity {
+	private static final String TAG = EditTask.class.getSimpleName();
 	private Spinner goalSpin;
 	private TimePicker tp;
+	private DatePicker dp;
 	private String goalName;
 	private Goal goal;
+	private Goal currentGoal;
+	private EditText et;
+	private Button bt;
 
 	private ArrayList<String> goalsStrings;
 	private List<Goal> goals;
@@ -55,8 +60,33 @@ public class TaskForm extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.task_form);
 
+		Intent in = getIntent();
+		Task t = (Task) in.getSerializableExtra("task");
+		currentGoal = t.getGoal();
+		taskDAO = new TaskDAO(this);
+		goalDAO = new GoalDAO(this);
+
+		taskDAO.open();
+		taskDAO.deleteTaskEntry(t);
+
+		tp = (TimePicker) findViewById(R.id.pick_deadline_time);
+		dp = (DatePicker) findViewById(R.id.pick_deadline);
+		et = (EditText) findViewById(R.id.taskname);
+		bt = (Button) findViewById(R.id.add_task);
+
+		bt.setText("Finished Editing");
+		et.setText(t.getName());
+
+		Calendar cal = t.getDeadline();
+		tp.setCurrentHour(cal.HOUR_OF_DAY);
+		tp.setCurrentMinute(cal.MINUTE);
+		dp.updateDate(cal.YEAR, cal.MONTH, cal.DAY_OF_MONTH);
+
 		val = (TextView) findViewById(R.id.value);
+		val.setText(t.getValue());
+
 		SeekBar sb = (SeekBar) findViewById(R.id.add_value);
+		sb.setProgress(t.getValue());
 		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
@@ -78,19 +108,10 @@ public class TaskForm extends Activity {
 
 		});
 
-		taskDAO = new TaskDAO(this);
-		goalDAO = new GoalDAO(this);
+		goalDAO.open();
 
-		if (getIntent().getExtras() != null) {
-			goals = new ArrayList<Goal>();
-			Goal activeGoal = (Goal) getIntent().getSerializableExtra("goal");
-			goals.add(activeGoal);
-		} else {
-			goalDAO.open();
+		goals = goalDAO.getAllGoals();
 
-			goals = goalDAO.getAllGoals();
-
-		}
 		addItemsToSpinner();
 		addSpinnerItemClickListener();
 
@@ -120,10 +141,11 @@ public class TaskForm extends Activity {
 			goalsStrings.add(go.getName());
 		}
 		goalsStrings.add("New Goal");
-
+		int pos = goalsStrings.indexOf(currentGoal.getName());
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, goalsStrings);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		goalSpin.setSelection(pos);
 		goalSpin.setAdapter(dataAdapter);
 
 	}
@@ -138,7 +160,6 @@ public class TaskForm extends Activity {
 		int hour = tp.getCurrentHour();
 		int minute = tp.getCurrentMinute();
 
-		DatePicker dp = (DatePicker) findViewById(R.id.pick_deadline);
 		int day = dp.getDayOfMonth();
 		int month = dp.getMonth();
 		int year = dp.getYear();
@@ -150,7 +171,7 @@ public class TaskForm extends Activity {
 			return;
 		}
 
-		EditText et = (EditText) findViewById(R.id.taskname);
+		et = (EditText) findViewById(R.id.taskname);
 
 		String taskName = et.getText().toString().trim();
 
@@ -233,10 +254,10 @@ public class TaskForm extends Activity {
 			goalName = arg0.getItemAtPosition(arg2).toString();
 			if (goalName.equalsIgnoreCase("New Goal")) {
 				Intent intent = new Intent();
-				intent.setClass(TaskForm.this, GoalForm.class);
-				TaskForm.this.startActivityForResult(intent, 0);
+				intent.setClass(EditTask.this, GoalForm.class);
+				EditTask.this.startActivityForResult(intent, 0);
 			} else {
-				Toast.makeText(TaskForm.this, "Choosen Goal: " + goalName, Toast.LENGTH_SHORT)
+				Toast.makeText(EditTask.this, "Choosen Goal: " + goalName, Toast.LENGTH_SHORT)
 						.show();
 
 				goalDAO.open();
@@ -247,7 +268,7 @@ public class TaskForm extends Activity {
 
 		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
-			Toast.makeText(TaskForm.this, "Choose a Goal for this Task", Toast.LENGTH_SHORT).show();
+			Toast.makeText(EditTask.this, "Choose a Goal for this Task", Toast.LENGTH_SHORT).show();
 
 		}
 

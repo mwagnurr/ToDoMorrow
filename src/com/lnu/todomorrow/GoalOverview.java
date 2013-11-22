@@ -23,16 +23,20 @@ import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
+import com.lnu.todomorrow.utils.MyBroadcastReceiver;
 import com.lnu.todomorrow.utils.Task;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class GoalOverview extends Activity {
@@ -41,6 +45,8 @@ public class GoalOverview extends Activity {
 	private XYPlot plot;
 
 	private static TaskDAO taskDAO;
+
+	private TaskListFragment listFragment;
 
 	private Goal thisGoal;
 
@@ -60,7 +66,7 @@ public class GoalOverview extends Activity {
 
 		// ExampleFragment fragment = (ExampleFragment)
 		// getFragmentManager().findFragmentById(R.id.example_fragment);
-		TaskListFragment listFragment = (TaskListFragment) getFragmentManager().findFragmentById(
+		listFragment = (TaskListFragment) getFragmentManager().findFragmentById(
 				R.id.goal_overview_task_list_fragment);
 
 		listFragment.filterByGoal(thisGoal);
@@ -69,10 +75,10 @@ public class GoalOverview extends Activity {
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		
-		//TODO add "add Task" button (or similar) in goal overview
-		
-		//TODO add sorting options for taskfragment list
+
+		// TODO add "add Task" button (or similar) in goal overview
+
+		// TODO add sorting options for taskfragment list
 
 		Log.d(TAG, "onCreate() finished");
 	}
@@ -121,7 +127,7 @@ public class GoalOverview extends Activity {
 		}
 		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
 
-		//TODO maybe add another plot series for non completed tasks
+		// TODO maybe add another plot series for non completed tasks
 		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
 
 		// Formatter for graph line and point, partly defined in XML
@@ -194,7 +200,7 @@ public class GoalOverview extends Activity {
 		plot.getGraphWidget().setDomainValueFormat(new GraphXLabelFormat());
 	}
 
-	//TODO further testing and tweaking correct graph display
+	// TODO further testing and tweaking correct graph display
 	private XYSeries initGraphSeries(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
 			int calendarField, DateFormat dateFormat) {
 
@@ -277,6 +283,45 @@ public class GoalOverview extends Activity {
 		public Object parseObject(String source, ParsePosition pos) {
 			return null;
 
+		}
+	}
+
+	public void addTask(View view) {
+		Intent intent = new Intent(this, TaskForm.class);
+		intent.putExtra("goal", thisGoal);
+		this.startActivityForResult(intent, 0);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent result) {
+		Log.d(TAG, "received result");
+		switch (requestCode) {
+		case 0:
+			if (resultCode == RESULT_OK) {
+
+				Task task = (Task) result.getSerializableExtra("task");
+
+				if (task == null) {
+					Log.e(TAG, "received as task null");
+					return;
+				}
+
+				// creating intent for alarmManager
+				Intent intent = new Intent(GoalOverview.this, MyBroadcastReceiver.class);
+				intent.putExtra("name", task.getName());
+				intent.putExtra("goal", task.getGoal().getName());
+				intent.putExtra("value", task.getValue());
+				intent.putExtra("id", task.getId());
+				PendingIntent pi = PendingIntent.getBroadcast(GoalOverview.this, 0, intent,
+						PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
+
+				// setting alarm
+				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
+				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
+
+				Log.d(TAG, "created task: " + task);
+				listFragment.addTask(task);
+			}
 		}
 	}
 

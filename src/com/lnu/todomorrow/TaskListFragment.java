@@ -14,12 +14,17 @@ import com.lnu.todomorrow.utils.TimeUtil;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -52,11 +57,58 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		fetchFilteredTasks();
+		
+		
 
 		setListAdapter(adapter);
 		// TODO add context menu to edit Tasks (maybe refactoring in TaskForm, or new
 		// TaskUpdateForm), and for deleting
 
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedState) {
+		super.onActivityCreated(savedState);
+		registerForContextMenu(getListView());
+		
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		menu.setHeaderTitle("" + tasks.get(info.position).getName());
+		menu.add(0, 0, 0, "Delete");
+		menu.add(1, 1, 1, "Update");
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		if (item.getItemId() == 0) { // deleteTask
+			Task t = tasks.get(info.position);
+			taskDAO.deleteTaskEntry(t);
+			adapter.remove(t);
+		} else if (item.getItemId() == 1) {
+			Task t = tasks.get(info.position);
+			Intent intent = new Intent(getActivity(), EditTask.class);
+			intent.putExtra("task", t);
+			this.startActivityForResult(intent, 0);
+
+		}
+		return true;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent result) {
+		super.onActivityResult(requestCode, resultCode, result);
+		switch (requestCode) {
+		case 0:
+			Task t = (Task) result.getSerializableExtra("task");
+			adapter.add(t);
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
