@@ -63,10 +63,10 @@ public class DialogPostpone extends Activity {
 		deadline.set(Calendar.MONTH, month);
 		deadline.set(Calendar.YEAR, year);
 
-//		taskDB.open();
-//		Task t = taskDB.getTask(id);
-//		t.setDeadline(deadline);
-//		taskDB.updateTask(t);
+		taskDB.open();
+		Task t = taskDB.getTask(id);
+		t.setDeadline(deadline);
+		taskDB.updateTask(t);
 		Toast.makeText(getApplicationContext(), "Postpone ok", Toast.LENGTH_SHORT).show();
 		finish();
 	}

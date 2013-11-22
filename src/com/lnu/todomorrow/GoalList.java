@@ -120,8 +120,6 @@ public class GoalList extends Activity {
 
 			Goal currGoal = getItem(position);
 
-			// TODO show deadline only when selected
-
 			TextView name = (TextView) row.findViewById(R.id.goalrow_name);
 			TextView score = (TextView) row.findViewById(R.id.goalrow_score);
 			TextView tasks = (TextView) row.findViewById(R.id.goalrow_tasks);
@@ -129,10 +127,8 @@ public class GoalList extends Activity {
 
 			String n = currGoal.getName();
 			String nShort = n;
-			System.out.println(n);
 			if (n.length() > 10) {
 				nShort = n.replace(" ", "\n");
-				System.out.println(nShort);
 			}
 			name.setText(nShort);
 			score.setText(String.valueOf(currGoal.getScore()));

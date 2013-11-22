@@ -23,6 +23,7 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 	private static final String TAG = TaskList.class.getSimpleName();
 	// private static TaskDAO dataTasks;
 	private TaskListFragment list;
+	private static int alarmID = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,6 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 		setContentView(R.layout.activity_task_list);
 
 		list = (TaskListFragment) getFragmentManager().findFragmentById(R.id.task_list_fragment);
-		
-		
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -99,24 +98,31 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 					Log.e(TAG, "received as task null");
 					return;
 				}
+				
+				setAlarmForTask(task);
 
-				// creating intent for alarmManager
-				Intent intent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
-				intent.putExtra("name", task.getName());
-				intent.putExtra("goal", task.getGoal().getName());
-				intent.putExtra("value", task.getValue());
-				intent.putExtra("id", task.getId());
-				PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, intent,
-						PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
-
-				// setting alarm
-				AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
-				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
+				
 
 				Log.d(TAG, "created task: " + task);
 				list.addTask(task);
 			}
 		}
+	}
+
+	private void setAlarmForTask(Task task) {
+		// creating intent for alarmManager
+		Intent intent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
+		intent.putExtra("name", task.getName());
+		intent.putExtra("goal", task.getGoal().getName());
+		intent.putExtra("value", task.getValue());
+		intent.putExtra("id", task.getId());
+		PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), alarmID, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
+		alarmID ++;
+
+		// setting alarm
+		AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
 	}
 
 	@Override

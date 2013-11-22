@@ -57,8 +57,6 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		fetchFilteredTasks();
-		
-		
 
 		setListAdapter(adapter);
 		// TODO add context menu to edit Tasks (maybe refactoring in TaskForm, or new
@@ -70,7 +68,7 @@ public class TaskListFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedState) {
 		super.onActivityCreated(savedState);
 		registerForContextMenu(getListView());
-		
+
 	}
 
 	@Override
@@ -296,11 +294,9 @@ public class TaskListFragment extends ListFragment {
 			}
 			goalDAO.open();
 			Goal g = goalDAO.getGoal(id);
-			System.out.println(g.getScore());
 			g.addScore(score);
 			t.setGoal(g);
 			goalDAO.updateGoal(g);
-			System.out.println(g.getScore());
 
 		}
 

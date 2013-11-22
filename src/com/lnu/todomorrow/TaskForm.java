@@ -48,8 +48,6 @@ public class TaskForm extends Activity {
 	private GoalDAO goalDAO;
 	private TaskDAO taskDAO;
 
-	// TODO change date picker view
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

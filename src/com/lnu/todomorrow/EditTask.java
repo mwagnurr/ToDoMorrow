@@ -53,8 +53,6 @@ public class EditTask extends Activity {
 	private GoalDAO goalDAO;
 	private TaskDAO taskDAO;
 
-	// TODO change date picker view
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -179,7 +177,6 @@ public class EditTask extends Activity {
 			createAlert(getResources().getString(R.string.alert_task_name_empty)).show();
 			return;
 		} else if (taskName.length() > 30) {
-			// TODO change task length with layout change;
 			createAlert(getResources().getString(R.string.alert_task_name_toolong)).show();
 			return;
 		}

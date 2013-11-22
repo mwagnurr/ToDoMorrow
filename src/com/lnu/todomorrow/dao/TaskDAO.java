@@ -272,13 +272,12 @@ public class TaskDAO {
 	public void updateTasksForGoal(Goal g) {
 		List<Task> taskList = getAllTasksByGoal(g);
 
-		if(goalDAO == null){
+		if (goalDAO == null) {
 			goalDAO = new GoalDAO(context);
 		}
 		goalDAO.open();
 		for (Task t : taskList) {
 			t.setGoal(goalDAO.getGoal(g.getId()));
-			System.out.println("Goal Name: " + g.getName() + "Score: " + g.getScore());
 			updateTask(t);
 		}
 		goalDAO.close();

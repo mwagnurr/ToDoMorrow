@@ -137,7 +137,6 @@ public class GoalDAO {
 
 		taskDb = new TaskDAO(context);
 		taskDb.open();
-		// TODO delete goal and delete tasks of goals
 		List<Task> tasks = taskDb.getAllTasksByGoal(goal);
 		for (Task t : tasks) {
 			taskDb.deleteTaskEntry(t);

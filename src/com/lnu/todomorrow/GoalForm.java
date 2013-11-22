@@ -51,8 +51,6 @@ public class GoalForm extends Activity {
 			TextView dateText = new TextView(this);
 			dateText.setText("Date of Deadline: ");
 			lay.addView(dateText);
-
-			// TODO change date picker view
 			deadDate = new DatePicker(this);
 			deadDate.setCalendarViewShown(false);
 			lay.addView(deadDate);
@@ -89,7 +87,6 @@ public class GoalForm extends Activity {
 			createAlert(getResources().getString(R.string.alert_goal_name_empty)).show();
 			return;
 		} else if (goalName.length() > 20) {
-			// TODO change goal length with layout change; maybe - change layout to support longer
 			createAlert(getResources().getString(R.string.alert_goal_name_toolong)).show();
 			return;
 		}

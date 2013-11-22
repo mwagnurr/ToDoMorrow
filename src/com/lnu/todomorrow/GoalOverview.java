@@ -76,8 +76,6 @@ public class GoalOverview extends Activity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		// TODO add "add Task" button (or similar) in goal overview
-
 		// TODO add sorting options for taskfragment list
 
 		Log.d(TAG, "onCreate() finished");
