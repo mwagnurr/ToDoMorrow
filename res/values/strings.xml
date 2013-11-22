@@ -8,6 +8,8 @@
     <string name="title_activity_goal_overview">Goal Overview</string>
     <string name="title_activity_goal_form">Add Goal</string>
     <string name="title_activity_edit">Edit Task</string>
+    <string name="title_activity_dialog_postpone">Postpone Task</string>
+    <string name="title_activity_dialog_finish">Mark Task as finished</string>
     <string name="deadline_date">Date of Deadline</string>
     <string name="deadline_time">Time of Deadline</string>
     <string name="task_name">Description</string>
@@ -35,7 +37,6 @@
     <string name="task_menu_showGoallist">Switch to Goal list</string>
     <string name="currentValue">0</string>
     <string name="notificationText">   Value: </string>
-    <string name="title_activity_dialog__postpone">Dialog_Postpone</string>
     <string name="dialog_goal_selection_title">Select goals which should be shown:</string>
     <string name="alert_goal_notunique">There is already a goal with this name in the database! Please choose a different one!</string>
     <string name="alert_goal_name_empty">The goal name must not be empty!</string>
@@ -45,5 +46,6 @@
     <string name="alert_task_name_toolong">The task name is too long!</string>
     <string name="alert_task_deadlinepast">The task deadline must not be in the past!</string>
     <string name="alert_deadline_before_goal">Task deadline must not be before Goal deadline!</string>
+    <string name="finish_task">Do you want to mark this task as finished?</string>
 
 </resources>

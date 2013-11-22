@@ -43,7 +43,12 @@
 
         <activity
             android:name="com.lnu.todomorrow.DialogPostpone"
-            android:label="@string/title_activity_dialog__postpone"
+            android:label="@string/title_activity_dialog_postpone"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.lnu.todomorrow.DialogFinish"
+            android:label="@string/title_activity_dialog_finish"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
