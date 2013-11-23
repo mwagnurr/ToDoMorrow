@@ -31,6 +31,7 @@ public class GoalList extends Activity {
 	private GoalAdapter adapter;
 	private static GoalDAO goalDAO;
 	private static TaskDAO taskDAO;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

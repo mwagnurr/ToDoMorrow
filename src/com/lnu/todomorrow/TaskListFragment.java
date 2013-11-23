@@ -74,6 +74,8 @@ public class TaskListFragment extends ListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+		
+		Log.d(TAG, "onCreateContextMenu");
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		menu.setHeaderTitle("" + tasks.get(info.position).getName());
 		menu.add(0, 0, 0, "Delete");
@@ -84,6 +86,8 @@ public class TaskListFragment extends ListFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
+		
+		Log.d(TAG," context item selected " + item.getItemId());
 		if (item.getItemId() == 0) { // deleteTask
 			Task t = tasks.get(info.position);
 			taskDAO.deleteTaskEntry(t);
@@ -210,6 +214,7 @@ public class TaskListFragment extends ListFragment {
 			check.setTag(position);
 			check.setChecked(tasks.get(position).isFinished());
 			check.setOnClickListener(new CheckListener());
+			check.setFocusable(false);
 			if (tasks.get(position).isFinished()) {
 				check.setEnabled(false);
 				// Log.d(TAG, "disabling checkbox because task: " +

@@ -12,14 +12,17 @@
     <string name="title_activity_dialog_finish">Mark Task as finished</string>
     <string name="deadline_date">Date of Deadline</string>
     <string name="deadline_time">Time of Deadline</string>
+    <string name="task">Task</string>
     <string name="task_name">Description</string>
     <string name="task_hint">e.g. Project setup</string>
+    <string name="task_value">Value: </string>
+    <string name="task_value_zero">Value: 0</string>
     <string name="goal">Goal</string>
     <string name="addGoal">Add Goal</string>
     <string name="addTask">Add Task</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="task">Task</string>
+    
     <string name="deadline">Deadline</string>
     <string name="selectGoal">Select Goal</string>
     <string name="goal_name">Goal name:</string>
@@ -35,7 +38,7 @@
     <string name="task_menu_sortByDeadline">Sort by deadline</string>
     <string name="task_menu_filterByGoal">Filter by Goal</string>
     <string name="task_menu_showGoallist">Switch to Goal list</string>
-    <string name="currentValue">0</string>
+    
     <string name="notificationText">   Value: </string>
     <string name="dialog_goal_selection_title">Select goals which should be shown:</string>
     <string name="alert_goal_notunique">There is already a goal with this name in the database! Please choose a different one!</string>

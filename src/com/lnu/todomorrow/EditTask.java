@@ -76,12 +76,12 @@ public class EditTask extends Activity {
 		et.setText(t.getName());
 
 		Calendar cal = t.getDeadline();
-		tp.setCurrentHour(cal.HOUR_OF_DAY);
-		tp.setCurrentMinute(cal.MINUTE);
-		dp.updateDate(cal.YEAR, cal.MONTH, cal.DAY_OF_MONTH);
+		tp.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+		tp.setCurrentMinute(cal.get(Calendar.MINUTE));
+		dp.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
 		val = (TextView) findViewById(R.id.value);
-		val.setText(t.getValue());
+		val.setText(getResources().getString(R.string.task_value) + t.getValue());
 
 		SeekBar sb = (SeekBar) findViewById(R.id.add_value);
 		sb.setProgress(t.getValue());

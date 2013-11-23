@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/currentValue" />
+            android:text="@string/task_value_zero" />
 
         <LinearLayout
             android:layout_width="fill_parent"

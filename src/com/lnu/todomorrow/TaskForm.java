@@ -60,7 +60,7 @@ public class TaskForm extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean bool) {
 
-				String v = "Value: " + Integer.toString(seekBar.getProgress());
+				String v = getResources().getString(R.string.task_value) + Integer.toString(seekBar.getProgress());
 				val = (TextView) findViewById(R.id.value);
 				val.setText(v);
 				value = progress;
@@ -234,7 +234,7 @@ public class TaskForm extends Activity {
 				intent.setClass(TaskForm.this, GoalForm.class);
 				TaskForm.this.startActivityForResult(intent, 0);
 			} else {
-				Toast.makeText(TaskForm.this, "Choosen Goal: " + goalName, Toast.LENGTH_SHORT)
+				Toast.makeText(TaskForm.this, "Chosen Goal: " + goalName, Toast.LENGTH_SHORT)
 						.show();
 
 				goalDAO.open();
