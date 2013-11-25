@@ -54,8 +54,8 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 
 	private Goal thisGoal;
 
-	private int graphBackColor = Color.WHITE;
-	private int graphLabelColor = Color.BLACK;
+	private int graphBackColor = Color.BLACK;
+	private int graphLabelColor = Color.WHITE;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,12 +134,12 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 			cal = thisGoal.getDeadline();
 
 			Calendar currTime = Calendar.getInstance();
-			if (currTime.after(cal)) {
-				Log.d(TAG, "goal has deadline and it is older than today - display current time");
-				cal = currTime;
-			} else {
-				Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
-			}
+//			if (currTime.after(cal)) {
+//				Log.d(TAG, "goal has deadline and it is older than today - display current time");
+//				cal = currTime;
+//			} else {
+//				Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
+//			}
 
 		}
 
@@ -251,7 +251,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 					String strCurrFinishedAt = dateFormat
 							.format(currTask.getFinishedAt().getTime());
 
-					Log.d(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
+					//Log.d(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
 					if (strCurrPivotTime.equals(strCurrFinishedAt)) {
 						valYInt[i] += 1;
 						Log.d(TAG, "task " + currTask.getName() + " was completed "
