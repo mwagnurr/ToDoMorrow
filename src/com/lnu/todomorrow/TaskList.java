@@ -76,6 +76,9 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 		case R.id.sort_by_deadline:
 			list.sortListByDeadline();
 			return true;
+		case R.id.delete_finished_tasks:
+			list.deleteFinishedTasks();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

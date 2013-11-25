@@ -38,6 +38,7 @@
     <string name="task_menu_sortByDeadline">Sort by deadline</string>
     <string name="task_menu_filterByGoal">Filter by Goal</string>
     <string name="task_menu_showGoallist">Switch to Goal list</string>
+    <string name="task_menu_delete_finished">Delete finished Tasks</string>
     
     <string name="notificationText">   Value: </string>
     <string name="dialog_goal_selection_title">Select goals which should be shown:</string>

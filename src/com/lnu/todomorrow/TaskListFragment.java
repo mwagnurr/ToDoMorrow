@@ -36,7 +36,7 @@ public class TaskListFragment extends ListFragment {
 
 	private TaskDAO taskDAO;
 	private TaskListAdapter adapter;
-	// private List<Task> tasks;
+	 private List<Task> tasks;
 	private ScoreManager scoreMan;
 	private GoalDAO goalDAO;
 
@@ -60,10 +60,6 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		fetchFilteredTasks();
-
-		setListAdapter(adapter);
-		// TODO add context menu to edit Tasks (maybe refactoring in TaskForm, or new
-		// TaskUpdateForm), and for deleting
 
 	}
 
@@ -335,5 +331,17 @@ public class TaskListFragment extends ListFragment {
 
 	public interface TaskDataChangedListener {
 		public void onTaskChanged(); //TODO implement in goaloverview
+	}
+
+	public void deleteFinishedTasks() {
+		taskDAO.open();
+		tasks = taskDAO.getAllTasks();
+		for(Task t : tasks){
+			if(t.isFinished()){
+				taskDAO.deleteTaskEntry(t);
+			}
+		}
+		adapter.notifyDataSetChanged();
+		taskDAO.close();
 	}
 }
