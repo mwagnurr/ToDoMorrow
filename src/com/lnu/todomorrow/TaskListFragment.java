@@ -12,6 +12,7 @@ import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
 import com.lnu.todomorrow.utils.TimeUtil;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,8 @@ public class TaskListFragment extends ListFragment {
 	private GoalDAO goalDAO;
 
 	private ArrayList<Goal> filterGoalList;
+	
+	private TaskDataChangedListener taskChangeListener;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -283,6 +286,9 @@ public class TaskListFragment extends ListFragment {
 			// adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 			// }
 			adapter.notifyDataSetChanged();
+			
+			//callback for implementing activities
+			taskChangeListener.onTaskChanged();
 		}
 
 		/**
@@ -313,8 +319,21 @@ public class TaskListFragment extends ListFragment {
 		}
 
 	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		// Verify that the host activity implements the callback interface
+		try {
 
-	public interface OnTaskChangedListener {
+			taskChangeListener = (TaskDataChangedListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement TaskDataChangedListener");
+		}
+	}
+
+	public interface TaskDataChangedListener {
 		public void onTaskChanged(); //TODO implement in goaloverview
 	}
 }

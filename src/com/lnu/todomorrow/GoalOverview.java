@@ -23,6 +23,7 @@ import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
+import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
@@ -42,7 +43,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class GoalOverview extends Activity {
+public class GoalOverview extends Activity implements TaskDataChangedListener {
 	private static final String TAG = GoalOverview.class.getSimpleName();
 
 	private XYPlot plot;
@@ -271,15 +272,15 @@ public class GoalOverview extends Activity {
 		XYSeries series = new SimpleXYSeries(Arrays.asList(valXInt), Arrays.asList(valYInt),
 				"Tasks completed");
 
-//		plot.getGraphWidget().addDomainAxisValueLabelRegion(valXInt[0], valXInt[1],
-//	            new AxisValueLabelFormatter(Color.BLUE));
-		
-		//TODO delete not working sadface
-//		YValueMarker marker = new YValueMarker(valXInt[1], "test");
-//		Paint bla = new Paint();
-//		bla.setColor(Color.GREEN);
-//		marker.setLinePaint(bla);
-//		plot.addMarker(marker);
+		// plot.getGraphWidget().addDomainAxisValueLabelRegion(valXInt[0], valXInt[1],
+		// new AxisValueLabelFormatter(Color.BLUE));
+
+		// TODO delete not working sadface
+		// YValueMarker marker = new YValueMarker(valXInt[1], "test");
+		// Paint bla = new Paint();
+		// bla.setColor(Color.GREEN);
+		// marker.setLinePaint(bla);
+		// plot.addMarker(marker);
 
 		// domain configuration
 		plot.setDomainStep(XYStepMode.SUBDIVIDE, valXInt.length);
@@ -353,7 +354,7 @@ public class GoalOverview extends Activity {
 				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
 
 				Log.d(TAG, "created task: " + task);
-				if(listFragment == null){
+				if (listFragment == null) {
 					listFragment = (TaskListFragment) getFragmentManager().findFragmentById(
 							R.id.goal_overview_task_list_fragment);
 				}
@@ -389,5 +390,16 @@ public class GoalOverview extends Activity {
 
 		plot.setDomainStep(XYStepMode.SUBDIVIDE, years.length);
 		plot.addSeries(series2, series1Format);
+	}
+
+	@Override
+	public void onTaskChanged() {
+		// TODO Auto-generated method stub
+
+		Log.d(TAG,
+				"receiveid onTaskChanged - the taskListFragment data changed, we should redraw graph!");
+		plot.clear();
+		createTaskPlot();	
+		plot.redraw();
 	}
 }

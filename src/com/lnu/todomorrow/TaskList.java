@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lnu.todomorrow.GoalFilterDialogFragment.GoalFilterDialogListener;
+import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
 import com.lnu.todomorrow.utils.Task;
@@ -19,7 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class TaskList extends Activity implements GoalFilterDialogListener {
+public class TaskList extends Activity implements GoalFilterDialogListener, TaskDataChangedListener {
 	private static final String TAG = TaskList.class.getSimpleName();
 	// private static TaskDAO dataTasks;
 	private TaskListFragment list;
@@ -129,6 +130,12 @@ public class TaskList extends Activity implements GoalFilterDialogListener {
 	public void onGoalFilterDialogSubmit(List<Goal> filteredGoals) {
 		Log.d(TAG, "Receveid selected filter goals");
 		list.setFilterGoalList((ArrayList<Goal>) filteredGoals);
+	}
+
+	@Override
+	public void onTaskChanged() {
+		// TODO Auto-generated method stub
+		//we don't care!
 	}
 
 }
