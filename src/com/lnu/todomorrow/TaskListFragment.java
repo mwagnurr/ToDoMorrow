@@ -35,7 +35,7 @@ public class TaskListFragment extends ListFragment {
 
 	private TaskDAO taskDAO;
 	private TaskListAdapter adapter;
-	private List<Task> tasks;
+	// private List<Task> tasks;
 	private ScoreManager scoreMan;
 	private GoalDAO goalDAO;
 
@@ -74,10 +74,10 @@ public class TaskListFragment extends ListFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		
+
 		Log.d(TAG, "onCreateContextMenu");
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		menu.setHeaderTitle("" + tasks.get(info.position).getName());
+		menu.setHeaderTitle("" + adapter.getItem(info.position).getName());
 		menu.add(0, 0, 0, "Delete");
 		menu.add(1, 1, 1, "Update");
 	}
@@ -86,14 +86,14 @@ public class TaskListFragment extends ListFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
-		
-		Log.d(TAG," context item selected " + item.getItemId());
+
+		Log.d(TAG, " context item selected " + item.getItemId());
 		if (item.getItemId() == 0) { // deleteTask
-			Task t = tasks.get(info.position);
+			Task t = adapter.getItem(info.position);
 			taskDAO.deleteTaskEntry(t);
 			adapter.remove(t);
 		} else if (item.getItemId() == 1) {
-			Task t = tasks.get(info.position);
+			Task t = adapter.getItem(info.position);
 			Intent intent = new Intent(getActivity(), EditTask.class);
 			intent.putExtra("task", t);
 			this.startActivityForResult(intent, 0);
@@ -148,7 +148,7 @@ public class TaskListFragment extends ListFragment {
 	 */
 	private void fetchFilteredTasks() {
 		taskDAO.open();
-		tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
+		List<Task> tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
 		if (adapter == null) {
 			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 			// setListAdapter(adapter);
@@ -178,11 +178,17 @@ public class TaskListFragment extends ListFragment {
 
 	public void sortListByDeadline() {
 
-		Collections.sort(tasks, new DateComparator());
+		Log.d(TAG, "sorting by deadline");
 
 		if (adapter == null) {
+			Log.d(TAG, "adapter was null");
+			List<Task> tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
 			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 		}
+
+		adapter.sort(new DateComparator());
+		// Collections.sort(tasks, new DateComparator());
+
 		adapter.notifyDataSetChanged();
 	}
 
@@ -262,9 +268,10 @@ public class TaskListFragment extends ListFragment {
 		@Override
 		public void onClick(View arg0) {
 			CheckBox check = (CheckBox) arg0;
+			Log.d(TAG, "check box clicked");
 			int pos = (Integer) check.getTag();
 			if (check.isChecked()) {
-				Task t = tasks.get(pos);
+				Task t = adapter.getItem(pos);
 				finishTask(t);
 
 				Toast.makeText(getActivity(),
@@ -272,9 +279,9 @@ public class TaskListFragment extends ListFragment {
 						.show();
 			}
 
-			if (adapter == null) {
-				adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
-			}
+			// if (adapter == null) {
+			// adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
+			// }
 			adapter.notifyDataSetChanged();
 		}
 
