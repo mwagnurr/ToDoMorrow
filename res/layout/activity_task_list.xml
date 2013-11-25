@@ -1,33 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <Button
+        android:id="@+id/new_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/solid_black"
+        android:drawableLeft="@android:drawable/ic_menu_add"
+        android:onClick="addTask"
+        android:text="@string/addTask" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.9"
-        android:orientation="vertical" >
+        android:layout_height="1dip"
+        android:background="#ff121212" />
 
-        <fragment
-            android:id="@+id/task_list_fragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            class="com.lnu.todomorrow.TaskListFragment" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/new_task"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="addTask"
-            android:text="@string/addTask" />
-    </LinearLayout>
+    <fragment
+        android:id="@+id/task_list_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="com.lnu.todomorrow.TaskListFragment" />
 
 </LinearLayout>

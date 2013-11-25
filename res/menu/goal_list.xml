@@ -2,7 +2,7 @@
 
     <item
         android:id="@+id/goal_menu"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@android:drawable/ic_menu_more"
         android:showAsAction="ifRoom|withText"
         android:title="@string/goal_menu_title">
         <menu>

@@ -9,14 +9,14 @@
         android:orientation="vertical" >
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4sp"
             android:text="@string/goal_name" />
 
         <EditText
             android:id="@+id/goal_form_name_reader"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/goal_name_hint" />
 
@@ -32,7 +32,7 @@
                 android:onClick="addDeadlineChecked" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="addDeadlineChecked"
                 android:padding="4sp"
@@ -48,12 +48,25 @@
             <!-- dynamic content date and time picker added with java -->
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#ff121212" />
+
         <Button
             android:id="@+id/goal_form_add_goal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/solid_black"
             android:onClick="addGoalButtonClick"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="@string/addGoal" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#ff121212" />
     </LinearLayout>
 
 </ScrollView>

@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/goal_overview_name"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="5sp"
             android:text="Goal" />
@@ -31,17 +31,30 @@
         title="Overview Tasks" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4sp"
         android:text="@string/goal_overview_tasklist" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#ff121212" />
+
     <Button
         android:id="@+id/overview_new_task"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/solid_black"
+        android:drawableLeft="@android:drawable/ic_menu_add"
         android:onClick="addTask"
         android:text="@string/addTask" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#ff121212" />
 
     <fragment
         android:id="@+id/goal_overview_task_list_fragment"
