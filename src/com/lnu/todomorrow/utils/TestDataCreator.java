@@ -137,11 +137,76 @@ public class TestDataCreator {
 			value = 50;
 
 			Task task4 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal1);
-
+			
 			task4.setFinished(true);
 			task4.setFinishedAt(Calendar.getInstance());
+			
+			taskDAO.updateTask(task4);
 
 			Log.d(TAG, "TESTDATA created: " + task4);
+
+			// ! NEW TASK
+
+			taskName = "Taskcomp1";
+
+			calendarTask.set(Calendar.HOUR_OF_DAY, 15);
+			calendarTask.set(Calendar.MINUTE, 40);
+			calendarTask.set(Calendar.SECOND, 0);
+
+			calendarTask.set(Calendar.DAY_OF_MONTH, 7);
+			calendarTask.set(Calendar.MONTH, 11);
+			calendarTask.set(Calendar.YEAR, 2013);
+
+			value = 50;
+
+			Task taskc1 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal1);
+
+			taskc1.setFinished(true);
+			
+			Calendar finished = Calendar.getInstance();
+			
+			finished.set(Calendar.DAY_OF_MONTH, 10);
+			finished.set(Calendar.MONTH, 8);
+			finished.set(Calendar.YEAR, 2013); 
+			Log.e(TAG, "D finished: " + TimeUtil.getFormattedDate(calendarTask));
+			
+			Log.v(TAG, "is month: " + finished.get(Calendar.MONTH) );
+			
+			taskc1.setFinishedAt(finished);
+			
+			taskDAO.updateTask(taskc1);
+
+			Log.d(TAG, "TESTDATA created: " + taskc1);
+
+			// ! NEW TASK
+
+			taskName = "Taskcomp2";
+
+			calendarTask.set(Calendar.HOUR_OF_DAY, 15);
+			calendarTask.set(Calendar.MINUTE, 40);
+			calendarTask.set(Calendar.SECOND, 0);
+
+			calendarTask.set(Calendar.DAY_OF_MONTH, 7);
+			calendarTask.set(Calendar.MONTH, 11);
+			calendarTask.set(Calendar.YEAR, 2013);
+
+			value = 50;
+
+			Task taskc2 = taskDAO.createTaskEntry(taskName, calendarTask, value, goal1);
+
+			taskc2.setFinished(true);
+			
+			finished = Calendar.getInstance();
+			
+			finished.set(Calendar.DAY_OF_MONTH, 10);
+			finished.set(Calendar.MONTH, 9);
+			finished.set(Calendar.YEAR, 2013);
+			
+			taskc2.setFinishedAt(finished);
+			
+			taskDAO.updateTask(taskc2);
+
+			Log.d(TAG, "TESTDATA created: " + taskc2);
 
 			// ! NEW TASK
 
@@ -213,7 +278,7 @@ public class TestDataCreator {
 
 			Task taskc = taskDAO.createTaskEntry(taskName, calendarTask, value, goal3);
 
-			Log.d(TAG, "TESTDATA created: " + taskb);
+			Log.d(TAG, "TESTDATA created: " + taskc);
 
 		} catch (DAOException e) {
 			e.printStackTrace();

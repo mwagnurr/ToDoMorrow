@@ -315,6 +315,6 @@ public class TaskListFragment extends ListFragment {
 	}
 
 	public interface OnTaskChangedListener {
-		public void onTaskChanged();
+		public void onTaskChanged(); //TODO implement in goaloverview
 	}
 }

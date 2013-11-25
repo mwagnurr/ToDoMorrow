@@ -14,6 +14,7 @@ import java.util.List;
 import com.androidplot.Plot;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
+import com.androidplot.xy.AxisValueLabelFormatter;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -21,6 +22,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
+import com.androidplot.xy.YValueMarker;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
@@ -33,6 +35,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -111,6 +114,10 @@ public class GoalOverview extends Activity {
 		taskDAO.open();
 		List<Task> tasks = taskDAO.getAllTasksByGoal(thisGoal);
 
+		for (Task curr : tasks) {
+			Log.v(TAG, "- " + curr);
+		}
+
 		int timeField = Calendar.MONTH;
 
 		// definition of how far the graph should draw on X axis - either to deadline or to
@@ -120,13 +127,27 @@ public class GoalOverview extends Activity {
 			cal = Calendar.getInstance();
 
 			cal.set(timeField, cal.get(timeField) + 1);
+
+			Log.d(TAG, "goal has no deadline - display current time + 1");
 		} else {
 			cal = thisGoal.getDeadline();
+
+			Calendar currTime = Calendar.getInstance();
+			if (currTime.after(cal)) {
+				Log.d(TAG, "goal has deadline and it is older than today - display current time");
+				cal = currTime;
+			} else {
+				Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
+			}
+
 		}
+
 		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
 
 		// TODO maybe add another plot series for non completed tasks
 		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
+
+		// TODO another plot series for vertical deadline line
 
 		// Formatter for graph line and point, partly defined in XML
 		LineAndPointFormatter series1Format = new LineAndPointFormatter();
@@ -202,6 +223,8 @@ public class GoalOverview extends Activity {
 	private XYSeries initGraphSeries(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
 			int calendarField, DateFormat dateFormat) {
 
+		Log.d(TAG, "initGraphSeries()");
+
 		// setup
 		int decrement = -1;
 		Integer[] valXInt = new Integer[sumValuesX];
@@ -217,9 +240,6 @@ public class GoalOverview extends Activity {
 			int curr = (int) (currLong / 1000);
 			valXInt[i] = curr;
 
-			// decrement calendar
-			pivotTimeX.add(calendarField, decrement);
-
 			String strCurrPivotTime = dateFormat.format(pivotTimeX.getTime());
 
 			for (int j = 0; j < tasks.size(); j++) {
@@ -229,6 +249,8 @@ public class GoalOverview extends Activity {
 
 					String strCurrFinishedAt = dateFormat
 							.format(currTask.getFinishedAt().getTime());
+
+					Log.d(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
 					if (strCurrPivotTime.equals(strCurrFinishedAt)) {
 						valYInt[i] += 1;
 						Log.d(TAG, "task " + currTask.getName() + " was completed "
@@ -238,6 +260,9 @@ public class GoalOverview extends Activity {
 				}
 			}
 
+			// decrement calendar
+			pivotTimeX.add(calendarField, decrement);
+
 		}
 
 		// List<Integer> valuesX = Arrays.asList(valXInt);
@@ -245,6 +270,16 @@ public class GoalOverview extends Activity {
 
 		XYSeries series = new SimpleXYSeries(Arrays.asList(valXInt), Arrays.asList(valYInt),
 				"Tasks completed");
+
+//		plot.getGraphWidget().addDomainAxisValueLabelRegion(valXInt[0], valXInt[1],
+//	            new AxisValueLabelFormatter(Color.BLUE));
+		
+		//TODO delete not working sadface
+//		YValueMarker marker = new YValueMarker(valXInt[1], "test");
+//		Paint bla = new Paint();
+//		bla.setColor(Color.GREEN);
+//		marker.setLinePaint(bla);
+//		plot.addMarker(marker);
 
 		// domain configuration
 		plot.setDomainStep(XYStepMode.SUBDIVIDE, valXInt.length);
