@@ -318,6 +318,10 @@ public class GoalOverview extends Activity {
 				alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
 
 				Log.d(TAG, "created task: " + task);
+				if(listFragment == null){
+					listFragment = (TaskListFragment) getFragmentManager().findFragmentById(
+							R.id.goal_overview_task_list_fragment);
+				}
 				listFragment.addTask(task);
 			}
 		}

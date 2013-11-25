@@ -7,24 +7,34 @@
     <CheckBox
         android:id="@+id/check"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="match_parent"
+        android:background="#ff121212" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingLeft="4dp" >
 
         <TextView
             android:id="@+id/show_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/task"
+            android:textColor="@color/dark_green"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:paddingLeft="10dp" >
 
             <TextView
                 android:id="@+id/show_deadline"

@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4sp"
         android:text="@string/deadline_date" />
@@ -18,7 +18,7 @@
         android:calendarViewShown="false" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4sp"
         android:text="@string/deadline_time" />
@@ -29,34 +29,50 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#ff121212" />
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/ButtonOk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:background="@color/solid_black"
             android:onClick="dialogOK"
             android:text="Ok"
-            android:textColor="#000"
+            android:textColor="#ffffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="#ff121212" />
 
         <Button
             android:id="@+id/ButtonCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:background="@color/solid_black"
             android:onClick="dialogCancel"
             android:text="Cancel"
-            android:textColor="#000"
+            android:textColor="#ffffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#ff121212" />
 
 </LinearLayout>

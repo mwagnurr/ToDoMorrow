@@ -86,7 +86,7 @@ public class GoalForm extends Activity {
 			Log.e(TAG, "goal name is empty");
 			createAlert(getResources().getString(R.string.alert_goal_name_empty)).show();
 			return;
-		} else if (goalName.length() > 20) {
+		} else if (goalName.length() > 35) {
 			createAlert(getResources().getString(R.string.alert_goal_name_toolong)).show();
 			return;
 		}

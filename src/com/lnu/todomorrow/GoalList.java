@@ -127,11 +127,7 @@ public class GoalList extends Activity {
 			TextView deadline = (TextView) row.findViewById(R.id.goalrow_deadline);
 
 			String n = currGoal.getName();
-			String nShort = n;
-			if (n.length() > 10) {
-				nShort = n.replace(" ", "\n");
-			}
-			name.setText(nShort);
+			name.setText(n);
 			score.setText(String.valueOf(currGoal.getScore()));
 			if (currGoal.getDeadline() != null) {
 				deadline.setText(TimeUtil.getFormattedDate(currGoal.getDeadline()));
