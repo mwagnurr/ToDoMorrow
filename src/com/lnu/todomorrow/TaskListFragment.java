@@ -36,12 +36,11 @@ public class TaskListFragment extends ListFragment {
 
 	private TaskDAO taskDAO;
 	private TaskListAdapter adapter;
-	 private List<Task> tasks;
 	private ScoreManager scoreMan;
 	private GoalDAO goalDAO;
 
 	private ArrayList<Goal> filterGoalList;
-	
+
 	private TaskDataChangedListener taskChangeListener;
 
 	@SuppressWarnings("unchecked")
@@ -150,7 +149,7 @@ public class TaskListFragment extends ListFragment {
 		List<Task> tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
 		if (adapter == null) {
 			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
-			// setListAdapter(adapter);
+			setListAdapter(adapter);
 		} else {
 			adapter.clear();
 			adapter.addAll(tasks);
@@ -282,8 +281,8 @@ public class TaskListFragment extends ListFragment {
 			// adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 			// }
 			adapter.notifyDataSetChanged();
-			
-			//callback for implementing activities
+
+			// callback for implementing activities
 			taskChangeListener.onTaskChanged();
 		}
 
@@ -315,7 +314,7 @@ public class TaskListFragment extends ListFragment {
 		}
 
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -330,17 +329,19 @@ public class TaskListFragment extends ListFragment {
 	}
 
 	public interface TaskDataChangedListener {
-		public void onTaskChanged(); //TODO implement in goaloverview
+		public void onTaskChanged();
 	}
 
 	public void deleteFinishedTasks() {
 		taskDAO.open();
-		tasks = taskDAO.getAllTasks();
-		for(Task t : tasks){
-			if(t.isFinished()){
+		List<Task> tasks = taskDAO.getAllTasks();
+		for (Task t : tasks) {
+			if (t.isFinished()) {
 				taskDAO.deleteTaskEntry(t);
 			}
 		}
+		
+		//TODO change deletion to not actually delete
 		adapter.notifyDataSetChanged();
 		taskDAO.close();
 	}
