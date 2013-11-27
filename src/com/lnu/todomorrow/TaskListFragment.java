@@ -329,4 +329,19 @@ public class TaskListFragment extends ListFragment {
 	}
 	
 
+
+	public void deleteFinishedTasks() {
+		taskDAO.open();
+		List<Task> tasks = taskDAO.getAllTasks();
+		for (Task t : tasks) {
+			if (t.isFinished()) {
+				taskDAO.deleteTaskEntry(t);
+			}
+		}
+		
+		//TODO change deletion to not actually delete
+		adapter.notifyDataSetChanged();
+		taskDAO.close();
+	}
+
 }
