@@ -328,25 +328,5 @@ public class TaskListFragment extends ListFragment {
 		public void onTaskChanged();
 	}
 	
-	public void deleteFinishedTasks() {
-		taskDAO.open();
-<<<<<<< HEAD
-		for(int i = 0; i<=adapter.getCount(); i++){
-			Task t = adapter.getItem(i);
-			if(t.isFinished()){
-=======
-		List<Task> tasks = taskDAO.getAllTasks();
-		for (Task t : tasks) {
-			if (t.isFinished()) {
->>>>>>> a837f818a3cde1122456670b315a27d639c9f008
-				taskDAO.deleteTaskEntry(t);
-			} else {
-				continue;
-			}
-		}
-		
-		//TODO change deletion to not actually delete
-		adapter.notifyDataSetChanged();
-	}
 
 }
