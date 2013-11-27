@@ -36,7 +36,6 @@ public class TaskListFragment extends ListFragment {
 
 	private TaskDAO taskDAO;
 	private TaskListAdapter adapter;
-	 private List<Task> tasks;
 	private ScoreManager scoreMan;
 	private GoalDAO goalDAO;
 
@@ -186,7 +185,6 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		adapter.sort(new DateComparator());
-		// Collections.sort(tasks, new DateComparator());
 
 		adapter.notifyDataSetChanged();
 	}
@@ -278,9 +276,6 @@ public class TaskListFragment extends ListFragment {
 						.show();
 			}
 
-			// if (adapter == null) {
-			// adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
-			// }
 			adapter.notifyDataSetChanged();
 			
 			//callback for implementing activities
@@ -332,16 +327,18 @@ public class TaskListFragment extends ListFragment {
 	public interface TaskDataChangedListener {
 		public void onTaskChanged(); //TODO implement in goaloverview
 	}
-
+	
 	public void deleteFinishedTasks() {
 		taskDAO.open();
-		tasks = taskDAO.getAllTasks();
-		for(Task t : tasks){
+		for(int i = 0; i<=adapter.getCount(); i++){
+			Task t = adapter.getItem(i);
 			if(t.isFinished()){
 				taskDAO.deleteTaskEntry(t);
+			} else {
+				continue;
 			}
 		}
 		adapter.notifyDataSetChanged();
-		taskDAO.close();
 	}
+
 }
