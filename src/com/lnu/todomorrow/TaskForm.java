@@ -161,7 +161,7 @@ public class TaskForm extends Activity {
 			return;
 		}
 
-		if (goal.getDeadline() != null) {
+		if (goal != null && goal.getDeadline() != null) {
 			if (goal.getDeadline().before(deadline)) {
 				createAlert(getResources().getString(R.string.alert_deadline_before_goal)).show();
 				return;
