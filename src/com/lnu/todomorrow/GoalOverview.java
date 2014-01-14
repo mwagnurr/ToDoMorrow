@@ -24,6 +24,7 @@ import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
 import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
+import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.MyBroadcastReceiver;
@@ -49,6 +50,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 	private XYPlot plot;
 
 	private static TaskDAO taskDAO;
+	private GoalDAO goalDAO;
 
 	private TaskListFragment listFragment;
 
@@ -62,11 +64,19 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goal_overview);
 
-		thisGoal = (Goal) getIntent().getSerializableExtra("goal");
 		taskDAO = new TaskDAO(this);
+		goalDAO = new GoalDAO(this);
+
+		Goal goal = (Goal) getIntent().getSerializableExtra("goal");
+
+		goalDAO.open();
+		thisGoal = goalDAO.getGoal(goal.getId());
+
 		TextView goalName = (TextView) findViewById(R.id.goal_overview_name);
 
 		goalName.setText(thisGoal.getName());
+
+		Log.d(TAG, "DE goal: " + thisGoal);
 
 		// ExampleFragment fragment = (ExampleFragment)
 		// getFragmentManager().findFragmentById(R.id.example_fragment);
@@ -134,18 +144,20 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 			cal = thisGoal.getDeadline();
 
 			Calendar currTime = Calendar.getInstance();
-//			if (currTime.after(cal)) {
-//				Log.d(TAG, "goal has deadline and it is older than today - display current time");
-//				cal = currTime;
-//			} else {
-//				Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
-//			}
-
+			// if (currTime.after(cal)) {
+			// Log.d(TAG, "goal has deadline and it is older than today - display current time");
+			// cal = currTime;
+			// } else {
+			// Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
+			// }
+			Log.d(TAG, "goal has deadline - " + thisGoal + " / cal: " + cal);
 		}
 
 		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
 
 		// TODO maybe add another plot series for non completed tasks
+
+		Log.e(TAG, "cal is: " + cal.getTimeInMillis());
 		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
 
 		// TODO another plot series for vertical deadline line
@@ -251,7 +263,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 					String strCurrFinishedAt = dateFormat
 							.format(currTask.getFinishedAt().getTime());
 
-					//Log.d(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
+					Log.e(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
 					if (strCurrPivotTime.equals(strCurrFinishedAt)) {
 						valYInt[i] += 1;
 						Log.d(TAG, "task " + currTask.getName() + " was completed "
@@ -398,8 +410,10 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 
 		Log.d(TAG,
 				"receiveid onTaskChanged - the taskListFragment data changed, we should redraw graph!");
-		plot.clear();
-		createTaskPlot();	
-		plot.redraw();
+		// plot.clear();
+		// createTaskPlot();
+		// plot.redraw();
+
+		recreate();
 	}
 }

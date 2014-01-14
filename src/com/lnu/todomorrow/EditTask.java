@@ -183,7 +183,7 @@ public class EditTask extends Activity {
 
 		if (goal.getDeadline() != null) {
 			if (goal.getDeadline().before(deadline)) {
-				createAlert(getResources().getString(R.string.alert_deadline_before_goal)).show();
+				createAlert(getResources().getString(R.string.alert_deadline_after_goal)).show();
 				return;
 			}
 		}
