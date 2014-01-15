@@ -55,8 +55,6 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 
 	private int graphBackColor = Color.BLACK;
 	private int graphLabelColor = Color.WHITE;
-	
-	//TODO layout for landscape mode (important - otherwise not useable in landscape mode)
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
