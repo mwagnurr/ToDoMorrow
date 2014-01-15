@@ -212,6 +212,7 @@ public class TaskListFragment extends ListFragment {
 			TextView name = (TextView) row.findViewById(R.id.show_task);
 			TextView dead = (TextView) row.findViewById(R.id.show_deadline);
 			TextView goal = (TextView) row.findViewById(R.id.show_goal);
+			TextView value = (TextView) row.findViewById(R.id.show_value);
 
 			CheckBox check = (CheckBox) row.findViewById(R.id.check);
 			check.setTag(position);
@@ -228,6 +229,7 @@ public class TaskListFragment extends ListFragment {
 			name.setText(tasks.get(position).getName());
 			dead.setText(TimeUtil.getFormattedDate(tasks.get(position).getDeadline()));
 			goal.setText(tasks.get(position).getGoal().getName());
+			value.setText(String.valueOf(tasks.get(position).getValue()));
 
 			return row;
 		}
