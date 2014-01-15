@@ -43,10 +43,6 @@ public class TaskListFragment extends ListFragment {
 
 	private TaskDataChangedListener taskChangeListener;
 
-	
-	//TODO layout change - display value for tasks
-	
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

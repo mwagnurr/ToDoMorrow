@@ -21,8 +21,6 @@ public class ScoreManager {
 			return 0;
 		}
 
-		// TODO fancy math
-
 		int score = 0;
 		int value = task.getValue();
 		Calendar deadline = task.getDeadline();
