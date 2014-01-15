@@ -25,6 +25,7 @@ public class DialogPostpone extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		//tt
 		Intent in = getIntent();
 		id = in.getLongExtra("id", 0);
 		System.out.println("id in dialogPostone: " + id);
