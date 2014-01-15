@@ -14,7 +14,6 @@ import java.util.List;
 import com.androidplot.Plot;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
-import com.androidplot.xy.AxisValueLabelFormatter;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -22,7 +21,6 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
-import com.androidplot.xy.YValueMarker;
 import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
 import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
@@ -37,7 +35,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -58,6 +55,8 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 
 	private int graphBackColor = Color.BLACK;
 	private int graphLabelColor = Color.WHITE;
+	
+	//TODO layout for landscape mode (important - otherwise not useable in landscape mode)
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 
 		goalName.setText(thisGoal.getName());
 
-		Log.d(TAG, "DE goal: " + thisGoal);
+		Log.d(TAG, "DEBUG thisgoal: " + thisGoal);
 
 		// ExampleFragment fragment = (ExampleFragment)
 		// getFragmentManager().findFragmentById(R.id.example_fragment);
@@ -144,18 +143,16 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 			cal = thisGoal.getDeadline();
 
 			Calendar currTime = Calendar.getInstance();
-			// if (currTime.after(cal)) {
-			// Log.d(TAG, "goal has deadline and it is older than today - display current time");
-			// cal = currTime;
-			// } else {
-			// Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
-			// }
-			Log.d(TAG, "goal has deadline - " + thisGoal + " / cal: " + cal);
+			if (currTime.after(cal)) {
+				Log.d(TAG, "goal has deadline and it is older than today - display current time");
+				cal = currTime;
+			} else {
+				Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
+			}
+			//Log.d(TAG, "goal has deadline - " + thisGoal + " / cal: " + cal);
 		}
 
 		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
-
-		// TODO maybe add another plot series for non completed tasks
 
 		Log.e(TAG, "cal is: " + cal.getTimeInMillis());
 		XYSeries s1 = initGraphSeries(tasks, cal, 12, timeField, dateComparisonFormat);
@@ -232,7 +229,6 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 		plot.getGraphWidget().setDomainValueFormat(new GraphXLabelFormat());
 	}
 
-	// TODO further testing and tweaking correct graph display
 	private XYSeries initGraphSeries(List<Task> tasks, Calendar pivotTimeX, int sumValuesX,
 			int calendarField, DateFormat dateFormat) {
 
@@ -263,7 +259,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 					String strCurrFinishedAt = dateFormat
 							.format(currTask.getFinishedAt().getTime());
 
-					Log.e(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
+					//Log.e(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
 					if (strCurrPivotTime.equals(strCurrFinishedAt)) {
 						valYInt[i] += 1;
 						Log.d(TAG, "task " + currTask.getName() + " was completed "
@@ -287,7 +283,6 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 		// plot.getGraphWidget().addDomainAxisValueLabelRegion(valXInt[0], valXInt[1],
 		// new AxisValueLabelFormatter(Color.BLUE));
 
-		// TODO delete not working sadface
 		// YValueMarker marker = new YValueMarker(valXInt[1], "test");
 		// Paint bla = new Paint();
 		// bla.setColor(Color.GREEN);
@@ -406,8 +401,6 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 
 	@Override
 	public void onTaskChanged() {
-		// TODO Auto-generated method stub
-
 		Log.d(TAG,
 				"receiveid onTaskChanged - the taskListFragment data changed, we should redraw graph!");
 		// plot.clear();

@@ -137,7 +137,6 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 
 	@Override
 	public void onTaskChanged() {
-		// TODO Auto-generated method stub
 		//we don't care!
 	}
 
