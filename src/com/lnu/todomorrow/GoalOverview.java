@@ -34,8 +34,10 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,15 +67,33 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 		goalDAO = new GoalDAO(this);
 
 		Goal goal = (Goal) getIntent().getSerializableExtra("goal");
+		int goalId;
+
+		if (goal != null) {
+
+			goalId = goal.getId();
+			storeGoalIdSettings(goal.getId());
+
+			Log.d(TAG, "goal info in intent - goalId: " + goalId + ", storing to settings");
+
+		} else {
+			goalId = getGoalIdSettings();
+			Log.d(TAG, "no intent info - getting last goalId from settings: " + goalId);
+
+			if (goalId == -1) {
+				Log.e(TAG, "no goal ID is stored");
+				goalId = 1;
+			}
+		}
 
 		goalDAO.open();
-		thisGoal = goalDAO.getGoal(goal.getId());
+		thisGoal = goalDAO.getGoal(goalId);
 
 		TextView goalName = (TextView) findViewById(R.id.goal_overview_name);
 
 		goalName.setText(thisGoal.getName());
 
-		Log.d(TAG, "DEBUG thisgoal: " + thisGoal);
+		Log.d(TAG, "thisGoal: " + thisGoal);
 
 		// ExampleFragment fragment = (ExampleFragment)
 		// getFragmentManager().findFragmentById(R.id.example_fragment);
@@ -90,6 +110,26 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 		// TODO add sorting options for taskfragment list
 
 		Log.d(TAG, "onCreate() finished");
+	}
+
+	/**
+	 * @return
+	 */
+	private int getGoalIdSettings() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		int goalId = prefs.getInt("thisGoalId", -1);
+		return goalId;
+	}
+
+	/**
+	 * @param goalId
+	 */
+	private void storeGoalIdSettings(int goalId) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = prefs.edit();
+
+		editor.putInt("thisGoalId", goalId);
+		editor.apply();
 	}
 
 	@Override
@@ -147,7 +187,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 			} else {
 				Log.d(TAG, "goal has deadline and it is not older than today - display deadline");
 			}
-			//Log.d(TAG, "goal has deadline - " + thisGoal + " / cal: " + cal);
+			// Log.d(TAG, "goal has deadline - " + thisGoal + " / cal: " + cal);
 		}
 
 		SimpleDateFormat dateComparisonFormat = new SimpleDateFormat("MM/yy");
@@ -257,7 +297,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 					String strCurrFinishedAt = dateFormat
 							.format(currTask.getFinishedAt().getTime());
 
-					//Log.e(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
+					// Log.e(TAG, "" + strCurrFinishedAt + " vs " + strCurrPivotTime);
 					if (strCurrPivotTime.equals(strCurrFinishedAt)) {
 						valYInt[i] += 1;
 						Log.d(TAG, "task " + currTask.getName() + " was completed "

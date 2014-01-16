@@ -38,7 +38,6 @@ public class GoalForm extends Activity {
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	public void addDeadlineChecked(View view) {
@@ -60,6 +59,7 @@ public class GoalForm extends Activity {
 
 			deadTime = new TimePicker(this);
 			deadTime.setIs24HourView(true);
+			deadTime.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 			lay.addView(deadTime);
 
 			deadlineChecked = true;

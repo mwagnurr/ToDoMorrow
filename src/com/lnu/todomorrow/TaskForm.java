@@ -60,7 +60,8 @@ public class TaskForm extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean bool) {
 
-				String v = getResources().getString(R.string.task_value) + Integer.toString(seekBar.getProgress());
+				String v = getResources().getString(R.string.task_value)
+						+ Integer.toString(seekBar.getProgress());
 				val = (TextView) findViewById(R.id.value);
 				val.setText(v);
 				value = progress;
@@ -94,6 +95,7 @@ public class TaskForm extends Activity {
 
 		tp = (TimePicker) findViewById(R.id.pick_deadline_time);
 		tp.setIs24HourView(true);
+		tp.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -144,8 +146,15 @@ public class TaskForm extends Activity {
 		Calendar deadline = createCalendar(hour, minute, day, month, year);
 
 		if (deadline.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+			Log.d(TAG, "deadline time vs curr time: " + deadline.getTimeInMillis() + " < "
+					+ Calendar.getInstance().getTimeInMillis());
 			createAlert(getResources().getString(R.string.alert_task_deadlinepast)).show();
 			return;
+		} else {
+			Log.d(TAG,
+					"Deadline correct - deadline time vs curr time: " + deadline.getTimeInMillis()
+							+ " >= " + Calendar.getInstance().getTimeInMillis());
+
 		}
 
 		EditText et = (EditText) findViewById(R.id.taskname);
@@ -155,7 +164,7 @@ public class TaskForm extends Activity {
 		if (taskName.isEmpty()) {
 			createAlert(getResources().getString(R.string.alert_task_name_empty)).show();
 			return;
-		} else if (taskName.length() > 30) {
+		} else if (taskName.length() > 22) {
 			createAlert(getResources().getString(R.string.alert_task_name_toolong)).show();
 			return;
 		}
@@ -199,6 +208,7 @@ public class TaskForm extends Activity {
 	 * @return
 	 */
 	private Calendar createCalendar(int hour, int minute, int day, int month, int year) {
+		// Log.d(TAG, "DEBUG: " +hour + ":" + minute + ", " +day+ "/" +month +"/" + year);
 		Calendar deadline = Calendar.getInstance();
 		deadline.set(Calendar.HOUR_OF_DAY, hour);
 		deadline.set(Calendar.MINUTE, minute);
