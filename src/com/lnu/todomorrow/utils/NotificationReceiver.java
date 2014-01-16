@@ -38,8 +38,6 @@ public class NotificationReceiver extends BroadcastReceiver {
 		intFinish.putExtra("task_id", task.getId());
 		intFinish.putExtra("notif_id", notificationID);
 
-		// TODO cancel alarm when task finished
-
 		NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(task.getName())
