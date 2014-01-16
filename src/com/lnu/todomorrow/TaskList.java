@@ -6,7 +6,7 @@ import java.util.List;
 import com.lnu.todomorrow.GoalFilterDialogFragment.GoalFilterDialogListener;
 import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
 import com.lnu.todomorrow.utils.Goal;
-import com.lnu.todomorrow.utils.MyBroadcastReceiver;
+import com.lnu.todomorrow.utils.NotificationReceiver;
 import com.lnu.todomorrow.utils.Task;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -79,6 +79,9 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 		case R.id.delete_finished_tasks:
 			list.deleteFinishedTasks();
 			return true;
+		case R.id.refresh:
+			recreate();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -102,10 +105,8 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 					Log.e(TAG, "received as task null");
 					return;
 				}
-				
-				setAlarmForTask(task);
 
-				
+				setAlarmForTask(task);
 
 				Log.d(TAG, "created task: " + task);
 				list.addTask(task);
@@ -115,14 +116,13 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 
 	private void setAlarmForTask(Task task) {
 		// creating intent for alarmManager
-		Intent intent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
-		intent.putExtra("name", task.getName());
-		intent.putExtra("goal", task.getGoal().getName());
-		intent.putExtra("value", task.getValue());
-		intent.putExtra("id", task.getId());
+		Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+		intent.putExtra("task", task);
 		PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), alarmID, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
-		alarmID ++;
+		alarmID++;
+
+		Log.d(TAG, "creating alarm for task: " + task + ", alarmID: " + alarmID);
 
 		// setting alarm
 		AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -137,7 +137,7 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 
 	@Override
 	public void onTaskChanged() {
-		//we don't care!
+		// we don't care!
 	}
 
 }

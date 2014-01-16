@@ -147,6 +147,9 @@ public class TaskListFragment extends ListFragment {
 	private void fetchFilteredTasks() {
 		taskDAO.open();
 		List<Task> tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
+		
+		debugPrint(tasks);
+		
 		if (adapter == null) {
 			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 			setListAdapter(adapter);
@@ -154,6 +157,17 @@ public class TaskListFragment extends ListFragment {
 			adapter.clear();
 			adapter.addAll(tasks);
 			adapter.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * @param tasks
+	 */
+	private void debugPrint(List<Task> tasks) {
+		Log.v(TAG, "fetched tasks:");
+		for(Task curr: tasks){
+			
+			Log.v(TAG, curr.toString());
 		}
 	}
 

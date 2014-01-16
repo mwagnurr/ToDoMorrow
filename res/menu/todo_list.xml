@@ -15,9 +15,12 @@
             <item
                 android:id="@+id/sort_by_deadline"
                 android:title="@string/task_menu_sortByDeadline"/>
-            <item 
+            <item
                 android:id="@+id/delete_finished_tasks"
-                android:title="@string/task_menu_delete_finished" />
+                android:title="@string/task_menu_delete_finished"/>
+            <item
+                android:id="@+id/refresh"
+                android:title="@string/task_menu_refresh"/>
         </menu>
     </item>
 

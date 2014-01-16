@@ -39,7 +39,7 @@
             android:label="@string/title_activity_goal_form" >
         </activity>
 
-        <receiver android:name="com.lnu.todomorrow.utils.MyBroadcastReceiver" />
+        <receiver android:name="com.lnu.todomorrow.utils.NotificationReceiver" />
 
         <activity
             android:name="com.lnu.todomorrow.DialogPostpone"

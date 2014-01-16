@@ -25,7 +25,7 @@ import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
 import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
-import com.lnu.todomorrow.utils.MyBroadcastReceiver;
+import com.lnu.todomorrow.utils.NotificationReceiver;
 import com.lnu.todomorrow.utils.Task;
 
 import android.annotation.SuppressLint;
@@ -386,7 +386,7 @@ public class GoalOverview extends Activity implements TaskDataChangedListener {
 				}
 
 				// creating intent for alarmManager
-				Intent intent = new Intent(GoalOverview.this, MyBroadcastReceiver.class);
+				Intent intent = new Intent(GoalOverview.this, NotificationReceiver.class);
 				intent.putExtra("name", task.getName());
 				intent.putExtra("goal", task.getGoal().getName());
 				intent.putExtra("value", task.getValue());

@@ -8,6 +8,7 @@ import com.lnu.todomorrow.utils.Task;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
@@ -15,20 +16,30 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class DialogPostpone extends Activity {
+	private static final String TAG = DialogPostpone.class.getSimpleName();
 
 	private TimePicker tp;
 	private DatePicker dp;
-	private long id;
+	private long taskId;
 	private TaskDAO taskDB;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//tt
-		Intent in = getIntent();
-		id = in.getLongExtra("id", 0);
-		System.out.println("id in dialogPostone: " + id);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			taskId = extras.getLong("task_id", -1);
+			getIntent().removeExtra("task_id");
+
+			if (taskId == -1) {
+				Log.e(TAG, "didn't receive correct task_id");
+			}
+
+		} else {
+			Log.e(TAG, "no extras in the intent");
+		}
+		Log.d(TAG, "id in dialogPostone: " + taskId);
 
 		setContentView(R.layout.activity_dialog_postpone);
 		tp = (TimePicker) findViewById(R.id.pick_deadline_time);
@@ -65,7 +76,7 @@ public class DialogPostpone extends Activity {
 		deadline.set(Calendar.YEAR, year);
 
 		taskDB.open();
-		Task t = taskDB.getTask(id);
+		Task t = taskDB.getTask(taskId);
 		t.setDeadline(deadline);
 		taskDB.updateTask(t);
 		Toast.makeText(getApplicationContext(), "Postpone ok", Toast.LENGTH_SHORT).show();
