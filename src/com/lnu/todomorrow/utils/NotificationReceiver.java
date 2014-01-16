@@ -32,6 +32,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		Log.d(TAG, "show notification for task: " + task);
 		Intent intPostpone = new Intent(context, DialogPostpone.class);
 		intPostpone.putExtra("task_id", task.getId());
+		intPostpone.putExtra("notif_id", notificationID);
 
 		Intent intFinish = new Intent(context, DialogFinish.class);
 		intFinish.putExtra("task_id", task.getId());

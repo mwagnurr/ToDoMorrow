@@ -48,10 +48,14 @@ public class TaskForm extends Activity {
 	private GoalDAO goalDAO;
 	private TaskDAO taskDAO;
 
+	private NotificationAlarmManager alarmMan;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.task_form);
+
+		alarmMan = new NotificationAlarmManager();
 
 		val = (TextView) findViewById(R.id.value);
 		SeekBar sb = (SeekBar) findViewById(R.id.add_value);
@@ -191,6 +195,8 @@ public class TaskForm extends Activity {
 			setResult(RESULT_CANCELED, reply);
 			finish();
 		}
+
+		alarmMan.setAlarmForTask(this, task);
 
 		reply.putExtra("task", task);
 		setResult(RESULT_OK, reply);

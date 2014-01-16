@@ -7,7 +7,8 @@ import com.lnu.todomorrow.utils.Task;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -20,8 +21,13 @@ public class DialogPostpone extends Activity {
 
 	private TimePicker tp;
 	private DatePicker dp;
-	private long taskId;
+
 	private TaskDAO taskDB;
+
+	private long taskId;
+	private int notifId;
+
+	private NotificationAlarmManager alarmMan = new NotificationAlarmManager();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +38,14 @@ public class DialogPostpone extends Activity {
 			taskId = extras.getLong("task_id", -1);
 			getIntent().removeExtra("task_id");
 
+			notifId = extras.getInt("notif_id", -1);
+			getIntent().removeExtra("notif_id");
+
 			if (taskId == -1) {
 				Log.e(TAG, "didn't receive correct task_id");
+			}
+			if (notifId == -1) {
+				Log.e(TAG, "didn't receive correct notif_id");
 			}
 
 		} else {
@@ -44,6 +56,8 @@ public class DialogPostpone extends Activity {
 		setContentView(R.layout.activity_dialog_postpone);
 		tp = (TimePicker) findViewById(R.id.pick_deadline_time);
 		tp.setIs24HourView(true);
+		// important because Android sucks
+		tp.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 		dp = (DatePicker) findViewById(R.id.pick_deadline);
 
 		taskDB = new TaskDAO(getApplicationContext());
@@ -59,6 +73,7 @@ public class DialogPostpone extends Activity {
 
 	public void dialogOK(View view) {
 
+		Log.d(TAG, "pressed dialog OK");
 		int hour = tp.getCurrentHour();
 		int minute = tp.getCurrentMinute();
 
@@ -66,20 +81,30 @@ public class DialogPostpone extends Activity {
 		int month = dp.getMonth();
 		int year = dp.getYear();
 
-		Calendar deadline = Calendar.getInstance();
-		deadline.set(Calendar.HOUR_OF_DAY, hour);
-		deadline.set(Calendar.MINUTE, minute);
-		deadline.set(Calendar.SECOND, 0);
+		Log.d(TAG, "DEBUG: " + hour + ":" + minute + ", " + day + "/" + month + "/" + year);
 
-		deadline.set(Calendar.DAY_OF_MONTH, day);
-		deadline.set(Calendar.MONTH, month);
-		deadline.set(Calendar.YEAR, year);
+		Calendar changedDeadline = Calendar.getInstance();
+		changedDeadline.set(Calendar.HOUR_OF_DAY, hour);
+		changedDeadline.set(Calendar.MINUTE, minute);
+		changedDeadline.set(Calendar.SECOND, 0);
+
+		changedDeadline.set(Calendar.DAY_OF_MONTH, day);
+		changedDeadline.set(Calendar.MONTH, month);
+		changedDeadline.set(Calendar.YEAR, year);
 
 		taskDB.open();
-		Task t = taskDB.getTask(taskId);
-		t.setDeadline(deadline);
-		taskDB.updateTask(t);
+		Task task = taskDB.getTask(taskId);
+		task.setDeadline(changedDeadline);
+		taskDB.updateTask(task);
 		Toast.makeText(getApplicationContext(), "Postpone ok", Toast.LENGTH_SHORT).show();
+
+		alarmMan.changeAlarmForTask(getApplicationContext(), task, changedDeadline);
+		// alarmMan.removeAlarmForTask(getApplicationContext(), task);
+
+		NotificationManager notificationManager = (NotificationManager) this
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(notifId);
+
 		finish();
 	}
 

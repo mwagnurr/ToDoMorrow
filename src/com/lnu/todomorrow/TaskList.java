@@ -6,13 +6,10 @@ import java.util.List;
 import com.lnu.todomorrow.GoalFilterDialogFragment.GoalFilterDialogListener;
 import com.lnu.todomorrow.TaskListFragment.TaskDataChangedListener;
 import com.lnu.todomorrow.utils.Goal;
-import com.lnu.todomorrow.utils.NotificationReceiver;
 import com.lnu.todomorrow.utils.Task;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DialogFragment;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +21,6 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 	private static final String TAG = TaskList.class.getSimpleName();
 	// private static TaskDAO dataTasks;
 	private TaskListFragment list;
-	private static int alarmID = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,27 +102,10 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 					return;
 				}
 
-				setAlarmForTask(task);
-
 				Log.d(TAG, "created task: " + task);
 				list.addTask(task);
 			}
 		}
-	}
-
-	private void setAlarmForTask(Task task) {
-		// creating intent for alarmManager
-		Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
-		intent.putExtra("task", task);
-		PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), alarmID, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT | Intent.FILL_IN_DATA);
-		alarmID++;
-
-		Log.d(TAG, "creating alarm for task: " + task + ", alarmID: " + alarmID);
-
-		// setting alarm
-		AlarmManager alarmMan = (AlarmManager) getSystemService(ALARM_SERVICE);
-		alarmMan.set(AlarmManager.RTC_WAKEUP, task.getDeadline().getTimeInMillis(), pi);
 	}
 
 	@Override

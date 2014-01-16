@@ -2,8 +2,11 @@ package com.lnu.todomorrow;
 
 import java.util.Calendar;
 
+import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
+import com.lnu.todomorrow.utils.Goal;
 import com.lnu.todomorrow.utils.Task;
+import com.lnu.todomorrow.utils.TimeUtil;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -19,21 +22,12 @@ public class DialogFinish extends Activity {
 
 	private long taskId;
 	private int notifId;
-	private TaskDAO taskDB;
+	private TaskDAO taskDAO;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
-
-		// Intent in = getIntent();
-		// id = in.getLongExtra("task_id", 0);
-		// Log.d(TAG, "id in dialogFinish: " + id);
-		//
-		// Task task = (Task) in.getSerializableExtra("task");
-		//
-		// Log.d(TAG, "task from intent: " + task);
-
 		setContentView(R.layout.activity_dialog_finish);
 
 		Bundle extras = getIntent().getExtras();
@@ -42,6 +36,7 @@ public class DialogFinish extends Activity {
 			getIntent().removeExtra("task_id");
 
 			notifId = extras.getInt("notif_id", -1);
+			getIntent().removeExtra("notif_id");
 
 			if (taskId == -1) {
 				Log.e(TAG, "didn't receive correct task_id");
@@ -53,7 +48,7 @@ public class DialogFinish extends Activity {
 			Log.e(TAG, "no extras in the intent");
 		}
 
-		taskDB = new TaskDAO(getApplicationContext());
+		taskDAO = new TaskDAO(getApplicationContext());
 	}
 
 	@Override
@@ -66,12 +61,31 @@ public class DialogFinish extends Activity {
 	public void dialogOK(View view) {
 
 		Log.d(TAG, "pressed OK - taskId: " + taskId);
-		taskDB.open();
-		Task t = taskDB.getTask(taskId);
+		taskDAO.open();
+		Task t = taskDAO.getTask(taskId);
 
 		t.setFinishedAt(Calendar.getInstance());
 		t.setFinished(true);
-		taskDB.updateTask(t);
+		if (!taskDAO.updateTask(t)) {
+			Log.e(TAG, "couldnt update Task");
+		}
+
+		Log.d(TAG,
+				"task - " + t.getName() + " set isfinshed to: " + t.isFinished()
+						+ TimeUtil.getFormattedDate(t.getFinishedAt()));
+
+		ScoreManager scoreMan = new ScoreManager();
+		int score = scoreMan.calculateScore(t);
+
+		int id = t.getGoal().getId();
+
+		GoalDAO goalDAO = new GoalDAO(getApplicationContext());
+		goalDAO.open();
+
+		Goal g = goalDAO.getGoal(id);
+		g.addScore(score);
+		t.setGoal(g);
+		goalDAO.updateGoal(g);
 
 		NotificationManager notificationManager = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -79,9 +93,7 @@ public class DialogFinish extends Activity {
 
 		Log.v(TAG, "task: " + t);
 		Toast.makeText(getApplicationContext(), "Task finished", Toast.LENGTH_SHORT).show();
-		// Intent intent = new Intent(this, TaskList.class);
-		// //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		// startActivity(intent);
+
 		finish();
 	}
 

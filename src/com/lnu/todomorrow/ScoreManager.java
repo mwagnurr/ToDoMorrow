@@ -31,12 +31,13 @@ public class ScoreManager {
 
 		long timeDiff = deadTimeMs - currTimeMs;
 
-		if (timeDiff < 0) {
-			Log.d(TAG, "calculating after deadline");
-			score += 1;
+		// if more than one minute after deadline
+		if (timeDiff < 60000) {
+			score += value * 0.5;
+			Log.d(TAG, "calculating after deadline, score 50%: " + score);
 		} else {
-			Log.d(TAG, "calculating before deadline");
 			score += value;
+			Log.d(TAG, "calculating before deadline, score: " + score);
 		}
 
 		return score;
