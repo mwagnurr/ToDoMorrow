@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +33,6 @@ public class GoalList extends Activity {
 	private GoalAdapter adapter;
 	private static GoalDAO goalDAO;
 	private static TaskDAO taskDAO;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class GoalList extends Activity {
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnGoalItemClick());
 
+		registerForContextMenu(listView);
+
 		Log.d(TAG, "onCreate()");
 	}
 
@@ -58,6 +61,32 @@ public class GoalList extends Activity {
 		if (goalDAO != null)
 			goalDAO.close();
 		super.onDestroy();
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		Log.d(TAG, "onCreateContextMenu");
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		menu.setHeaderTitle("" + adapter.getItem(info.position).getName());
+		// menu.add(0, 0, 0, "Update");
+		menu.add(0, 0, 0, "Delete");
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+
+		Log.d(TAG, " context item selected " + item.getItemId());
+		if (item.getItemId() == 0) { // deleteTask
+			Goal goal = adapter.getItem(info.position);
+			goalDAO.deleteGoal(goal);
+			adapter.remove(goal);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -74,11 +103,11 @@ public class GoalList extends Activity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
-		case R.id.add_testdata:
-			TestDataCreator data = new TestDataCreator(this);
-			data.createTestData();
-			this.recreate();
-			return true;
+			// case R.id.add_testdata:
+			// TestDataCreator data = new TestDataCreator(this);
+			// data.createTestData();
+			// this.recreate();
+			// return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

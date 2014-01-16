@@ -76,8 +76,8 @@ public class TaskListFragment extends ListFragment {
 		Log.d(TAG, "onCreateContextMenu");
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		menu.setHeaderTitle("" + adapter.getItem(info.position).getName());
-		menu.add(0, 0, 0, "Delete");
-		menu.add(1, 1, 1, "Update");
+		menu.add(0, 0, 0, "Update");
+		menu.add(0, 1, 1, "Delete");
 	}
 
 	@Override
@@ -86,16 +86,16 @@ public class TaskListFragment extends ListFragment {
 				.getMenuInfo();
 
 		Log.d(TAG, " context item selected " + item.getItemId());
-		if (item.getItemId() == 0) { // deleteTask
-			Task t = adapter.getItem(info.position);
-			taskDAO.deleteTaskEntry(t);
-			adapter.remove(t);
-		} else if (item.getItemId() == 1) {
+		if (item.getItemId() == 0) {
 			Task t = adapter.getItem(info.position);
 			Intent intent = new Intent(getActivity(), EditTask.class);
 			intent.putExtra("task", t);
 			this.startActivityForResult(intent, 0);
 
+		} else if (item.getItemId() == 1) { // deleteTask
+			Task t = adapter.getItem(info.position);
+			taskDAO.deleteTaskEntry(t);
+			adapter.remove(t);
 		}
 		return true;
 	}
@@ -147,9 +147,9 @@ public class TaskListFragment extends ListFragment {
 	private void fetchFilteredTasks() {
 		taskDAO.open();
 		List<Task> tasks = taskDAO.getAllTasksFilteredByGoals(filterGoalList);
-		
+
 		debugPrint(tasks);
-		
+
 		if (adapter == null) {
 			adapter = new TaskListAdapter(getActivity(), R.layout.row_layout, tasks);
 			setListAdapter(adapter);
@@ -165,8 +165,8 @@ public class TaskListFragment extends ListFragment {
 	 */
 	private void debugPrint(List<Task> tasks) {
 		Log.v(TAG, "fetched tasks:");
-		for(Task curr: tasks){
-			
+		for (Task curr : tasks) {
+
 			Log.v(TAG, curr.toString());
 		}
 	}
@@ -323,6 +323,10 @@ public class TaskListFragment extends ListFragment {
 			t.setGoal(g);
 			goalDAO.updateGoal(g);
 
+			NotificationAlarmManager alarmMan = new NotificationAlarmManager();
+
+			alarmMan.removeAlarmForTask(getActivity(), t);
+
 		}
 
 	}
@@ -343,8 +347,6 @@ public class TaskListFragment extends ListFragment {
 	public interface TaskDataChangedListener {
 		public void onTaskChanged();
 	}
-	
-
 
 	public void deleteFinishedTasks() {
 		taskDAO.open();
@@ -354,8 +356,8 @@ public class TaskListFragment extends ListFragment {
 				taskDAO.deleteTaskEntry(t);
 			}
 		}
-		
-		//TODO change deletion to not actually delete
+
+		// TODO change deletion to not actually delete
 		adapter.notifyDataSetChanged();
 		taskDAO.close();
 	}
