@@ -17,6 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+/**
+ * @author Julia Bergmayr, Michael Wagner
+ * @version 1.0
+ *
+ */
 public class TaskList extends Activity implements GoalFilterDialogListener, TaskDataChangedListener {
 	private static final String TAG = TaskList.class.getSimpleName();
 	// private static TaskDAO dataTasks;
@@ -83,11 +88,18 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 		}
 	}
 
+	/**
+	 * Adds task to list and database
+	 * @param view
+	 */
 	public void addTask(View view) {
 		Intent intent = new Intent(this, TaskForm.class);
 		this.startActivityForResult(intent, 0);
 	}
 
+	/**
+	 * Handles results of activities in option menue
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent result) {
 		Log.d(TAG, "received result");
@@ -108,6 +120,9 @@ public class TaskList extends Activity implements GoalFilterDialogListener, Task
 		}
 	}
 
+	/**
+	 * Activity on Selection of FilterDialog
+	 */
 	@Override
 	public void onGoalFilterDialogSubmit(List<Goal> filteredGoals) {
 		Log.d(TAG, "Receveid selected filter goals");
