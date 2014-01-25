@@ -23,6 +23,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 		Intent in = new Intent(context, com.lnu.todomorrow.TaskList.class);
 		PendingIntent pendInt = PendingIntent.getActivity(context, 0, in, 0);
 
+		if(task==null){
+			Log.e(TAG, "task is null; abort");
+			return;
+		}
 		Log.d(TAG, "id in broadCastReceiver: " + task.getId());
 
 		showNotification(context, pendInt, task);

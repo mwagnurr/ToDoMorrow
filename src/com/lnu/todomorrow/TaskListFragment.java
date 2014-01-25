@@ -105,9 +105,11 @@ public class TaskListFragment extends ListFragment {
 		super.onActivityResult(requestCode, resultCode, result);
 		switch (requestCode) {
 		case 0:
-			Task t = (Task) result.getSerializableExtra("task");
-			adapter.add(t);
-			adapter.notifyDataSetChanged();
+			// Task t = (Task) result.getSerializableExtra("task");
+			// adapter.add(t);
+			// adapter.notifyDataSetChanged();
+			fetchFilteredTasks();
+			Log.d(TAG, "received result");
 		}
 	}
 
