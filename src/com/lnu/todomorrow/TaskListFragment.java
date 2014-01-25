@@ -1,5 +1,9 @@
 package com.lnu.todomorrow;
 
+/**
+ * @author Julia Bergmayr, Michael Wagner
+ * @version 1.0
+ */
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -69,6 +73,9 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	/**
+	 * Creates Context Menu to Delete and Update Tasks
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -80,6 +87,9 @@ public class TaskListFragment extends ListFragment {
 		menu.add(0, 1, 1, "Delete");
 	}
 
+	/**
+	 * Defines Activity for Context Menu
+	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
@@ -100,6 +110,9 @@ public class TaskListFragment extends ListFragment {
 		return true;
 	}
 
+	/**
+	 * Defines actions after activity result from Edit Task
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent result) {
 		super.onActivityResult(requestCode, resultCode, result);
@@ -123,6 +136,10 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	/**
+	 * stores goal that should be displayed in list
+	 * @param filterGoals
+	 */
 	public void setFilterGoalList(ArrayList<Goal> filterGoals) {
 		Log.d(TAG, "filtering task fragment by goals");
 
@@ -131,6 +148,10 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	/**
+	 * preparing for filtering list by goals
+	 * @param goal
+	 */
 	public void filterByGoal(Goal goal) {
 		Log.d(TAG, "filtering task fragment by goal: " + goal.getName());
 
@@ -144,7 +165,7 @@ public class TaskListFragment extends ListFragment {
 	}
 
 	/**
-	 * 
+	 * loading tasks for specified goals
 	 */
 	private void fetchFilteredTasks() {
 		taskDAO.open();
@@ -173,16 +194,24 @@ public class TaskListFragment extends ListFragment {
 		}
 	}
 
+	/**
+	 * checks if list contains specified goal
+	 * @param goal
+	 * @return boolean
+	 */
 	private boolean filterListContainsGoal(Goal goal) {
 		for (int i = 0; i < filterGoalList.size(); i++) {
 			if (filterGoalList.get(i).getId() == goal.getId()) {
 				return true;
 			}
-			// if(filterGoalList.contains(goal))
 		}
 		return false;
 	}
 
+	/**
+	 * adds task to adapter
+	 * @param task
+	 */
 	public void addTask(Task task) {
 		Log.d(TAG, "adding task to TaskListFragment adapter - " + task.getName());
 
@@ -190,6 +219,9 @@ public class TaskListFragment extends ListFragment {
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * sorts tasklist entries by date of deadline
+	 */
 	public void sortListByDeadline() {
 
 		Log.d(TAG, "sorting by deadline");
@@ -205,6 +237,11 @@ public class TaskListFragment extends ListFragment {
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * Adapter for TaskList entries
+	 * @author Julia Bergmayr, Michael Wagner
+	 *
+	 */
 	private class TaskListAdapter extends ArrayAdapter<Task> {
 		private List<Task> tasks;
 
@@ -252,6 +289,11 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	/**
+	 * Comparator for sorting finished tasks on end of list
+	 * @author Julia Bergmayr, Michael Wanger
+	 *
+	 */
 	private class BooleanComparator implements Comparator<Task> {
 
 		@Override
@@ -265,6 +307,11 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	/**
+	 * Comparator to compare dates
+	 * @author Julia Bergmayr, Michael Wagner
+	 *
+	 */
 	private class DateComparator implements Comparator<Task> {
 
 		@Override
@@ -278,6 +325,11 @@ public class TaskListFragment extends ListFragment {
 
 	}
 
+	/**
+	 * Listener for checking Checkboxes
+	 * @author Julia Bergmayr, Michael Wagner
+	 *
+	 */
 	private class CheckListener implements OnClickListener {
 
 		@Override
@@ -301,6 +353,7 @@ public class TaskListFragment extends ListFragment {
 		}
 
 		/**
+		 * called when task is finished (checkbox is checked)
 		 * @param t
 		 */
 		private void finishTask(Task t) {
@@ -350,18 +403,23 @@ public class TaskListFragment extends ListFragment {
 		public void onTaskChanged();
 	}
 
+	/**
+	 * deletes all finished tasks from list and database
+	 */
 	public void deleteFinishedTasks() {
 		taskDAO.open();
 		List<Task> tasks = taskDAO.getAllTasks();
 		for (Task t : tasks) {
 			if (t.isFinished()) {
 				taskDAO.deleteTaskEntry(t);
+				adapter.remove(t);
 			}
 		}
 
 		// TODO change deletion to not actually delete
-		adapter.notifyDataSetChanged();
 		taskDAO.close();
+		adapter.notifyDataSetChanged();
+
 	}
 
 }
