@@ -10,11 +10,9 @@
                 android:id="@+id/show_taskList"
                 android:title="@string/goal_menu_switchToTasklist"/>
 
-            <!--
-                  <item
+                <!--  <item
                 android:id="@+id/add_testdata"
-                android:title="add test data (debug)"/>
-            -->
+                android:title="add test data (debug)"/>-->  
         </menu>
     </item>
 

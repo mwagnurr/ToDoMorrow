@@ -9,6 +9,10 @@ import com.lnu.todomorrow.dao.DAOException;
 import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
 
+/**
+ * debug class for easy test data generation
+ *
+ */
 public class TestDataCreator {
 	private static final String TAG = TestDataCreator.class.getSimpleName();
 

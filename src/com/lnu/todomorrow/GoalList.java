@@ -6,7 +6,6 @@ import com.lnu.todomorrow.dao.GoalDAO;
 import com.lnu.todomorrow.dao.TaskDAO;
 import com.lnu.todomorrow.utils.Goal;
 
-import com.lnu.todomorrow.utils.TestDataCreator;
 import com.lnu.todomorrow.utils.TimeUtil;
 
 import android.app.Activity;
@@ -103,6 +102,7 @@ public class GoalList extends Activity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
+			// for debugging
 			// case R.id.add_testdata:
 			// TestDataCreator data = new TestDataCreator(this);
 			// data.createTestData();

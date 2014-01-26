@@ -1,11 +1,9 @@
 package com.lnu.todomorrow.utils;
 
-import java.text.DateFormat;
+import android.annotation.SuppressLint;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import android.util.Log;
 
 public class TimeUtil {
 
@@ -15,6 +13,7 @@ public class TimeUtil {
 	 * @param cal
 	 * @return empty string if Calendar is null
 	 */
+	@SuppressLint("SimpleDateFormat")
 	public static String getFormattedDate(Calendar cal) {
 		if (cal == null) {
 			// Log.d("TimeUtil","calendar == null");
