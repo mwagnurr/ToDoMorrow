@@ -43,7 +43,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		intFinish.putExtra("notif_id", notificationID);
 
 		NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setSmallIcon(R.drawable.checkbox_checked1)
 				.setContentTitle(task.getName())
 				.setContentText(
 						task.getGoal().getName() + "    "
